@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
     <aside
       className={`
         fixed top-0 left-0 w-full h-screen bg-background flex flex-col 
-        transition-transform duration-300 ease-in-out
+        transition-transform duration-300 ease-in-out z-999
         ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
     >
@@ -65,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
             {user?.name ? user?.name : "User"}
           </h3>
           <Link href="/profile">
-            <Button className="px-8"><User className="size-5"/> My Profile</Button>
+            <Button className="px-8"><User className="size-5i"/> My Profile</Button>
           </Link>
         </div>
 
