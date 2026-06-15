@@ -7,14 +7,17 @@ import { Button } from "../ui/button";
 import ButtonGroup from "../ui/ButtonGroup";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import ProfileDropdown from "./ProfileDropdown";
+import Sidebar from "./Sidebar";
+import { useState } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = {
     name: "Jacob Jones",
     email: "exhibitors@industryexpo2027.com",
-    image: "",
+    image: "/logo.webp",
   };
 
   const links = [
@@ -58,18 +61,25 @@ const Navbar = () => {
 
         <div className="flex items-center gap-2 md:gap-4">
           <Button variant="outline" className="px-10 hidden md:block">
-            Sign Up
+            Sign In
           </Button>
           <ButtonGroup>Book a Stand</ButtonGroup>
-          <Button className="w-13 h-13 xl:hidden" variant="ghost">
+          <div className="hidden md:block">
+            <ProfileDropdown user={user} />
+          </div>
+          <Button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className=" px-0 h-13 xl:hidden"
+            variant="ghost"
+          >
             <HiOutlineMenuAlt3 className="size-6" />
           </Button>
         </div>
         {/* user dropdown */}
-        <div>
-         <ProfileDropdown user={user}/> 
-        </div>
       </div>
+
+      {/* sidebar */}
+      <Sidebar user={user} setIsOpen={setSidebarOpen} isOpen={sidebarOpen} />
     </section>
   );
 };
