@@ -29,7 +29,7 @@ const Navbar = () => {
   ];
 
   return (
-    <section className="border">
+    <section>
       <div className="container flex justify-between items-center h-20 xl:h-24">
         <div>
           <Image
