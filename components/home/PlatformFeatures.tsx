@@ -1,4 +1,9 @@
-import { CalendarCheck, ShieldCheck } from "lucide-react";
+import {
+  CalendarCheck,
+  LayoutDashboard,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
 import React from "react";
 import { FiUpload } from "react-icons/fi";
 import { RiLoopRightFill } from "react-icons/ri";
@@ -35,16 +40,16 @@ const PlatformFeatures = () => {
         "Upload trade licences, insurance certificates, and compliance documents directly within your booking dashboard.",
     },
     {
-      icon: FiUpload,
-      title: "Document Upload Management",
+      icon: LayoutDashboard,
+      title: "Exhibitor Dashboard",
       subtitle:
-        "Upload trade licences, insurance certificates, and compliance documents directly within your booking dashboard.",
+        "Track your booking status, outstanding payments, deadlines, and setup schedule from a single, unified dashboard.",
     },
     {
-      icon: FiUpload,
-      title: "Document Upload Management",
+      icon: Settings,
+      title: "Admin Management System",
       subtitle:
-        "Upload trade licences, insurance certificates, and compliance documents directly within your booking dashboard.",
+        "Powerful tools for organizers to manage floor plans, approve exhibitors, review documents, and generate reports.",
     },
   ];
   return (
