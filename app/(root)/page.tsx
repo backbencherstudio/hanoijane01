@@ -1,4 +1,5 @@
 import EventDetails from "@/components/home/EventDetails";
+import FAQ from "@/components/home/FAQ";
 import HowItWorks from "@/components/home/HowItWorks";
 import PlatformFeatures from "@/components/home/PlatformFeatures";
 import Banner from "@/components/layout/Banner";
@@ -11,6 +12,7 @@ const Home = () => {
       <EventDetails />
       <HowItWorks />
       <PlatformFeatures />
+      <FAQ/>
     </div>
   );
 };

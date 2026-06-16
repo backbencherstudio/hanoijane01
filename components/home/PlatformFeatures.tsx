@@ -96,7 +96,7 @@ const PlatformFeatures = () => {
         </div>
         {/* cta button */}
         <div className="w-full flex justify-center mt-12">
-          <ButtonGroup>Explore Full Floor Map</ButtonGroup>
+          <ButtonGroup className="px-2 lg:px-6">Explore Full Floor Map</ButtonGroup>
         </div>
       </div>
     </section>

@@ -35,7 +35,7 @@ const ButtonGroup = ({
   const mainButton = (
     <Button variant={variant} className={className}>
       {children}
-      <span className={`size-9 rounded-full text-5xl relative border flex md:hidden justify-center items-center`}>
+      <span className={`size-9 rounded-full text-5xl relative[#C25B29] flex md:hidden justify-center items-center`}>
         {icon ? icon : <ArrowUpRight className="size-5" />}
       </span>
     </Button>
@@ -44,7 +44,7 @@ const ButtonGroup = ({
   const iconButton = (
     <Button
       variant={variant}
-      className={`${className} size-13 hidden md:flex text-5xl relative p-0 `}
+      className={`${className} size-13 hidden md:flex text-5xl relative p-0 border-none`}
     >
       {icon ? icon : <ArrowUpRight className="size-6" />}
     </Button>
