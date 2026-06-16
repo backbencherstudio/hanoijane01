@@ -46,7 +46,7 @@ const HowItWorks = () => {
 
         {/* Heading */}
         <div className="flex flex-col items-center mx-auto text-center justify-center max-w-145">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary leading-12">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary leading-8 md:leading-10 lg:leading-12">
             Book Your Stand in 4 Simple Steps
           </h2>
 

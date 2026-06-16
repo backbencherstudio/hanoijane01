@@ -1,9 +1,10 @@
+import Banner from "@/components/home/Banner";
+import ContactCTA from "@/components/home/ContactCTA";
 import EventDetails from "@/components/home/EventDetails";
 import FAQ from "@/components/home/FAQ";
 import HowItWorks from "@/components/home/HowItWorks";
+import InteractiveFloorPlan from "@/components/home/InteractiveFloorPlan";
 import PlatformFeatures from "@/components/home/PlatformFeatures";
-import Banner from "@/components/layout/Banner";
-import React from "react";
 
 const Home = () => {
   return (
@@ -11,8 +12,10 @@ const Home = () => {
       <Banner />
       <EventDetails />
       <HowItWorks />
+      <InteractiveFloorPlan />
       <PlatformFeatures />
-      <FAQ/>
+      <FAQ />
+      <ContactCTA />
     </div>
   );
 };

@@ -35,7 +35,7 @@ const Banner = () => {
             Browse available exhibition stands, select your preferred location,
             complete bookings online, and manage everything from one platform.
           </p>
-          <ButtonGroup>View Floor Map</ButtonGroup>
+          <ButtonGroup className="px-6">View Floor Map</ButtonGroup>
         </div>
       </div>
 

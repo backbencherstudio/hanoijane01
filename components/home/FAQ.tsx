@@ -19,7 +19,7 @@ const FAQ = () => {
 
             {/* Heading */}
             <div className="">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary leading-12">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary leading-8 md:leading-10 lg:leading-12">
                 Frequently Asked Questions
               </h2>
 
@@ -29,7 +29,7 @@ const FAQ = () => {
               </p>
             </div>
             {/* cta button */}
-            <ButtonGroup className="mt-8 px-2 lg:px-6">
+            <ButtonGroup className="mt-8 px-6 hidden lg:flex">
               View More FAQ
             </ButtonGroup>
           </div>
@@ -37,6 +37,9 @@ const FAQ = () => {
           {/* content - right side */}
           <div className="col-span-full lg:col-span-3">
             <FAQAccordion faqData={faqData} />
+            <ButtonGroup className="mt-12 px-6 lg:hidden">
+              View More FAQ
+            </ButtonGroup>
           </div>
         </div>
       </div>
