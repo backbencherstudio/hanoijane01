@@ -40,7 +40,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
             <BiSolidDownArrow className="text-gray-400 text-xs" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-80 md:w-87.5 p-5 mt-3.5 xl:mt-5">
+        <DropdownMenuContent align="end" className="w-80 md:w-87.5 p-5 mt-3.25 xl:mt-5">
           <DropdownMenuLabel>
             <div className="flex items-center gap-2 space-y-1">
               {user?.image ? (
@@ -64,7 +64,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
           </DropdownMenuLabel>
 
           <DropdownMenuItem
-            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center"
+            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center hover:bg-gray-200!"
             asChild
           >
             <Link href="/profile">
@@ -77,7 +77,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center"
+            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center hover:bg-gray-200!"
             asChild
           >
             <Link href="/booking-history">
@@ -90,7 +90,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center"
+            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center hover:bg-gray-200!"
             asChild
           >
             <Link href="/notifications">
@@ -104,7 +104,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
 
           <DropdownMenuItem
             onClick={handleLogout}
-            className="cursor-pointer py-3 rounded-none font-medium text-base flex justify-between items-center text-red-600"
+            className="cursor-pointer py-3 rounded-none font-medium text-base flex justify-between items-center text-red-600 hover:text-red-700! hover:bg-red-200!"
           >
             <span className="flex items-center gap-2">
               <IoLogInOutline className="size-5 " />
