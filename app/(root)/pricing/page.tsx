@@ -16,7 +16,7 @@ const PricingPage = () => {
               Simple, Transparent Exhibition Pricing
             </h2>
 
-            <p className="mx-auto mt-2 lg:mt-4 text-sm md:text-base lg:text-xl font-normal">
+            <p className="mx-auto mt-2 lg:mt-4 text-sm md:text-base lg:text-xl font-normal text-[#F9F9FF]">
               Choose from Standard, Double, or Outdoor stands. No hidden fees.
               Everything you need to make your mark at Industry Expo 2027.
             </p>

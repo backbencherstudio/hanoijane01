@@ -4,6 +4,7 @@ import FAQAccordion from "../ui/FAQAccordion";
 import { faqData } from "@/data/faqData";
 
 const FAQ = () => {
+  const faqs = faqData.slice(0, 5);
   return (
     <section className="bg-background padding-default">
       <div className="container">
@@ -36,11 +37,11 @@ const FAQ = () => {
 
           {/* content - right side */}
           <div className="col-span-full lg:col-span-3">
-            <FAQAccordion faqData={faqData} />
+            <FAQAccordion faqData={faqs} />
             <div className="w-full flex justify-center items-center">
-            <ButtonGroup className="mt-12 px-6 lg:hidden">
-              View More FAQ
-            </ButtonGroup>
+              <ButtonGroup className="mt-12 px-6 lg:hidden">
+                View More FAQ
+              </ButtonGroup>
             </div>
           </div>
         </div>
