@@ -9,10 +9,12 @@ import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import ProfileDropdown from "./ProfileDropdown";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
+import AuthModal from "@/app/(auth)/_components/AuthModal";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const user = {
     name: "Jacob Jones",
@@ -60,7 +62,11 @@ const Navbar = () => {
         </ul>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <Button variant="outline" className="px-10 hidden md:block">
+          <Button
+            onClick={() => setIsOpen(true)}
+            variant="outline"
+            className="px-10 hidden md:block"
+          >
             Sign In
           </Button>
           <ButtonGroup>Book a Stand</ButtonGroup>
@@ -80,6 +86,7 @@ const Navbar = () => {
 
       {/* sidebar */}
       <Sidebar user={user} setIsOpen={setSidebarOpen} isOpen={sidebarOpen} />
+      <AuthModal open={isOpen} setOpen={setIsOpen} />
     </section>
   );
 };

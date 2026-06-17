@@ -4,7 +4,7 @@ const ExhibitionMapPage = () => {
   return (
     <div>
       {/* banner section */}
-      <section className="max-w-380 h-133.75 mx-auto rounded-4xl overflow-hidden flex justify-center items-center bg-[url('/assets/exhibition-map-banner.webp')] bg-cover bg-center padding-default relative">
+      <section className="max-w-380 h-80 md:h-100 lg:h-120 xl:h-133.75 mx-auto rounded-4xl overflow-hidden flex justify-center items-center bg-[url('/assets/exhibition-map-banner.webp')] bg-cover bg-center padding-default relative">
         <div className="bg-black/50 absolute top-0 left-0 w-full h-full contrast-75"></div>
         <div className="container relative  z-10">
           {/* Heading */}
@@ -43,7 +43,7 @@ const ExhibitionMapPage = () => {
           </div>
 
           {/* footer */}
-          <div className="lg:text-lg font-semibold text-primary mt-12 py-5.5 bg-primary/10 w-full text-center rounded-lg border border-primary">
+          <div className="lg:text-lg font-semibold text-primary mt-12 py-5.5 bg-primary/10 w-full text-center rounded-lg border border-primary p-4">
             March 14–17, 2027 · Booking deadline: Jan 30, 2027
           </div>
         </div>
