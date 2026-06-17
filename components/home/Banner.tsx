@@ -39,7 +39,7 @@ const Banner = () => {
         </div>
       </div>
 
-      <div className="h-8 md:h-15 lg:h-18 xl:h-22.5"></div>
+      <div className="h-9 md:h-15 lg:h-18 xl:h-22.5"></div>
 
       {/* Stats box */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-85 md:w-150 lg:w-200 xl:w-300 h-20 md:h-30 lg:h-35 xl:h-45 bg-[url('/assets/texture.webp')] bg-cover bg-center bg-no-repeat rounded-[24px] flex justify-around items-center">

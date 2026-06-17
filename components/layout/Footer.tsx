@@ -6,6 +6,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { TbBrandFacebook } from "react-icons/tb";
 import { FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
+import Image from "next/image";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -72,10 +73,10 @@ const Footer = () => {
           <div className="lg:col-span-2 w-2/3">
             <Link href="/" className="inline-block">
               <div className="flex items-center gap-2">
-                <img src="/logo.webp" alt="Logo" />
+                <Image src="/logo.webp" alt="Logo" width={90} height={74} />
               </div>
             </Link>
-            <p className="text-[#D2D2D5] mt-4 font-normal leading-relaxed">
+            <p className="text-[#D2D2D5] mt-2 font-normal leading-relaxed">
               The professional exhibition stand booking platform for Industry
               Expo 2027. Book, manage, and exhibit, all in one place.
             </p>

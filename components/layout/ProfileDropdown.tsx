@@ -12,7 +12,6 @@ import {
 import { IoLogInOutline } from "react-icons/io5";
 import { ProfileDropdownProps } from "@/types/User";
 
-
 const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
   const handleLogout = () => {
     if (onLogout) onLogout();
@@ -40,7 +39,10 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
             <BiSolidDownArrow className="text-gray-400 text-xs" />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-80 md:w-87.5 p-5 mt-3.25 xl:mt-5">
+        <DropdownMenuContent
+          align="end"
+          className="w-80 md:w-87.5 p-5 mt-3.25 xl:mt-5"
+        >
           <DropdownMenuLabel>
             <div className="flex items-center gap-2 space-y-1">
               {user?.image ? (

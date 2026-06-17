@@ -1,11 +1,10 @@
-
-export interface User {
+export interface UserProp {
   name: string;
   image: string;
   email: string;
 }
 
-interface ProfileDropdownProps {
-  user: User;
+export interface ProfileDropdownProps {
+  user: UserProp;
   onLogout?: () => void;
 }

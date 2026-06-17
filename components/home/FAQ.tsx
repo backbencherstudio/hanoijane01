@@ -37,9 +37,11 @@ const FAQ = () => {
           {/* content - right side */}
           <div className="col-span-full lg:col-span-3">
             <FAQAccordion faqData={faqData} />
+            <div className="w-full flex justify-center items-center">
             <ButtonGroup className="mt-12 px-6 lg:hidden">
               View More FAQ
             </ButtonGroup>
+            </div>
           </div>
         </div>
       </div>
