@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import BookingInfo from "./_components/BookingInfo";
+import BookingInfoCard from "./_components/BookingInfoCard";
+import AddOnsForm from "./_components/AddOnsForm";
 
 const steps = [
   {
@@ -18,30 +20,8 @@ const steps = [
   },
 ];
 
-function BookingInfoForm({ nextStep }: { nextStep: () => void }) {
-  return (
-    <div>
-      Booking Info Form
-      <button onClick={nextStep}>Next</button>
-    </div>
-  );
-}
 
-function AddOnsForm({
-  nextStep,
-  prevStep,
-}: {
-  nextStep: () => void;
-  prevStep: () => void;
-}) {
-  return (
-    <div>
-      Add Ons Form
-      <button onClick={prevStep}>Back</button>
-      <button onClick={nextStep}>Next</button>
-    </div>
-  );
-}
+
 
 function PaymentForm({ prevStep }: { prevStep: () => void }) {
   return (
@@ -129,14 +109,19 @@ export default function BookingPage() {
         </div>
 
         {/* Forms */}
-        <div className="mt-10">
-          {currentStep === 1 && <BookingInfo nextStep={nextStep} />}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12">
+          <div className="col-span-full lg:col-span-2">
+            {currentStep === 1 && <BookingInfo nextStep={nextStep} />}
 
-          {currentStep === 2 && (
-            <AddOnsForm nextStep={nextStep} prevStep={prevStep} />
-          )}
+            {currentStep === 2 && (
+              <AddOnsForm nextStep={nextStep} prevStep={prevStep} />
+            )}
 
-          {currentStep === 3 && <PaymentForm prevStep={prevStep} />}
+            {currentStep === 3 && <PaymentForm prevStep={prevStep} />}
+          </div>
+          <div className="border">
+            <BookingInfoCard />
+          </div>
         </div>
       </div>
     </section>

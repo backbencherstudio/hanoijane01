@@ -1,11 +1,10 @@
 import Image from "next/image";
 import React from "react";
 import BookingInfoForm from "./BookingInfoForm";
-import BookingInfoCard from "./BookingInfoCard";
 
 const BookingInfo = ({ nextStep }: { nextStep: () => void }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div>
       <div className="lg:col-span-2 border p-6 bg-white rounded-xl">
         <div className="bg-white rounded-xl">
           <Image src="/logo.webp" alt="logo" width={110} height={90} />
@@ -19,9 +18,6 @@ const BookingInfo = ({ nextStep }: { nextStep: () => void }) => {
             <BookingInfoForm nextStep={nextStep} />
           </div>
         </div>
-      </div>
-      <div className="border">
-        <BookingInfoCard />
       </div>
     </div>
   );
