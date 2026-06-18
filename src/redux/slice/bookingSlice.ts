@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AddOn {
   id: string;
@@ -27,25 +27,40 @@ interface BookingState {
     vatRate: number;
   };
   addOns: SelectedAddOn[];
+  bookingInfo: {
+    companyName: string;
+    contactName: string;
+    email: string;
+    phoneNumber: string;
+    companyAddress: string;
+    companyLicense?: File | null; // optional, not stored in Redux for serialization
+  };
 }
 
 const initialState: BookingState = {
   stand: {
-    id: 'B05',
-    name: 'Stand B05',
-    type: 'Standard',
-    size: '3×3m',
-    area: 'Indoor Stand',
-    event: 'ITBA EXPO The NEXT 100',
-    date: '14-16 March 2027',
+    id: "B05",
+    name: "Stand B05",
+    type: "Standard",
+    size: "3×3m",
+    area: "Indoor Stand",
+    event: "ITBA EXPO The NEXT 100",
+    date: "14-16 March 2027",
     price: 400,
     vatRate: 0.2,
   },
   addOns: [],
+  bookingInfo: {
+    companyName: "",
+    contactName: "",
+    email: "",
+    phoneNumber: "",
+    companyAddress: "",
+  },
 };
 
 const bookingSlice = createSlice({
-  name: 'booking',
+  name: "booking",
   initialState,
   reducers: {
     setAddOns: (state, action: PayloadAction<AddOn[]>) => {
@@ -72,11 +87,27 @@ const bookingSlice = createSlice({
         addOn.quantity -= 1;
       }
     },
-    updateStand: (state, action: PayloadAction<Partial<BookingState['stand']>>) => {
+    updateStand: (
+      state,
+      action: PayloadAction<Partial<BookingState["stand"]>>,
+    ) => {
       state.stand = { ...state.stand, ...action.payload };
     },
     resetAddOns: (state) => {
-      state.addOns = state.addOns.map((a) => ({ ...a, selected: false, quantity: 1 }));
+      state.addOns = state.addOns.map((a) => ({
+        ...a,
+        selected: false,
+        quantity: 1,
+      }));
+    },
+    updateBookingInfo: (
+      state,
+      action: PayloadAction<Partial<BookingState["bookingInfo"]>>,
+    ) => {
+      state.bookingInfo = { ...state.bookingInfo, ...action.payload };
+    },
+    resetBookingInfo: (state) => {
+      state.bookingInfo = initialState.bookingInfo;
     },
   },
 });
@@ -110,6 +141,8 @@ export const {
   decrementQuantity,
   updateStand,
   resetAddOns,
+  updateBookingInfo,
+  resetBookingInfo,
 } = bookingSlice.actions;
 
 export default bookingSlice.reducer;

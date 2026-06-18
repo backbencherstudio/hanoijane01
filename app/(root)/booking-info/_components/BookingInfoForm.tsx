@@ -1,10 +1,13 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/src/redux/store";
+import { updateBookingInfo } from "@/src/redux/slice/bookingSlice";
 
 interface BookingInfoData {
   companyName: string;
@@ -18,6 +21,12 @@ interface BookingInfoData {
 const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  // Get stored booking info from Redux
+  const storedInfo = useSelector(
+    (state: RootState) => state.booking.bookingInfo,
+  );
 
   const {
     register,
@@ -25,24 +34,40 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
     watch,
     setValue,
     formState: { errors },
+    reset,
   } = useForm<BookingInfoData>({
     defaultValues: {
-      companyName: "",
-      contactName: "",
-      email: "",
-      phoneNumber: "",
-      companyAddress: "",
+      companyName: storedInfo.companyName || "",
+      contactName: storedInfo.contactName || "",
+      email: storedInfo.email || "",
+      phoneNumber: storedInfo.phoneNumber || "",
+      companyAddress: storedInfo.companyAddress || "",
       companyLicense: null,
     },
   });
 
+  // Update form when storedInfo changes (e.g., after going back)
+  useEffect(() => {
+    reset({
+      companyName: storedInfo.companyName || "",
+      contactName: storedInfo.contactName || "",
+      email: storedInfo.email || "",
+      phoneNumber: storedInfo.phoneNumber || "",
+      companyAddress: storedInfo.companyAddress || "",
+      companyLicense: null,
+    });
+  }, [storedInfo, reset]);
+
   const onSubmit = (data: BookingInfoData) => {
+    // Save data to Redux (exclude file)
+    const { companyLicense, ...textData } = data;
+    dispatch(updateBookingInfo(textData));
+    // Here you could also handle the file upload separately
     console.log("Booking Info Data:", data);
-    // Send data to API
+    // Proceed to next step
     nextStep();
   };
 
-  // Safely get the selected file
   const selectedFile = watch("companyLicense")?.[0] || null;
 
   return (

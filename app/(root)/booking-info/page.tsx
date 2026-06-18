@@ -1,39 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import BookingInfo from "./_components/BookingInfo";
 import BookingInfoCard from "./_components/BookingInfoCard";
 import AddOnsForm from "./_components/AddOnsForm";
+import PaymentForm from "./_components/PaymentForm";
 
 const steps = [
-  {
-    id: 1,
-    title: "Booking Info",
-  },
-  {
-    id: 2,
-    title: "Adds On",
-  },
-  {
-    id: 3,
-    title: "Payment",
-  },
+  { id: 1, title: "Booking Info" },
+  { id: 2, title: "Adds On" },
+  { id: 3, title: "Payment" },
 ];
 
-
-
-
-function PaymentForm({ prevStep }: { prevStep: () => void }) {
-  return (
-    <div>
-      Payment Form
-      <button onClick={prevStep}>Back</button>
-    </div>
-  );
-}
-
 export default function BookingPage() {
-  const [currentStep, setCurrentStep] = useState(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const stepParam = searchParams.get("step");
+
+  // Initialize currentStep from URL or default to 1
+  const initialStep = stepParam ? parseInt(stepParam, 10) : 1;
+  const [currentStep, setCurrentStep] = useState(
+    steps.some((s) => s.id === initialStep) ? initialStep : 1,
+  );
+
+  // Sync URL with current step (only if it changed)
+  useEffect(() => {
+    const paramStep = searchParams.get("step");
+    const currentParam = paramStep ? parseInt(paramStep, 10) : 1;
+    if (currentParam !== currentStep) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("step", String(currentStep));
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [currentStep, searchParams, router]);
 
   const nextStep = () => {
     if (currentStep < steps.length) {
@@ -62,22 +62,22 @@ export default function BookingPage() {
                 <div
                   key={step.id}
                   className={`
-            flex items-center
-            ${isLast ? "flex-initial" : "flex-1 min-w-0"}
-          `}
+                    flex items-center
+                    ${isLast ? "flex-initial" : "flex-1 min-w-0"}
+                  `}
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
                     {/* Step Circle */}
                     <div
                       className={`
-                size-8 sm:size-10 rounded-full flex items-center justify-center
-                font-semibold transition-all shrink-0 text-sm sm:text-base
-                ${
-                  isActive || isCompleted
-                    ? "bg-[#D89B29] text-white"
-                    : "bg-[#E8DDCB] text-[#8E8E93]"
-                }
-              `}
+                        size-8 sm:size-10 rounded-full flex items-center justify-center
+                        font-semibold transition-all shrink-0 text-sm sm:text-base
+                        ${
+                          isActive || isCompleted
+                            ? "bg-[#D89B29] text-white"
+                            : "bg-[#E8DDCB] text-[#8E8E93]"
+                        }
+                      `}
                     >
                       {step.id}
                     </div>
@@ -85,9 +85,9 @@ export default function BookingPage() {
                     {/* Step Title (hidden on mobile) */}
                     <h3
                       className={`
-                text-base sm:text-xl font-medium truncate hidden sm:block
-                ${isActive || isCompleted ? "text-primary" : "text-[#8E8E93]"}
-              `}
+                        text-base sm:text-xl font-medium truncate hidden sm:block
+                        ${isActive || isCompleted ? "text-primary" : "text-[#8E8E93]"}
+                      `}
                     >
                       {step.title}
                     </h3>
@@ -97,9 +97,9 @@ export default function BookingPage() {
                   {!isLast && (
                     <div
                       className={`
-                h-px flex-1 mx-1 sm:mx-2
-                ${currentStep > step.id ? "bg-[#D89B29]" : "bg-[#D9D9D9]"}
-              `}
+                        h-px flex-1 mx-1 sm:mx-2
+                        ${currentStep > step.id ? "bg-[#D89B29]" : "bg-[#D9D9D9]"}
+                      `}
                     />
                   )}
                 </div>
