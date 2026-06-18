@@ -22,7 +22,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
     <div className="flex items-center gap-2 cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             {user?.image ? (
               <Image
                 src={user.image}

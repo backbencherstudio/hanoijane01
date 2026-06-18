@@ -153,7 +153,7 @@ const ContactForm = () => {
       </div>
 
       {/* Submit Button */}
-      <ButtonGroup type="submit" className="w-full">
+      <ButtonGroup type="submit" fullWidth={true}>
         Send Message
       </ButtonGroup>
     </form>

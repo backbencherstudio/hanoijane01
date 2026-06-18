@@ -5,6 +5,7 @@ import Link from "next/link";
 
 type ButtonGroupProps = {
   className?: string;
+  fullWidth?: boolean;
   onClick?: () => void;
   pathName?: string;
   children: React.ReactNode;
@@ -23,6 +24,7 @@ type ButtonGroupProps = {
 
 const ButtonGroup = ({
   className,
+  fullWidth = false,
   onClick,
   pathName,
   children,
@@ -35,7 +37,11 @@ const ButtonGroup = ({
 
   // Shared button content (the two buttons)
   const mainButton = (
-    <Button variant={variant} className={className} type={type}>
+    <Button
+      variant={variant}
+      className={`${className} ${fullWidth ? "w-full" : ""}`}
+      type={type}
+    >
       {children}
       <span
         className={`size-9 rounded-full text-5xl relative[#C25B29] flex md:hidden border ${className?.includes("bg-white") && "border-primary"} justify-center items-center`}
@@ -59,7 +65,7 @@ const ButtonGroup = ({
   if (isLink) {
     return (
       <div className="flex w-full justify-center items-center">
-        <div className="flex-1">
+        <div className={fullWidth ? "flex-1" : ""}>
           <Link href={pathName}>{mainButton}</Link>
         </div>
         <div className="shrink-0">
@@ -72,7 +78,7 @@ const ButtonGroup = ({
   // Otherwise, use button elements with onClick
   return (
     <div className="flex w-full justify-center items-center">
-      <div onClick={onClick} className="flex-1">
+      <div onClick={onClick} className={fullWidth ? "flex-1" : ""}>
         {mainButton}
       </div>
       <div onClick={onClick} className="shrink-0">
