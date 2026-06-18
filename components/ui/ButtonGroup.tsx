@@ -58,20 +58,26 @@ const ButtonGroup = ({
   // If it's a link, wrap both buttons inside a single Link
   if (isLink) {
     return (
-      <div className="flex">
-        <Link href={pathName}>
-          {mainButton}
-          {iconButton}
-        </Link>
+      <div className="flex w-full justify-center items-center">
+        <div className="flex-1">
+          <Link href={pathName}>{mainButton}</Link>
+        </div>
+        <div className="shrink-0">
+          <Link href={pathName}>{iconButton}</Link>
+        </div>
       </div>
     );
   }
 
   // Otherwise, use button elements with onClick
   return (
-    <div className="flex">
-      <div onClick={onClick}>{mainButton}</div>
-      <div onClick={onClick}>{iconButton}</div>
+    <div className="flex w-full justify-center items-center">
+      <div onClick={onClick} className="flex-1">
+        {mainButton}
+      </div>
+      <div onClick={onClick} className="shrink-0">
+        {iconButton}
+      </div>
     </div>
   );
 };

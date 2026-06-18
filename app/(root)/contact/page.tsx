@@ -1,6 +1,7 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import ContactForm from "./_components/ContactForm";
 
 type Contact = {
   icon: React.ElementType;
@@ -34,7 +35,7 @@ const ContactPage = () => {
           {/* left side */}
           <div className="col-span-full lg:col-span-2">
             <Image
-            src="/assets/contact.webp"
+              src="/assets/contact.webp"
               alt="contact"
               width={516}
               height={577}
@@ -67,7 +68,20 @@ const ContactPage = () => {
           </div>
 
           {/* content - right side */}
-          <div className="col-span-full lg:col-span-3">right</div>
+          <div className="col-span-full lg:col-span-3">
+            <div className="bg-white rounded-xl p-6">
+              <Image src="/logo.webp" alt="logo" width={110} height={90} />
+              <h2 className="text-[32px] font-semibold text-primary mt-5">
+                Get in touch
+              </h2>
+              <p className="lg:text-lg font-normal text-[#4A4C56] mt-3 pb-6 border-b-2">
+                Our friendly team would love to hear from you.
+              </p>
+              <div className="mt-6">
+                <ContactForm />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
