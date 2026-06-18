@@ -4,11 +4,14 @@ export interface AddOn {
   id: string;
   name: string;
   description: string;
-  price: number; // per unit
+  price: number;
+  icon?: string;
+  unit?: string;
+}
+
+export interface SelectedAddOn extends AddOn {
   selected: boolean;
   quantity: number;
-   icon?: string;   // path to icon
-  unit?: string;   // e.g., 'piece', 'pcs', 'person'
 }
 
 interface BookingState {
@@ -21,9 +24,9 @@ interface BookingState {
     event: string;
     date: string;
     price: number;
-    vatRate: number; // e.g., 0.2 for 20%
+    vatRate: number;
   };
-  addOns: AddOn[];
+  addOns: SelectedAddOn[];
 }
 
 const initialState: BookingState = {
@@ -38,59 +41,24 @@ const initialState: BookingState = {
     price: 400,
     vatRate: 0.2,
   },
-  addOns: [
-    {
-      id: '1',
-      name: 'Standard Exhibition Chair',
-      description: 'Dedicated high-speed broadband',
-      price: 20,
-      selected: false,
-      quantity: 1,
-    },
-    {
-      id: '2',
-      name: 'Premium Wi-Fi',
-      description: 'Dedicated high-speed broadband',
-      price: 20,
-      selected: false,
-      quantity: 1,
-    },
-    {
-      id: '3',
-      name: 'Additional 500W Power Socket',
-      description: 'Dedicated high-speed broadband',
-      price: 20,
-      selected: false,
-      quantity: 1,
-    },
-    {
-      id: '4',
-      name: 'Additional Exhibitor Pass',
-      description: 'Dedicated high-speed broadband',
-      price: 20,
-      selected: false,
-      quantity: 1,
-    },
-    {
-      id: '5',
-      name: 'Lead Capture Device',
-      description: 'Dedicated high-speed broadband',
-      price: 20,
-      selected: false,
-      quantity: 1,
-    },
-  ],
+  addOns: [],
 };
 
 const bookingSlice = createSlice({
   name: 'booking',
   initialState,
   reducers: {
+    setAddOns: (state, action: PayloadAction<AddOn[]>) => {
+      state.addOns = action.payload.map((addOn) => ({
+        ...addOn,
+        selected: false,
+        quantity: 1,
+      }));
+    },
     toggleAddOn: (state, action: PayloadAction<string>) => {
       const addOn = state.addOns.find((a) => a.id === action.payload);
       if (addOn) {
         addOn.selected = !addOn.selected;
-        // if unselected, reset quantity to 1 (optional)
         if (!addOn.selected) addOn.quantity = 1;
       }
     },
@@ -104,23 +72,44 @@ const bookingSlice = createSlice({
         addOn.quantity -= 1;
       }
     },
-    // Optionally update stand info from BookingInfoForm later
     updateStand: (state, action: PayloadAction<Partial<BookingState['stand']>>) => {
       state.stand = { ...state.stand, ...action.payload };
     },
-    // For future API – replace all add‑ons
-    setAddOns: (state, action: PayloadAction<AddOn[]>) => {
-      state.addOns = action.payload;
+    resetAddOns: (state) => {
+      state.addOns = state.addOns.map((a) => ({ ...a, selected: false, quantity: 1 }));
     },
   },
 });
 
+// Selectors
+export const selectSubtotal = (state: { booking: BookingState }) => {
+  const standPrice = state.booking.stand.price;
+  const addOnsTotal = state.booking.addOns
+    .filter((a) => a.selected)
+    .reduce((sum, a) => sum + a.price * a.quantity, 0);
+  return standPrice + addOnsTotal;
+};
+
+export const selectVat = (state: { booking: BookingState }) => {
+  const subtotal = selectSubtotal(state);
+  return subtotal * state.booking.stand.vatRate;
+};
+
+export const selectTotal = (state: { booking: BookingState }) => {
+  return selectSubtotal(state) + selectVat(state);
+};
+
+export const selectSelectedAddOns = (state: { booking: BookingState }) => {
+  return state.booking.addOns.filter((a) => a.selected);
+};
+
 export const {
+  setAddOns,
   toggleAddOn,
   incrementQuantity,
   decrementQuantity,
   updateStand,
-  setAddOns,
+  resetAddOns,
 } = bookingSlice.actions;
 
 export default bookingSlice.reducer;

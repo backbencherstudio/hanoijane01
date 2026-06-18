@@ -1,20 +1,22 @@
 "use client";
-import { RootState } from "@/src/redux/store";
+import React from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "@/src/redux/store";
+import {
+  selectSubtotal,
+  selectVat,
+  selectTotal,
+  selectSelectedAddOns,
+} from "@/src/redux/slice/bookingSlice";
 
 const BookingInfoCard = () => {
-  const { stand, addOns } = useSelector((state: RootState) => state.booking);
+  const { stand } = useSelector((state: RootState) => state.booking);
+  const selectedAddOns = useSelector(selectSelectedAddOns);
+  const subtotal = useSelector(selectSubtotal);
+  const vat = useSelector(selectVat);
+  const total = useSelector(selectTotal);
 
-  // Calculate totals
-  const standPrice = stand.price;
-  const selectedAddOns = addOns.filter((a) => a.selected);
-  const addOnsTotal = selectedAddOns.reduce(
-    (sum, a) => sum + a.price * a.quantity,
-    0,
-  );
-  const subtotal = standPrice + addOnsTotal;
-  const vat = subtotal * stand.vatRate;
-  const total = subtotal + vat;
+  const hasAddOns = selectedAddOns.length > 0;
 
   return (
     <div className="space-y-4">
@@ -31,23 +33,23 @@ const BookingInfoCard = () => {
         </div>
         <div className="p-5 mt-4 space-y-4 text-[#4A4C56]">
           <div className="flex items-center justify-between">
-            <p className="text-lg">Type</p>{" "}
+            <p className="text-lg">Type</p>
             <p className="text-lg font-semibold">{stand.type}</p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-lg">Size</p>{" "}
+            <p className="text-lg">Size</p>
             <p className="text-lg font-semibold">{stand.size}</p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-lg">Area</p>{" "}
+            <p className="text-lg">Area</p>
             <p className="text-lg font-semibold">{stand.area}</p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-lg">Event</p>{" "}
+            <p className="text-lg">Event</p>
             <p className="text-lg font-semibold">{stand.event}</p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-lg">Date</p>{" "}
+            <p className="text-lg">Date</p>
             <p className="text-lg font-semibold">{stand.date}</p>
           </div>
         </div>
@@ -60,24 +62,33 @@ const BookingInfoCard = () => {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-lg">{stand.name}</p>
-            <p className="text-lg font-semibold">${standPrice}</p>
+            <p className="text-lg font-semibold">${stand.price}</p>
           </div>
-
-          {selectedAddOns.map((addOn) => (
-            <div key={addOn.id} className="flex items-center justify-between">
-              <p className="text-lg">
-                {addOn.name} × {addOn.quantity}
-              </p>
-              <p className="text-lg font-semibold">
-                ${addOn.price * addOn.quantity}
-              </p>
-            </div>
-          ))}
-
           <div className="flex items-center justify-between">
             <p className="text-lg">VAT ({Math.round(stand.vatRate * 100)}%)</p>
             <p className="text-lg font-semibold">${vat.toFixed(2)}</p>
           </div>
+
+          {/* Additional Charge Section – only if add‑ons exist */}
+          {hasAddOns && (
+            <div className="space-y-2 border-t border-gray-200 pt-2">
+              <p className="font-semibold text-primary">Additional Charge</p>
+              {selectedAddOns.map((addOn) => (
+                <div
+                  key={addOn.id}
+                  className="flex items-center justify-between text-lg"
+                >
+                  <p>
+                    {addOn.name} × {addOn.quantity}
+                  </p>
+                  <p className="font-semibold">
+                    ${addOn.price * addOn.quantity}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="h-px bg-gray-400"></div>
         </div>
 
