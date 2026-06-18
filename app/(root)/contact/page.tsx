@@ -34,7 +34,7 @@ const ContactPage = () => {
           {/* left side */}
           <div className="col-span-full lg:col-span-2">
             <Image
-              src="/assets/contact.webp"
+            src="/assets/contact.webp"
               alt="contact"
               width={516}
               height={577}
