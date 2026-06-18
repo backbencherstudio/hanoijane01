@@ -77,7 +77,7 @@ const ButtonGroup = ({
 
   // Otherwise, use button elements with onClick
   return (
-    <div className="flex w-full justify-center items-center">
+    <div className="flex justify-center items-center">
       <div onClick={onClick} className={fullWidth ? "flex-1" : ""}>
         {mainButton}
       </div>

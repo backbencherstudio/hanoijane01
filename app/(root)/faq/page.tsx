@@ -36,7 +36,7 @@ const FAQPage = () => {
 
             {/* Heading */}
             <div className="">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-text-primary leading-8 md:leading-10 lg:leading-12">
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-text-primary leading-10 lg:leading-12 xl:leading-14">
                 Frequently Asked Questions
               </h2>
 
