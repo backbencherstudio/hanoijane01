@@ -75,7 +75,9 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
     dispatch(resetBookingInfo());
     dispatch(resetAddOns());
     sessionStorage.removeItem("bookingState");
-    // router.push("/booking/success");
+    router.push(
+      `/booking-success?payment_option=${paymentOption === "now" ? "now" : "later"}`,
+    );
   };
 
   return (
@@ -134,7 +136,7 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
             <div
               className={`
                 border-2 rounded-xl p-2 md:p-5 cursor-pointer transition-all
-                ${paymentOption === "now" ? "border-primary/10 bg-primary/5" : "border-gray-200"}
+                ${paymentOption === "now" ? "border-primary/10" : "border-gray-200"}
               `}
               onClick={() => setPaymentOption("now")}
             >
@@ -183,7 +185,7 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
             <div
               className={`
                 border-2 rounded-xl p-2 md:p-5 cursor-pointer transition-all
-                ${paymentOption === "later" ? "border-primary/10 bg-primary/5" : "border-gray-200"}
+                ${paymentOption === "later" ? "border-primary/10" : "border-gray-200"}
               `}
               onClick={() => setPaymentOption("later")}
             >
