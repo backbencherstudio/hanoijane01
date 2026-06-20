@@ -23,7 +23,7 @@ const LoginForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
   };
 
   return (
-    <div className="w-full px-4 py-6 md:px-6">
+    <div className="w-full">
       <div className="text-center">
         <h1 className="text-3xl font-semibold text-primary">Welcome Back</h1>
         <p className="text-accent lg:text-lg max-w-87.5 mt-3 mx-auto">
