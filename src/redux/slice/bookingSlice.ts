@@ -109,6 +109,9 @@ const bookingSlice = createSlice({
     resetBookingInfo: (state) => {
       state.bookingInfo = initialState.bookingInfo;
     },
+    restoreBooking: (state, action: PayloadAction<BookingState>) => {
+      return action.payload;
+    },
   },
 });
 
@@ -143,6 +146,7 @@ export const {
   resetAddOns,
   updateBookingInfo,
   resetBookingInfo,
+  restoreBooking,
 } = bookingSlice.actions;
 
 export default bookingSlice.reducer;

@@ -6,7 +6,7 @@ import React from "react";
 interface AddOnCardProps {
   add: {
     icon: string;
-    title: string;
+    name: string;
     description: string;
     price: number;
     unit: string;
@@ -20,7 +20,7 @@ const AddOnCard = ({ add }: AddOnCardProps) => {
         <Image src={add.icon} alt="icon" width={20} height={20} />
       </div>
       <div className="flex-1">
-        <h4 className="text-xl font-semibold text-text-primary">{add.title}</h4>
+        <h4 className="text-xl font-semibold text-text-primary">{add.name}</h4>
         <p className="font-medium text-[#4A4C56]">{add.description}</p>
         <div className="mt-5 w-full flex justify-between items-center">
           <p className="text-lg font-semibold text-text-primary">

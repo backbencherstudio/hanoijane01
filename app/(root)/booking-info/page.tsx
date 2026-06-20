@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import BookingInfo from "./_components/BookingInfo";
 import BookingInfoCard from "./_components/BookingInfoCard";
 import AddOnsForm from "./_components/AddOnsForm";
+import { usePersistBooking } from "@/hooks/usePersistBooking";
 import PaymentForm from "./_components/PaymentForm";
 
 const steps = [
@@ -14,6 +15,7 @@ const steps = [
 ];
 
 export default function BookingPage() {
+  usePersistBooking();
   const router = useRouter();
   const searchParams = useSearchParams();
   const stepParam = searchParams.get("step");
