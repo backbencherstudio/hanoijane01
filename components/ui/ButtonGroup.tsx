@@ -9,6 +9,7 @@ type ButtonGroupProps = {
   onClick?: () => void;
   pathName?: string;
   children: React.ReactNode;
+  roundButtonSize?: string;
   variant?:
     | "default"
     | "link"
@@ -31,6 +32,7 @@ const ButtonGroup = ({
   variant = "default",
   icon,
   type,
+  roundButtonSize = "size-13"
 }: ButtonGroupProps) => {
   // Determine if we should use a Link (if pathName is provided)
   const isLink = !!pathName;
@@ -54,7 +56,7 @@ const ButtonGroup = ({
   const iconButton = (
     <Button
       variant={variant}
-      className={`${className} size-13 hidden md:flex text-5xl relative p-0 `}
+      className={`${className} ${roundButtonSize} hidden md:flex text-5xl relative p-0 `}
       type={type}
     >
       {icon ? icon : <ArrowUpRight className="size-6" />}

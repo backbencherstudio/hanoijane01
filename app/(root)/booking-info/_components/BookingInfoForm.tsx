@@ -219,7 +219,7 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
               htmlFor="companyLicense"
               className="
               flex flex-col items-center justify-center
-              border-2 border-dashed border-[#0F5EA8]
+              border border-dashed border-[#0F5EA8]
               bg-[#F5F5F5]
               rounded-3xl
        py-6.5
@@ -295,7 +295,7 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
         >
           Back
         </Button>
-        <ButtonGroup type="submit" className="px-12.5">
+        <ButtonGroup fullWidth={true} type="submit" className="px-12.5">
           Next
         </ButtonGroup>
       </div>

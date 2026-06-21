@@ -31,7 +31,7 @@ const Navbar = () => {
   ];
 
   return (
-    <section>
+    <section className="bg-[#fbfbfd]">
       <div className="container flex justify-between items-center h-20 xl:h-24">
         <div>
           <Image
