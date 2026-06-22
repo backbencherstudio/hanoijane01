@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IoLogInOutline } from "react-icons/io5";
 import { ProfileDropdownProps } from "@/types/User";
+import { FaCreditCard } from "react-icons/fa";
 
 const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
   const handleLogout = () => {
@@ -86,6 +87,19 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
               <span className="flex items-center gap-2">
                 <CalendarClock className="size-5" />
                 Booking History
+              </span>
+              <ChevronRight size={16} />
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center hover:bg-gray-200!"
+            asChild
+          >
+            <Link href="/transaction-history">
+              <span className="flex items-center gap-2">
+                <FaCreditCard className="size-5" />
+                Transaction-history
               </span>
               <ChevronRight size={16} />
             </Link>

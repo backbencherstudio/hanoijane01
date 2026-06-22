@@ -31,7 +31,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
     { label: "Profile", href: "/profile" },
     { label: "Booking History", href: "/booking-history" },
     { label: "Transaction History", href: "/transaction-history" },
-    { label: "Notification", href: "/notification" },
+    { label: "Notifications", href: "/notifications" },
   ];
   return (
     <div className="bg-[#fbfbfd]">

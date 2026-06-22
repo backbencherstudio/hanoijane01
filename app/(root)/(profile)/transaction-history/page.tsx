@@ -1,9 +1,9 @@
 "use client";
 import CustomTable from "@/components/ui/Table";
 import { Column } from "@/types/table";
+import { Dot } from "lucide-react";
 import React, { useCallback, useState } from "react";
-
-
+import { GoDotFill } from "react-icons/go";
 
 export interface Transaction {
   id: number;
@@ -269,10 +269,8 @@ export const transactions: Transaction[] = [
   },
 ];
 
-
-
 const TransactionHistoryPage = () => {
-  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 10 });
+  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 5 });
 
   const startIndex = (filters.currentPage - 1) * filters.perPageItem;
   const endIndex = startIndex + filters.perPageItem;
@@ -295,47 +293,48 @@ const TransactionHistoryPage = () => {
     setFilters({ currentPage: 1, perPageItem: newPerPage });
   };
 
-const columns: Column<Transaction>[] = [
-  {
-    header: "Payment Reference",
-    accessor: "paymentRef",
-    cellClassName: "px-4 py-3",
-  },
-  { header: "Category", accessor: "payCategory", cellClassName: "px-4 py-3" },
-  { header: "Stand", accessor: "stand", cellClassName: "px-4 py-3" },
-  {
-    header: "Amount ($)",
-    accessor: "amount",
-    render: (value) => `$${value as number}`,
-    cellClassName: "px-4 py-3",
-  },
-  {
-    header: "Status",
-    accessor: "status",
-    render: (value) => {
-      const status = value as string;
-      const colorMap: Record<string, string> = {
-        Paid: "bg-green-100 text-green-700",
-        Pending: "bg-yellow-100 text-yellow-700",
-        Overdue: "bg-red-100 text-red-700",
-      };
-      return (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-semibold ${colorMap[status] || ""}`}
-        >
-          {status}
-        </span>
-      );
+  const columns: Column<Transaction>[] = [
+    {
+      header: "Payment Ref",
+      headerClassName:"text-left",
+      accessor: "paymentRef",
+      cellClassName: "px-4 py-3",
     },
-    cellClassName: "px-4 py-3",
-  },
-  {
-    header: "Payment Date",
-    accessor: "paymentDate",
-    cellClassName: "px-4 py-3",
-  },
-  { header: "Method", accessor: "method", cellClassName: "px-4 py-3" },
-];
+    { header: "Category", accessor: "payCategory", cellClassName: "px-4 py-3" },
+    { header: "Stand", accessor: "stand", cellClassName: "px-4 py-3" },
+    {
+      header: "Amount ($)",
+      accessor: "amount",
+      render: (value) => `$${value as number}`,
+      cellClassName: "px-4 py-3",
+    },
+    {
+      header: "Status",
+      accessor: "status",
+      render: (value) => {
+        const status = value as string;
+        const colorMap: Record<string, string> = {
+          Paid: "bg-green-100 text-green-700",
+          Pending: "bg-yellow-100 text-yellow-700",
+          Overdue: "bg-red-100 text-red-700",
+        };
+        return (
+          <p
+            className={`px-2 py-1 rounded-md text-xs font-semibold ${colorMap[status] || ""} flex justify-center items-center w-fit`}
+          ><GoDotFill />
+            {status}
+          </p>
+        );
+      },
+      cellClassName: "px-4 py-3",
+    },
+    {
+      header: "Payment Date",
+      accessor: "paymentDate",
+      cellClassName: "px-4 py-3",
+    },
+    { header: "Method", accessor: "method", cellClassName: "px-4 py-3" },
+  ];
 
   return (
     <div className="bg-white p-4 rounded-xl">
@@ -349,13 +348,13 @@ const columns: Column<Transaction>[] = [
         <CustomTable
           data={currentData}
           columns={columns}
-          showIndex
+          showIndex={false}
           indexLabel="SN"
           isLoading={false}
           emptyMessage="No transactions found"
           pagination={pagination}
           onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange} // ✅ pass it
+          onItemsPerPageChange={handleItemsPerPageChange}
         />
       </div>
     </div>
