@@ -41,7 +41,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="absolute inset-0 bg-[url('/assets/banner.jpg')] bg-cover bg-center" />
         </div>
 
-        <div className="h-25 md:h-30 lg:h-40 xl:h-55 border"></div>
+        <div className="h-25 md:h-30 lg:h-40 xl:h-55"></div>
 
         {/* Stats box */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-85 md:w-150 lg:w-200 xl:w-300 p-4 md:p-6 lg:p-8 xl:p-10 bg-[url('/assets/texture.webp')] bg-cover bg-center bg-no-repeat rounded-[24px] flex items-center gap-6">
@@ -78,7 +78,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       </section>
-      <div className="mt-4 lg:mt-14 mb-14 lg:mb-25 grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-8 container">
+      <div className="mt-4 lg:mt-14 pb-14 lg:pb-25 grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-8 container">
         <div className="col-span-full md:col-span-3 lg:col-span-3">
           {children}
         </div>
