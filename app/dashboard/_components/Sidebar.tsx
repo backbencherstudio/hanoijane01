@@ -23,28 +23,16 @@ const menuItems: MenuItem[] = [
     icon: <LayoutDashboard size={18} />,
   },
   {
-    title: "Booking Management",
+    title: "Stand Management",
     icon: <LayoutDashboard size={18} />,
     children: [
       {
-        title: "Booked List",
-        href: "/dashboard/bookings/booked",
+        title: "View All Stands",
+        href: "/dashboard/stand-management/stands",
       },
       {
-        title: "Reserved Booking",
-        href: "/dashboard/bookings/reserved",
-      },
-      {
-        title: "Booking Request",
-        href: "/dashboard/bookings/request",
-      },
-      {
-        title: "Overdue Booking",
-        href: "/dashboard/bookings/overdue",
-      },
-      {
-        title: "Cancel Booking",
-        href: "/dashboard/bookings/cancelled",
+        title: "Stand Price",
+        href: "/dashboard/stand-management/stand-price",
       },
     ],
   },

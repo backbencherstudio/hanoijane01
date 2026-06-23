@@ -71,7 +71,7 @@ export default function CustomTable<T extends object>({
   tbodyClassName = "",
   rowClassName = "",
   headerRowClassName = "",
-  rounded = "rounded-none",
+  rounded = "rounded-t-sm",
   emptyMessage = "No data available",
   emptyIcon,
   pagination,
@@ -228,7 +228,7 @@ export default function CustomTable<T extends object>({
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-          <table className={`w-full border-collapse ${tableClassName}`}>
+          <table className={`w-full overflow-hidden border-collapse ${tableClassName}`}>
             <thead className={`${theadClassName}`}>
               <tr
                 className={`bg-[#DDEDFE] text-[#666D80] border border-[#DDEDFE] ${headerRowClassName}`}

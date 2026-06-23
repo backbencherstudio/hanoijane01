@@ -113,7 +113,7 @@ const BookingHistoryPage = () => {
                 </p>
               </div>
               {/* action button */}
-              <div className="flex flex-col-reverse lg:flex-row gap-4 w-full justify-between px-4 pb-6 ">
+              <div className="flex flex-col-reverse xl:flex-row gap-4 w-full justify-between px-4 pb-6 ">
                 <Button
                   onClick={() => setIsOpen(true)}
                   variant="outline"

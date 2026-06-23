@@ -270,7 +270,7 @@ export const transactions: Transaction[] = [
 ];
 
 const TransactionHistoryPage = () => {
-  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 5 });
+  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
 
   const startIndex = (filters.currentPage - 1) * filters.perPageItem;
   const endIndex = startIndex + filters.perPageItem;
@@ -296,7 +296,7 @@ const TransactionHistoryPage = () => {
   const columns: Column<Transaction>[] = [
     {
       header: "Payment Ref",
-      headerClassName:"text-left",
+      headerClassName: "text-left",
       accessor: "paymentRef",
       cellClassName: "px-4 py-3",
     },
@@ -314,14 +314,15 @@ const TransactionHistoryPage = () => {
       render: (value) => {
         const status = value as string;
         const colorMap: Record<string, string> = {
-          Paid: "bg-green-100 text-green-700",
-          Pending: "bg-yellow-100 text-yellow-700",
-          Overdue: "bg-red-100 text-red-700",
+          Paid: "bg-[#e9faf7] border border-[#d3f4ef] text-[#22CAAD]",
+          Pending: "bg-[#fbf5eb] border border-[#edcebf] text-[#D79930]",
+          Overdue: "bg-[#fbe5eb] border border-[#f7b1b8] text-[#EB3D4D]",
         };
         return (
           <p
-            className={`px-2 py-1 rounded-md text-xs font-semibold ${colorMap[status] || ""} flex justify-center items-center w-fit`}
-          ><GoDotFill />
+            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[status] || ""} flex justify-center items-center w-fit`}
+          >
+            <GoDotFill />
             {status}
           </p>
         );

@@ -1,10 +1,10 @@
 export const standPackages = [
   {
-    title: "Standard Stand",
+    title: "Expo Marquee",
     description:
       "Perfect for small to mid-sized businesses making their exhibition debut.",
-    price: 200,
-    priceLabel: "Event (excl. VAT)",
+    price: 1250,
+    priceLabel: "+ VAT (23%)",
     includes: [
       "Standard shell scheme structure.",
       "1x Spotlight & 1x Power socket (500W).",
@@ -15,10 +15,10 @@ export const standPackages = [
     ],
   },
   {
-    title: "Double Stand",
+    title: "Main Goffs Sales Complex",
     description:
       "Perfect for small to mid-sized businesses making their exhibition debut.",
-    price: 400,
+    price: 1750,
     priceLabel: "Event (excl. VAT)",
     includes: [
       "Double-width shell scheme structure (Premium row/corner options).",
@@ -29,10 +29,24 @@ export const standPackages = [
     ],
   },
   {
-    title: "Outdoor Stand",
+    title: "Double Corner Stand",
     description:
       "Expansive outdoor space for large exhibits, machinery, and vehicles.",
-    price: 500,
+    price: 3250,
+    priceLabel: "Event (excl. VAT)",
+    includes: [
+      "Open-air concrete or grass plot.",
+      "High-capacity power supply setup.",
+      "Direct vehicle access for easy loading/unloading of trailers and machinery.",
+      "6x Exhibitor entry passes.",
+      "Dedicated highlight on the Interactive Event Floor Map.",
+    ],
+  },
+  {
+    title: "Double Corner Stand",
+    description:
+      "Expansive outdoor space for large exhibits, machinery, and vehicles.",
+    price: 1500,
     priceLabel: "Event (excl. VAT)",
     includes: [
       "Open-air concrete or grass plot.",

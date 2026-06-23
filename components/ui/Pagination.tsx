@@ -34,7 +34,7 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   totalItems,
   itemsPerPage,
-  itemsPerPageOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // ✅ 1 to 10
+  itemsPerPageOptions = [1, 2, 3, 5, 8, 10],
   onPageChange,
   onItemsPerPageChange,
   className = "",
@@ -98,45 +98,48 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div
-      className={`grid grid-cols-1 lg:grid-cols-2 items-center justify-between gap-4 ${className}`}
+      className={`grid grid-cols-1 lg:grid-cols-3 items-center justify-between gap-4 ${className}`}
     >
       {/* Left: Items info + Shadcn dropdown */}
-      <div className="flex items-center justify-center flex-col lg:flex-row lg:justify-start gap-4">
-        <div className="text-sm text-gray-600 dark:text-gray-400 flex justify-center sm:justify-start gap-1">
-          Showing{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {startItem}
-          </span>{" "}
-          to{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {endItem}
-          </span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {totalItems}
-          </span>{" "}
-          items
-        </div>
+      <div className="text-sm text-[#5E5F79] dark:text-gray-400 flex justify-center lg:justify-start gap-1">
+        Showing{" "}
+        <span className="font-medium text-[#5E5F79] dark:text-white">
+          {startItem}
+        </span>{" "}
+        to{" "}
+        <span className="font-medium text-[#5E5F79] dark:text-white">
+          {endItem}
+        </span>{" "}
+        of{" "}
+        <span className="font-medium text-[#5E5F79] dark:text-white">
+          {totalItems}
+        </span>{" "}
+        items
+      </div>
 
-        {/* Shadcn Select for items per page */}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span className="whitespace-nowrap">Show</span>
-          <Select
-            value={String(itemsPerPage)}
-            onValueChange={handleItemsPerPageChange}
-          >
-            <SelectTrigger className="w-20 h-9">
-              <SelectValue placeholder={itemsPerPage} />
-            </SelectTrigger>
-            <SelectContent>
-              {itemsPerPageOptions.map((option) => (
-                <SelectItem className="cursor-pointer hover:bg-gray-50!" key={option} value={String(option)}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Shadcn Select for items per page */}
+      <div className="flex border w-fit mx-auto rounded-lg items-center justify-center text-sm font-medium text-[#5E5F79]">
+        <span className="whitespace-nowrap px-4">Per page</span>
+        <div className="h-8 border-l"></div>
+        <Select
+          value={String(itemsPerPage)}
+          onValueChange={handleItemsPerPageChange}
+        >
+          <SelectTrigger className="w-20 h-8">
+            <SelectValue placeholder={itemsPerPage} />
+          </SelectTrigger>
+          <SelectContent className="">
+            {itemsPerPageOptions.map((option) => (
+              <SelectItem
+                className="cursor-pointer hover:bg-gray-50!"
+                key={option}
+                value={String(option)}
+              >
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Right: Pagination buttons */}
@@ -144,7 +147,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => handlePageChange(1)}
           disabled={currentPage === 1}
-          className="h-9 w-9 p-0 flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+          className="h-8 w-8 p-0 flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           aria-label="First page"
         >
           <ChevronsLeft className="w-4 h-4" />
@@ -153,7 +156,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="h-9 w-9 p-0 hidden md:flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+          className="h-8 w-8 p-0 hidden md:flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           aria-label="Previous page"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -165,7 +168,7 @@ const Pagination: React.FC<PaginationProps> = ({
               key={page}
               onClick={() => handlePageChange(page)}
               className={`
-                h-9 min-w-9 px-2
+                h-8 min-w-8 px-2
                 ${index !== 0 ? "border-l border-gray-300" : ""}
                 ${
                   currentPage === page
@@ -183,7 +186,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="h-9 w-9 p-0 hidden md:flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+          className="h-8 w-8 p-0 hidden md:flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           aria-label="Next page"
         >
           <ChevronRight className="w-4 h-4" />
@@ -192,7 +195,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => handlePageChange(totalPages)}
           disabled={currentPage === totalPages}
-          className="h-9 w-9 p-0 flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+          className="h-8 w-8 p-0 flex justify-center items-center border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
           aria-label="Last page"
         >
           <ChevronsRight className="w-4 h-4" />
