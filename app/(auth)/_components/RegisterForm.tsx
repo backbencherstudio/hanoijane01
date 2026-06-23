@@ -42,7 +42,7 @@ const RegisterForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
   };
 
   return (
-    <div className="w-full md:w-120 lg:w-150 xl:w-183.25 max-h-[90vh] overflow-y-auto pb-30 lg:pb-4">
+    <div className="w-full md:w-120 lg:w-150 xl:w-183.25 lg:pb-4">
       <div className="text-center">
         <h1 className="text-[32px] font-semibold text-primary">
           Create an Account

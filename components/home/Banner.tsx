@@ -19,18 +19,18 @@ const Banner = () => {
           className="absolute inset-0 rounded-[32px]"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 40%, transparent 70%)",
+              "radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%, transparent 100%)",
           }}
         />
 
         {/* Content */}
         <div className="relative md:max-w-4/5 lg:max-w-3/5 xl:max-w-195 mx-auto z-10 text-white px-4 text-center flex-1 flex flex-col justify-center items-center h-full">
-          <p className="text-[10px] md:text-base xl:text-lg font-bold mb-4 lg:mb-6">
-            ITBA Expo 2027 · Supported by The Irish Field
-          </p>
-          <h1 className="text-2xl md:text-4xl lg:text-5xl xl:text-[56px] font-bold mb-4">
-            Secure Your Exhibition Stand for Industry Expo
+          <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-[72px] font-bold mb-4 [paint-order:stroke_fill] [-webkit-text-stroke:8px_#005697]">
+            ITBA Expo 2027{" "}
           </h1>
+          <p className="text-2xl lg:text-4xl xl:text-[40px] mb-4">
+            Supported by The Irish Field
+          </p>
           <p className="text-xs lg:text-lg xl:text-xl mb-5 lg:mb-10">
             Browse available exhibition stands, select your preferred location,
             complete bookings online, and manage everything from one platform.

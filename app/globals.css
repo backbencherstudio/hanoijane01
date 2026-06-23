@@ -68,7 +68,7 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: #5E5F79;
+  --accent: #5e5f79;
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
@@ -145,4 +145,10 @@
 }
 .padding-default {
   @apply py-15 lg:py-20 xl:py-25;
+}
+.padding-default-top {
+  @apply pt-15 lg:pt-20 xl:pt-25;
+}
+.padding-default-bottom {
+  @apply pb-15 lg:pb-20 xl:pb-25;
 }

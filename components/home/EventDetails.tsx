@@ -4,15 +4,13 @@ import { FiGrid } from "react-icons/fi";
 const eventCards = [
   {
     icon: CalendarDays,
-    title: "March 14–17",
+    title: "Jan 8-9 2027",
     subtitle: "Event Date",
-    description: "2027",
   },
   {
     icon: MapPin,
-    title: "Dubai WTC",
+    title: "Goffs, Kildare",
     subtitle: "Venue",
-    description: "World Trade Centre",
   },
   {
     // icon: Squares,
@@ -63,7 +61,7 @@ export default function EventDetails() {
                 className="relative rounded-xl border border-primary bg-white py-5 text-center shadow-sm flex flex-col justify-center items-center"
               >
                 {/* Icon */}
-                <div className=" top-0 flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
+                <div className=" top-0 flex h-12 w-12 items-center justify-center rounded-xl bg-primary mb-4">
                   <Icon className="h-5.5 w-5.5 text-white" />
                 </div>
 
@@ -71,11 +69,7 @@ export default function EventDetails() {
                   {item.title}
                 </h3>
 
-                <p className="mt-2 text-accent">{item.subtitle}</p>
-
-                <p className="mt-2 text-sm text-[#94A3B8]">
-                  {item.description}
-                </p>
+                <p className="mt-1 text-accent">{item.subtitle}</p>
               </div>
             );
           })}

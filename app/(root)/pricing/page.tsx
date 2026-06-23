@@ -2,6 +2,7 @@ import { standPackages } from "@/data/standPackages";
 import PriceCard from "./_components/PriceCard";
 import OptionalExtras from "./_components/OptionalExtras";
 import SecurePaymentOptions from "./_components/SecurePaymentOptions";
+import AddOnContactCTA from "./_components/AddOnContactCTA";
 
 const PricingPage = () => {
   return (
@@ -51,9 +52,10 @@ const PricingPage = () => {
             ))}
           </div>
         </div>
+      <AddOnContactCTA/>
       </section>
       {/* Optional Extras section*/}
-      <OptionalExtras />
+      {/* <OptionalExtras /> */}
       <SecurePaymentOptions/>
     </div>
   );

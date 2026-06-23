@@ -1,7 +1,9 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Info, Plus } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+import BookingCancelModal from "./_components/BookingCancelModal";
 
 export const standBookings = [
   {
@@ -32,6 +34,7 @@ export const standBookings = [
 ];
 
 const BookingHistoryPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="bg-white p-4 rounded-xl">
       <div>
@@ -111,10 +114,18 @@ const BookingHistoryPage = () => {
               </div>
               {/* action button */}
               <div className="flex flex-col-reverse lg:flex-row gap-4 w-full justify-between px-4 pb-6 ">
-                <Button variant="outline" className="h-10 px-6 ">
+                <Button
+                  onClick={() => setIsOpen(true)}
+                  variant="outline"
+                  className="h-10 px-6 "
+                >
                   Booking Cancel
                 </Button>
-                <ButtonGroup className="h-10 px-10" fullWidth={true} roundButtonSize="size-10">
+                <ButtonGroup
+                  className="h-10 px-10"
+                  fullWidth={true}
+                  roundButtonSize="size-10"
+                >
                   View Map
                 </ButtonGroup>
               </div>
@@ -122,6 +133,16 @@ const BookingHistoryPage = () => {
           </div>
         ))}
       </div>
+      <BookingCancelModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        defaultStand="A05"
+        defaultStatus="Booked"
+        onSubmit={(data) => {
+          console.log("Cancellation data:", data);
+          // Handle cancellation
+        }}
+      />
     </div>
   );
 };
