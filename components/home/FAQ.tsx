@@ -30,16 +30,18 @@ const FAQ = () => {
               </p>
             </div>
             {/* cta button */}
-            <ButtonGroup className="mt-8 px-6 hidden lg:flex">
-              View More FAQ
-            </ButtonGroup>
+            <div className="hidden lg:flex justify-start ">
+              <ButtonGroup pathName="/faq" className="mt-8 px-6">
+                View More FAQ
+              </ButtonGroup>
+            </div>
           </div>
 
           {/* content - right side */}
           <div className="col-span-full lg:col-span-3">
             <FAQAccordion faqData={faqs} />
             <div className="w-full flex justify-center items-center">
-              <ButtonGroup className="mt-12 px-6 lg:hidden">
+              <ButtonGroup pathName="/faq" className="mt-12 px-6 lg:hidden">
                 View More FAQ
               </ButtonGroup>
             </div>

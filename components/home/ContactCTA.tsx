@@ -26,7 +26,7 @@ const ContactCTA = () => {
         </div>
         {/* cta button */}
         <div className="flex justify-center items-center w-full">
-          <ButtonGroup className="bg-white text-primary mt-12 px-6 hover:bg-gray-100">
+          <ButtonGroup pathName="/contact" className="bg-white text-primary mt-12 px-6 hover:bg-gray-100">
             {" "}
             Contact Organizer
           </ButtonGroup>

@@ -69,7 +69,7 @@ const Navbar = () => {
           >
             Sign In
           </Button>
-          <ButtonGroup>Book a Stand</ButtonGroup>
+          <ButtonGroup fullWidth={false} pathName="/exhibition-map">Book a Stand</ButtonGroup>
           <div className="hidden md:block">
             <ProfileDropdown user={user} />
           </div>

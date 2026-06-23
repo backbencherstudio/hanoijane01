@@ -31,7 +31,7 @@ const ReusableSuccessCard = ({
         <Button onClick={() => router.push("/")} variant="outline" className="px-8">
           Go To Home
         </Button>
-        <ButtonGroup onClick={() => router.push("/")} className="px-8">Dashboard</ButtonGroup>
+        <ButtonGroup onClick={() => router.push("/booking-history")} className="px-8">Booking History</ButtonGroup>
       </div>
     </div>
   );

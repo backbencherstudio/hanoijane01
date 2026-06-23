@@ -41,7 +41,7 @@ const ButtonGroup = ({
   const mainButton = (
     <Button
       variant={variant}
-      className={`${className} ${fullWidth ? "w-full" : ""}`}
+      className={`${className} ${fullWidth ? "w-full" : "w-fit"}`}
       type={type}
     >
       {children}
@@ -66,7 +66,7 @@ const ButtonGroup = ({
   // If it's a link, wrap both buttons inside a single Link
   if (isLink) {
     return (
-      <div className="flex w-full justify-center items-center">
+      <div className="flex justify-center items-center">
         <div className={fullWidth ? "flex-1" : ""}>
           <Link href={pathName}>{mainButton}</Link>
         </div>

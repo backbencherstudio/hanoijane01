@@ -34,7 +34,7 @@ const InteractiveFloorPlan = () => {
         />
         {/* cta button */}
         <div className="w-full flex justify-center items-center">
-          <ButtonGroup className="px-6 mt-12 bg-white text-primary hover:bg-gray-100">
+          <ButtonGroup pathName="/exhibition-map" className="px-6 mt-12 bg-white text-primary hover:bg-gray-100">
             Explore Full Floor Map
           </ButtonGroup>
         </div>
