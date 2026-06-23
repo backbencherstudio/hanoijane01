@@ -9,8 +9,8 @@ import PaymentForm from "./PaymentForm";
 
 const steps = [
   { id: 1, title: "Booking Info" },
-  { id: 2, title: "Adds On" },
-  { id: 3, title: "Payment" },
+  // { id: 2, title: "Adds On" },
+  { id: 2, title: "Payment" },
 ];
 
 export default function BookingContent() {
@@ -96,8 +96,8 @@ export default function BookingContent() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12">
           <div className="col-span-full lg:col-span-2">
             {currentStep === 1 && <BookingInfo nextStep={nextStep} />}
-            {currentStep === 2 && <AddOnsForm nextStep={nextStep} prevStep={prevStep} />}
-            {currentStep === 3 && <PaymentForm prevStep={prevStep} />}
+            {currentStep === 2 && <PaymentForm prevStep={prevStep} />}
+            {/* {currentStep === 3 && <AddOnsForm nextStep={nextStep} prevStep={prevStep} />} */}
           </div>
           <div className="border">
             <BookingInfoCard />
