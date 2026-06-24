@@ -4,26 +4,17 @@ import { useState } from "react";
 import Navbar from "./_components/Navbar";
 import Sidebar from "./_components/Sidebar";
 
-const DashboardLayout = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex bg-[#f9fafb]">
-      <Sidebar
-        isOpen={sidebarOpen}
-        setIsOpen={setSidebarOpen}
-      />
+    <div className="h-screen overflow-hidden bg-[#f9fafb]">
+      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
-      <div className="flex-1 min-w-0">
+      <div className="lg:ml-68 h-screen flex flex-col">
         <Navbar setIsOpen={setSidebarOpen} />
 
-        <main className="p-4 md:p-6">
-          {children}
-        </main>
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
       </div>
     </div>
   );

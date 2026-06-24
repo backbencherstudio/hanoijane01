@@ -8,7 +8,7 @@ interface FormData {
   email: string;
   password: string;
 }
-const LoginForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
+const LoginForm = () => {
   const [show, setShow] = useState(false);
   const {
     register,
@@ -23,7 +23,7 @@ const LoginForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white p-6 rounded-2xl md:w-118">
       <div className="text-center">
         <h1 className="text-3xl font-semibold text-primary">Welcome Back</h1>
         <p className="text-accent lg:text-lg max-w-87.5 mt-3 mx-auto">
@@ -98,9 +98,20 @@ const LoginForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
             )}
           </div>
         </div>
+        <div className="mt-5 flex justify-between items-center">
+          <div className="flex items-center gap-2 text-xs font-bold">
+            <input type="checkbox" />
+            <p>Keep me logged in</p>
+          </div>
+          <p className="text-sm text-blue-600 font-bold">Forgot password?</p>
+        </div>
 
         <div className="flex justify-center mt-8">
-          <ButtonGroup type="submit" className="px-6">
+          <ButtonGroup
+            type="submit"
+            className="px-6 w-full flex-1"
+            fullWidth={true}
+          >
             Sign In
           </ButtonGroup>
         </div>
@@ -108,10 +119,7 @@ const LoginForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
 
       <p className="text-accent mt-6 text-center">
         Don&apos;t have an account?{" "}
-        <button
-          onClick={() => pageShow("register")}
-          className="text-primary font-medium hover:underline cursor-pointer"
-        >
+        <button className="text-primary font-medium hover:underline cursor-pointer">
           Sign Up
         </button>
       </p>

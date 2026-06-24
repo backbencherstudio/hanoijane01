@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { PanelLeftOpen } from "lucide-react";
 
 type NavbarProps = {
   setIsOpen: React.Dispatch<
@@ -10,12 +10,12 @@ type NavbarProps = {
 
 const Navbar = ({ setIsOpen }: NavbarProps) => {
   return (
-    <div className="h-18 border-b border-gray-300 px-4 flex items-center justify-between">
+    <div className="h-18 border-b border-gray-300 px-4 lg:px-6 flex items-center justify-between">
       <button
         onClick={() => setIsOpen(true)}
         className="lg:hidden"
       >
-        <Menu className="size-6" />
+        <PanelLeftOpen className="size-6" />
       </button>
 
       <h2 className="font-medium">

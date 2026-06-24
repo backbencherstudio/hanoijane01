@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
-import { BsTwitterX } from "react-icons/bs";
 import { TbBrandFacebook } from "react-icons/tb";
 import { FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";

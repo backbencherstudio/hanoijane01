@@ -2,8 +2,15 @@
 import StateCard2 from "@/components/dashboard/StateCard2";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import StandFilters from "./_components/StandFilters";
+import {
+  StandManagement,
+  standManagementData,
+} from "@/data/dashboard/standManagementData";
+import CustomTable from "@/components/ui/Table";
+import { GoDotFill } from "react-icons/go";
+import { Column } from "@/types/table";
 
 const stateData = [
   { title: "standard stand", value: 40 },
@@ -11,7 +18,30 @@ const stateData = [
   { title: "Outdoor Stand", value: 12 },
 ];
 
-const AllStandPage = () => {
+const StandManagementPage = () => {
+  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
+
+  const startIndex = (filters.currentPage - 1) * filters.perPageItem;
+  const endIndex = startIndex + filters.perPageItem;
+  const currentData = standManagementData.slice(startIndex, endIndex);
+  const totalItems = standManagementData.length;
+  const totalPages = Math.ceil(totalItems / filters.perPageItem);
+
+  const pagination = {
+    currentPage: filters.currentPage,
+    totalPages,
+    totalItems,
+    itemsPerPage: filters.perPageItem,
+  };
+
+  const handlePageChange = useCallback((page: number) => {
+    setFilters((prev) => ({ ...prev, currentPage: page }));
+  }, []);
+
+  const handleItemsPerPageChange = (newPerPage: number) => {
+    setFilters({ currentPage: 1, perPageItem: newPerPage });
+  };
+
   // Filter states
   const [typeFilter, setTypeFilter] = useState("All types");
   const [blockFilter, setBlockFilter] = useState("All Block");
@@ -35,6 +65,83 @@ const AllStandPage = () => {
     });
   }, [typeFilter, blockFilter, statusFilter]);
 
+  // table column
+  const columns: Column<StandManagement>[] = [
+    {
+      header: "Booking ID",
+      headerClassName: "text-left",
+      accessor: "bookingId",
+      cellClassName: "px-3 py-5 font-medium",
+    },
+    {
+      header: "Stand No",
+      accessor: "standNo",
+      cellClassName: "px-3 py-5 text-center",
+    },
+    {
+      header: "Block",
+      accessor: "block",
+      cellClassName: "px-3 py-5 text-center",
+    },
+    {
+      header: "Stand Type",
+      accessor: "standType",
+      render: (value) => {
+        const type = value as string;
+        const colorMap: Record<string, string> = {
+          Standard: "bg-[#d3e0fb] text-blue-700 border border-[#BED1F9]",
+          Double: "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          Outdoor: "bg-[#FBF5EB] text-[#D79930] border border-[#F3E1C1]",
+        };
+        return (
+          <span
+            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[type] || ""}`}
+          >
+            {type}
+          </span>
+        );
+      },
+      cellClassName: "px-3 py-5 text-center",
+    },
+    {
+      header: "Price ($)",
+      accessor: "price",
+      render: (value) => `$${value as number}`,
+      cellClassName: "px-3 py-5 font-semibold text-center",
+    },
+    {
+      header: "Status",
+      accessor: "status",
+      render: (value) => {
+        const status = value as string;
+        const colorMap: Record<string, string> = {
+          Available: "bg-[#E9E9EA] border border-[#D4DAE3] text-[#777980]",
+          Booked: "bg-[#F6F1E9] border border-[#E6C58C] text-[#D79930]",
+          Reserved: "bg-[#F9EFEA] border border-[#EDCEBF] text-[#C25B29]",
+          Cancelled: "bg-[#FDECEE] border border-[#F9C5CA] text-[#EB3D4D]",
+        };
+        return (
+          <span
+            className={`px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 w-fit ${colorMap[status] || ""}`}
+          >
+            <GoDotFill className="size-3" />
+            {status}
+          </span>
+        );
+      },
+      cellClassName: "px-3 py-5 text-center",
+    },
+    {
+      header: "Size",
+      accessor: "size",
+      cellClassName: "px-3 py-5 text-center",
+    },
+    {
+      header: "Exhibitor",
+      accessor: "exhibitor",
+      cellClassName: "px-3 py-5 text-center whitespace-nowrap",
+    },
+  ];
   return (
     <div>
       {/* heading */}
@@ -66,7 +173,7 @@ const AllStandPage = () => {
 
       {/* content or data table */}
       <div className="bg-white rounded-2xl px-5 py-4">
-        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center gap-4">
+        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center gap-4 mb-4">
           <p className="text-text-primary text-lg font-semibold">
             All Stand List
           </p>
@@ -79,9 +186,21 @@ const AllStandPage = () => {
             onStatusChange={setStatusFilter}
           />
         </div>
+        {/* table */}
+        <CustomTable
+          data={currentData}
+          columns={columns}
+          showIndex={false}
+          indexLabel="SN"
+          isLoading={false}
+          emptyMessage="No transactions found"
+          pagination={pagination}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
       </div>
     </div>
   );
 };
 
-export default AllStandPage;
+export default StandManagementPage;

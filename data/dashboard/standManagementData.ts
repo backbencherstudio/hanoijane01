@@ -1,0 +1,133 @@
+export interface StandManagement {
+  bookingId: string;
+  standNo: string;
+  block: string;
+  standType: "Standard" | "Double" | "Outdoor";
+  price: number;
+  status: "Available" | "Booked" | "Reserved" | "Cancelled";
+  size: string;
+  exhibitor: string;
+}
+
+export const standManagementData: StandManagement[] = [
+  {
+    bookingId: "BK-1042",
+    standNo: "A01",
+    block: "A",
+    standType: "Standard",
+    price: 200,
+    status: "Available",
+    size: "6×3m",
+    exhibitor: "-",
+  },
+  {
+    bookingId: "BK-1043",
+    standNo: "A02",
+    block: "A",
+    standType: "Standard",
+    price: 200,
+    status: "Booked",
+    size: "6×3m",
+    exhibitor: "Acme Corp Inc.",
+  },
+  {
+    bookingId: "BK-1044",
+    standNo: "A03",
+    block: "A",
+    standType: "Double",
+    price: 350,
+    status: "Reserved",
+    size: "6×3m",
+    exhibitor: "Global Tech Ltd.",
+  },
+  {
+    bookingId: "BK-1045",
+    standNo: "A04",
+    block: "A",
+    standType: "Outdoor",
+    price: 300,
+    status: "Available",
+    size: "6×3m",
+    exhibitor: "-",
+  },
+  {
+    bookingId: "BK-1046",
+    standNo: "A05",
+    block: "A",
+    standType: "Standard",
+    price: 200,
+    status: "Cancelled",
+    size: "6×3m",
+    exhibitor: "Acme Corp Inc.",
+  },
+  {
+    bookingId: "BK-1047",
+    standNo: "A06",
+    block: "A",
+    standType: "Double",
+    price: 350,
+    status: "Available",
+    size: "6×3m",
+    exhibitor: "-",
+  },
+  {
+    bookingId: "BK-1048",
+    standNo: "A07",
+    block: "A",
+    standType: "Standard",
+    price: 200,
+    status: "Available",
+    size: "6×3m",
+    exhibitor: "-",
+  },
+  {
+    bookingId: "BK-1049",
+    standNo: "A08",
+    block: "A",
+    standType: "Standard",
+    price: 200,
+    status: "Cancelled",
+    size: "6×3m",
+    exhibitor: "Future Innovations",
+  },
+  {
+    bookingId: "BK-1050",
+    standNo: "B01",
+    block: "B",
+    standType: "Outdoor",
+    price: 300,
+    status: "Booked",
+    size: "6×3m",
+    exhibitor: "Visionary Group",
+  },
+  {
+    bookingId: "BK-1051",
+    standNo: "B02",
+    block: "B",
+    standType: "Double",
+    price: 350,
+    status: "Reserved",
+    size: "6×3m",
+    exhibitor: "NextGen Solutions",
+  },
+  {
+    bookingId: "BK-1052",
+    standNo: "B03",
+    block: "B",
+    standType: "Standard",
+    price: 200,
+    status: "Available",
+    size: "6×3m",
+    exhibitor: "-",
+  },
+  {
+    bookingId: "BK-1053",
+    standNo: "B04",
+    block: "B",
+    standType: "Outdoor",
+    price: 300,
+    status: "Booked",
+    size: "6×3m",
+    exhibitor: "Smart Industries",
+  },
+];

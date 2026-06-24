@@ -34,12 +34,14 @@ const Navbar = () => {
     <section className="bg-[#fbfbfd]">
       <div className="container flex justify-between items-center h-20 xl:h-24">
         <div>
-          <Image
-            src="/logo.webp"
-            alt="ITBA EXPO The Next 100"
-            width={68}
-            height={56}
-          />
+          <Link href="/">
+            <Image
+              src="/logo.webp"
+              alt="ITBA EXPO The Next 100"
+              width={68}
+              height={56}
+            />
+          </Link>
         </div>
 
         <ul className="hidden xl:flex gap-8 items-center font-medium text-lg">
@@ -69,7 +71,9 @@ const Navbar = () => {
           >
             Sign In
           </Button>
-          <ButtonGroup fullWidth={false} pathName="/exhibition-map">Book a Stand</ButtonGroup>
+          <ButtonGroup fullWidth={false} pathName="/exhibition-map">
+            Book a Stand
+          </ButtonGroup>
           <div className="hidden md:block">
             <ProfileDropdown user={user} />
           </div>

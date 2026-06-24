@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, FileText, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
 type MenuItem = {
   title: string;
@@ -83,9 +84,28 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     `}
       />
       <aside
-        className={`fixed lg:static top-0 left-0 h-screen w-68 bg-[#114263] text-white z-50 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+        className={`
+    fixed top-0 left-0
+    h-screen w-68
+    bg-[#114263]
+    text-white
+    z-50
+    transition-transform duration-300
+    ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+  `}
       >
-        <div className="h-18 border-b border-gray-500" />
+        <div className="h-18 border-b border-gray-500 flex justify-between px-2.5 items-center">
+          <div>
+            <Link href="/dashboard">
+              <Image
+                src="/logo.webp"
+                alt="ITBA EXPO The Next 100"
+                width={58}
+                height={48}
+              />
+            </Link>
+          </div>
+        </div>
 
         <nav className="space-y-2 p-2.5 text-sm font-medium">
           {menuItems.map((item) => {

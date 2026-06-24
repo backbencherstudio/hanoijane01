@@ -32,7 +32,7 @@ const ButtonGroup = ({
   variant = "default",
   icon,
   type,
-  roundButtonSize = "size-13"
+  roundButtonSize = "size-13",
 }: ButtonGroupProps) => {
   // Determine if we should use a Link (if pathName is provided)
   const isLink = !!pathName;
@@ -66,7 +66,9 @@ const ButtonGroup = ({
   // If it's a link, wrap both buttons inside a single Link
   if (isLink) {
     return (
-      <div className="flex justify-center items-center">
+      <div
+        className={`flex justify-center items-center ${fullWidth ? "w-full" : ""}`}
+      >
         <div className={fullWidth ? "flex-1" : ""}>
           <Link href={pathName}>{mainButton}</Link>
         </div>
@@ -79,7 +81,9 @@ const ButtonGroup = ({
 
   // Otherwise, use button elements with onClick
   return (
-    <div className="flex justify-center items-center">
+    <div
+      className={`flex justify-center items-center ${fullWidth ? "w-full" : ""}`}
+    >
       <div onClick={onClick} className={fullWidth ? "flex-1" : ""}>
         {mainButton}
       </div>
