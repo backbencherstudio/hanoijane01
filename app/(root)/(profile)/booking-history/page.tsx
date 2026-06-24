@@ -4,6 +4,7 @@ import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Info, Plus } from "lucide-react";
 import React, { useState } from "react";
 import BookingCancelModal from "./_components/BookingCancelModal";
+import BookingCancelSuccessModal from "./_components/BookingCancelSuccessModal";
 
 export const standBookings = [
   {
@@ -35,6 +36,7 @@ export const standBookings = [
 
 const BookingHistoryPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
   return (
     <div className="bg-white p-4 rounded-xl">
       <div>
@@ -141,7 +143,12 @@ const BookingHistoryPage = () => {
         onSubmit={(data) => {
           console.log("Cancellation data:", data);
           // Handle cancellation
+          setCancelOpen(true);
         }}
+      />
+      <BookingCancelSuccessModal
+        isOpen={cancelOpen}
+        onClose={() => setCancelOpen(false)}
       />
     </div>
   );

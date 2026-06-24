@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface FormData {
   email: string;
@@ -105,11 +106,10 @@ const LoginForm = () => {
 
         <div className="mt-5 flex justify-between items-center">
           <div className="flex items-center gap-2 text-xs font-bold">
-            <input
-              type="checkbox"
+            <Checkbox
               id="keepLoggedIn"
               checked={keepLoggedIn}
-              onChange={(e) => setKeepLoggedIn(e.target.checked)}
+              onCheckedChange={(checked) => setKeepLoggedIn(checked === true)}
               className="w-4 h-4 accent-primary cursor-pointer"
             />
             <label
@@ -139,7 +139,7 @@ const LoginForm = () => {
       </form>
 
       <p className="text-accent font-medium mt-6 text-center">
-        Not a member? 
+        Not a member?
         <Link
           href="sign-up"
           className="text-primary font-medium hover:underline cursor-pointer ml-1"
