@@ -15,13 +15,13 @@ const AuthModal = ({ open, setOpen, btnText = "Confirm" }: ModalProps) => {
   const [show, setShow] = useState("login");
   return (
     <>
-      <Modal btnText={btnText} isOpen={open} onClose={() => setOpen(false)}>
+      {/* <Modal btnText={btnText} isOpen={open} onClose={() => setOpen(false)}>
         {show === "login" ? (
           <LoginForm pageShow={setShow} />
         ) : (
           <RegisterForm pageShow={setShow} />
         )}
-      </Modal>
+      </Modal> */}
     </>
   );
 };

@@ -64,13 +64,11 @@ const Navbar = () => {
         </ul>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <Button
-            onClick={() => setIsOpen(true)}
-            variant="outline"
-            className="px-10 hidden md:block"
-          >
-            Sign In
-          </Button>
+          <Link href="/sign-in">
+            <Button variant="outline" className="px-10 hidden md:block">
+              Sign In
+            </Button>
+          </Link>
           <ButtonGroup fullWidth={false} pathName="/exhibition-map">
             Book a Stand
           </ButtonGroup>

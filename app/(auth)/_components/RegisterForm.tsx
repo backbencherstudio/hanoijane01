@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 // Form data interface
 interface FormData {
@@ -14,7 +15,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-const RegisterForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
+const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -42,7 +43,7 @@ const RegisterForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
   };
 
   return (
-    <div className="w-full md:w-120 lg:w-150 xl:w-183.25 lg:pb-4">
+    <div className="w-full bg-white p-6 rounded-2xl md:w-120 lg:w-150 xl:w-183.25 lg:pb-4 b">
       <div className="text-center">
         <h1 className="text-[32px] font-semibold text-primary">
           Create an Account
@@ -244,14 +245,14 @@ const RegisterForm = ({ pageShow }: { pageShow: (page: string) => void }) => {
           </ButtonGroup>
         </div>
       </form>
-      <p className="text-accent mt-6 text-center">
+      <p className="text-accent font-medium mt-6 text-center">
         Already have an account?{" "}
-        <button
-          onClick={() => pageShow("login")}
+        <Link
+          href="/sign-in"
           className="text-primary font-medium hover:underline cursor-pointer"
         >
           Sign In
-        </button>
+        </Link>
       </p>
     </div>
   );

@@ -3,13 +3,17 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 interface FormData {
   email: string;
   password: string;
 }
+
 const LoginForm = () => {
   const [show, setShow] = useState(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -19,7 +23,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: FormData) => {
-    console.log("Login data:", data);
+    console.log("Login data:", data, "Keep logged in:", keepLoggedIn);
   };
 
   return (
@@ -82,12 +86,12 @@ const LoginForm = () => {
               {show ? (
                 <EyeOff
                   onClick={() => setShow(false)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 cursor-pointer"
                 />
               ) : (
                 <Eye
                   onClick={() => setShow(true)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 cursor-pointer"
                 />
               )}
             </div>
@@ -98,12 +102,29 @@ const LoginForm = () => {
             )}
           </div>
         </div>
+
         <div className="mt-5 flex justify-between items-center">
           <div className="flex items-center gap-2 text-xs font-bold">
-            <input type="checkbox" />
-            <p>Keep me logged in</p>
+            <input
+              type="checkbox"
+              id="keepLoggedIn"
+              checked={keepLoggedIn}
+              onChange={(e) => setKeepLoggedIn(e.target.checked)}
+              className="w-4 h-4 accent-primary cursor-pointer"
+            />
+            <label
+              htmlFor="keepLoggedIn"
+              className="cursor-pointer select-none"
+            >
+              Keep me logged in
+            </label>
           </div>
-          <p className="text-sm text-blue-600 font-bold">Forgot password?</p>
+          <Link
+            href="/sign-in"
+            className="text-sm text-blue-600 font-bold hover:underline"
+          >
+            Forgot password?
+          </Link>
         </div>
 
         <div className="flex justify-center mt-8">
@@ -117,11 +138,14 @@ const LoginForm = () => {
         </div>
       </form>
 
-      <p className="text-accent mt-6 text-center">
-        Don&apos;t have an account?{" "}
-        <button className="text-primary font-medium hover:underline cursor-pointer">
+      <p className="text-accent font-medium mt-6 text-center">
+        Not a member? 
+        <Link
+          href="sign-up"
+          className="text-primary font-medium hover:underline cursor-pointer ml-1"
+        >
           Sign Up
-        </button>
+        </Link>
       </p>
     </div>
   );
