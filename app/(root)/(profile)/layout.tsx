@@ -1,9 +1,10 @@
 "use client";
+import LogOutModal from "@/app/(auth)/_components/LogOutModal";
 import { Mail, Phone, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const user: {
   name: string;
@@ -27,6 +28,7 @@ const user: {
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   const links = [
     { label: "Profile", href: "/profile" },
     { label: "Booking History", href: "/booking-history" },
@@ -96,12 +98,16 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
                 </Link>
               );
             })}
-            <li className="text-lg lg:text-xl font-semibold p-6  border-b hover:bg-red-500 hover:text-white cursor-pointer">
+            <li
+              onClick={() => setOpen(true)}
+              className="text-lg lg:text-xl font-semibold p-6  border-b hover:bg-red-500 hover:text-white cursor-pointer"
+            >
               Log Out
             </li>
           </ul>
         </div>
       </div>
+      <LogOutModal isOpen={open} onClose={() => setOpen(false)} />
     </div>
   );
 };
