@@ -30,7 +30,7 @@ const Modal = ({
         <div className="relative w-fit">
           <div
             className={`
-          relative bg-white rounded-xl p-8 min-w-50 mx-4 xl:mx-0 
+          relative bg-white rounded-xl px-4 py-8 lg:p-8 min-w-50 mx-4 xl:mx-0 
           transition-all duration-300 ease-in-out transform max-h-[90vh] overflow-y-auto
           ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}
         `}

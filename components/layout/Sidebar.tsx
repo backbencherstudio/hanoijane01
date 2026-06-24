@@ -19,7 +19,7 @@ const links = [
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
   { label: "Booking History", href: "/booking-history" },
-  { label: "Notifications", href: "/notifications" },
+  // { label: "Notifications", href: "/notifications" },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {

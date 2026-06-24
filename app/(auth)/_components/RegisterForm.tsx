@@ -240,7 +240,7 @@ const RegisterForm = () => {
 
         {/* Submit button */}
         <div className="flex justify-center items-center w-full">
-          <ButtonGroup type="submit" className="px-6">
+          <ButtonGroup fullWidth={true} type="submit" className="px-6">
             Create An Account
           </ButtonGroup>
         </div>

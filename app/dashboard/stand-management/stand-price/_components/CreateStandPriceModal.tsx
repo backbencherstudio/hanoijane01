@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useFieldArray, useForm, Controller } from "react-hook-form";
-import { Plus, Trash2, ChevronsUpDown, Check } from "lucide-react";
+import { Plus, Trash2, ChevronsUpDown, Check, Info } from "lucide-react";
 
 import Modal from "@/components/ui/Modal";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { currencies } from "@/data/dashboard/currencies";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export interface StandPriceFormData {
   title: string;
@@ -79,6 +81,7 @@ const CreateStandPriceModal = ({
   });
 
   const currency = watch("currency");
+  const vatIncluded = watch("vatIncluded");
 
   const handleClose = () => {
     reset();
@@ -105,176 +108,150 @@ const CreateStandPriceModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
-      {/*  Responsive container: full width on mobile, max-width on larger screens */}
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-        {/* Header */}
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-[32px] font-bold text-text-primary">
-            Create New Stand Price
-          </h2>
-        </div>
+      <div>
+        <h1 className="text-2xl md:text-3xl lg:text-[32px] font-bold text-text-primary text-center">
+          Create New Stand Price
+        </h1>
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="mt-8">
+          <div className="bg-[#F9FAFB] p-4 md:py-6 md:px-8">
+            {/* Stand Name */}
+            <div>
+              <label htmlFor="standName" className="font-medium">
+                Stand Name <span className="text-red-600">*</span>
+              </label>
+              <Input
+                type="text"
+                id="standName"
+                placeholder="Standard Stand"
+                className={`mt-2 ${errors.title ? "border-red-500" : ""}`}
+                {...register("title", { required: "Stand name is required" })}
+              />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.title.message}
+                </p>
+              )}
+            </div>
 
-        <form
-          onSubmit={handleSubmit(handleFormSubmit)}
-          className="mt-6 sm:mt-8 space-y-6 sm:space-y-8"
-        >
-          {/* Main Info */}
-          <div className="bg-[#F8F9FB] rounded-xl p-4 sm:p-6 lg:p-8">
-            <div className="space-y-4">
-              {/* Stand Name */}
+            {/* Description */}
+            <div className="mt-3">
+              <label htmlFor="standDescription" className="font-medium">
+                Description <span className="text-red-600">*</span>
+              </label>
+              <Textarea
+                id="standDescription"
+                placeholder="Enter Description"
+                className={`mt-2 ${errors.description ? "border-red-500" : ""}`}
+                {...register("description", {
+                  required: "Description is required",
+                })}
+              />
+              {errors.description && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-3">
+              {/* Currency - Searchable Combobox */}
               <div>
-                <label className="font-medium">
-                  Stand Name <span className="text-red-500">*</span>
+                <label htmlFor="currency" className="font-medium">
+                  Currency <span className="text-red-600">*</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder="Standard Stand"
-                  className={`placeholder:text-[#777980] placeholder:text-sm rounded-lg px-3 h-12 bg-[#F4F5F7] border w-full mt-2 ${
-                    errors.title ? "border-red-500" : "border-gray-200"
-                  }`}
-                  {...register("title", {
-                    required: "Stand name is required",
-                  })}
-                />
-                {errors.title && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.title.message}
-                  </p>
-                )}
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-full justify-between bg-[#F4F5F7] rounded-lg text-text-primary text-sm border border-gray-200 h-12 mt-2 hover:bg-gray-50"
+                    >
+                      <span className="truncate">
+                        {currency
+                          ? currencies.find((c) => c.value === currency)
+                              ?.label || currency
+                          : "Select currency..."}
+                      </span>
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command
+                      filter={(value, search) => {
+                        const item = currencies.find((c) => c.value === value);
+                        if (!item) return 0;
+                        const searchString =
+                          `${item.value} ${item.label}`.toLowerCase();
+                        return searchString.includes(search.toLowerCase())
+                          ? 1
+                          : 0;
+                      }}
+                    >
+                      <CommandInput placeholder="Search currency..." />
+                      <CommandList>
+                        <CommandEmpty>No currency found.</CommandEmpty>
+                        <CommandGroup>
+                          {currencies.map((c) => (
+                            <CommandItem
+                              key={c.value}
+                              value={c.value}
+                              onSelect={(currentValue) => {
+                                setValue("currency", currentValue);
+                                setOpen(false);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  currency === c.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                              {c.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
 
-              {/* Description */}
+              {/* Price */}
               <div>
-                <label className="font-medium">
-                  Description <span className="text-red-500">*</span>
+                <label htmlFor="price" className="font-medium">
+                  Price <span className="text-red-600">*</span>
                 </label>
-                <textarea
-                  rows={4}
-                  placeholder="Enter description"
-                  className={`placeholder:text-[#777980] placeholder:text-sm rounded-lg p-3 bg-[#F4F5F7] border w-full mt-2 resize-none ${
-                    errors.description ? "border-red-500" : "border-gray-200"
-                  }`}
-                  {...register("description", {
-                    required: "Description is required",
+                <Input
+                  type="number"
+                  id="price"
+                  placeholder="Enter price"
+                  className={`mt-2 ${errors.price ? "border-red-500" : ""}`}
+                  {...register("price", {
+                    required: "Price is required",
+                    valueAsNumber: true,
+                    min: { value: 1, message: "Price must be greater than 0" },
                   })}
                 />
-                {errors.description && (
+                {errors.price && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.description.message}
+                    {errors.price.message}
                   </p>
                 )}
-              </div>
-
-              {/* Currency & Price Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Currency */}
-                <div>
-                  <label className="font-medium">
-                    Currency <span className="text-red-500">*</span>
-                  </label>
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-full rounded-lg! text-text-primary hover:bg-[#F4F5F7] justify-between bg-[#F4F5F7] border border-[#E8EAEB]! h-12 mt-2"
-                      >
-                        <span className="truncate">
-                          {currency
-                            ? currencies.find((c) => c.value === currency)
-                                ?.label || currency
-                            : "Select currency..."}
-                        </span>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command
-                        filter={(value, search) => {
-                          const item = currencies.find(
-                            (c) => c.value === value,
-                          );
-                          if (!item) return 0;
-                          const searchString =
-                            `${item.value} ${item.label}`.toLowerCase();
-                          return searchString.includes(search.toLowerCase())
-                            ? 1
-                            : 0;
-                        }}
-                      >
-                        <CommandInput placeholder="Search currency..." />
-                        <CommandList>
-                          <CommandEmpty>No currency found.</CommandEmpty>
-                          <CommandGroup>
-                            {currencies.map((c) => (
-                              <CommandItem
-                                key={c.value}
-                                value={c.value}
-                                onSelect={(currentValue) => {
-                                  setValue("currency", currentValue);
-                                  setOpen(false);
-                                }}
-                                className="cursor-pointer"
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    currency === c.value
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                                {c.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                {/* Price */}
-                <div>
-                  <label className="font-medium">
-                    Price <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="200"
-                    className={`placeholder:text-[#777980] rounded-lg px-3 h-12 bg-[#F4F5F7] border w-full mt-2 ${
-                      errors.price ? "border-red-500" : "border-gray-200"
-                    }`}
-                    {...register("price", {
-                      required: "Price is required",
-                      valueAsNumber: true,
-                      min: {
-                        value: 1,
-                        message: "Price must be greater than 0",
-                      },
-                    })}
-                  />
-                  {errors.price && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.price.message}
-                    </p>
-                  )}
-                </div>
               </div>
             </div>
           </div>
 
-          {/* VAT */}
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-text-primary">
-              VAT Include
-            </h3>
+          {/* VAT Include */}
+          <div className="py-6 flex items-center justify-between">
+            <span className="text-lg font-medium">VAT Include</span>
             <Controller
               control={control}
               name="vatIncluded"
               render={({ field }) => (
                 <Switch
-                  className="cursor-pointer"
                   checked={field.value}
                   onCheckedChange={(checked) => field.onChange(checked)}
                 />
@@ -283,27 +260,21 @@ const CreateStandPriceModal = ({
           </div>
 
           {/* What's Include */}
-          <div className="bg-[#F8F9FB] rounded-xl px-4 md:px-8 py-4 md:py-6">
-            <div className="mb-3">
-              <h3 className="text-lg font-medium text-text-primary">
-                What&apos;s Include
-              </h3>
-              <p className="text-[#4A4C56] mt-2">
-                Select features included in this stand package
-              </p>
-            </div>
+          <div className="bg-[#F9FAFB] p-4 md:py-6 md:px-8">
+            <h4 className="text-lg font-medium text-text-primary flex items-center gap-2">
+              What&apos;s Include <Info size={18} />
+            </h4>
+            <p className="text-[#4A4C56] mt-2">
+              Select features included in this boost package
+            </p>
 
-            <div className="bg-white border rounded-xl p-4 sm:p-6">
+            <div className="mt-2 p-4 md:p-6 bg-white rounded-xl border">
               <div className="space-y-3">
                 {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
-                  >
-                    <input
-                      type="text"
+                  <div key={field.id} className="flex items-center gap-3">
+                    <Input
                       placeholder="Write here"
-                      className="flex-1 rounded-lg border border-gray-200 bg-gray-50 p-3"
+                      className="flex-1"
                       {...register(`includes.${index}.value`)}
                     />
                     {fields.length > 1 && (
@@ -325,28 +296,24 @@ const CreateStandPriceModal = ({
                 type="button"
                 variant="outline"
                 onClick={() => append({ value: "" })}
-                className="mt-4 border-primary text-primary rounded-lg h-10 w-full sm:w-auto"
+                className="rounded-lg h-10 text-sm mt-3"
               >
-                <Plus className="size-4" />
-                Add New
+                <Plus className="size-4" /> Add More
               </Button>
             </div>
           </div>
 
-          {/* Footer Buttons - Responsive stacking */}
-          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4">
+          {/* Footer Buttons */}
+          <div className="flex justify-end gap-4 mt-8">
             <Button
               type="button"
+              className="h-10 text-[#777980]"
               variant="secondary"
               onClick={handleClose}
-              className="h-11 text-[#777980] w-full sm:w-auto"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="px-10 h-11 bg-primary text-white w-full sm:w-auto"
-            >
+            <Button type="submit" className="h-10">
               Create
             </Button>
           </div>

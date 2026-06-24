@@ -105,7 +105,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
             </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             className="cursor-pointer py-3 rounded-none border-b font-medium text-base flex justify-between items-center hover:bg-gray-200!"
             asChild
           >
@@ -116,7 +116,7 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
               </span>
               <ChevronRight size={16} />
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
           <DropdownMenuItem
             onClick={handleLogout}

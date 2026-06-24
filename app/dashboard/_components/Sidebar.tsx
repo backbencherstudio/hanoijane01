@@ -123,7 +123,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                   >
                     <button
                       onClick={() => toggleMenu(item.title)}
-                      className={`w-full flex items-center justify-between rounded-lg px-4 py-3 transition-all duration-200 cursor-pointer
+                      className={`w-full flex items-center justify-between rounded-lg px-4 py-3  transition-all duration-200 cursor-pointer
                     ${
                       parentActive
                         ? "bg-[#3f6781] text-white"
@@ -168,21 +168,31 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 )}
 
                 {/* Children */}
+                {/* Children */}
                 {hasChildren && (
                   <div
                     className={`
-                    grid transition-all duration-300 ease-in-out
-                    ${
-                      openMenus[item.title]
-                        ? "grid-rows-[1fr] opacity-100 mt-3"
-                        : "grid-rows-[0fr] opacity-0"
-                    }
-                  `}
+      grid transition-all duration-300 ease-in-out
+      ${
+        openMenus[item.title]
+          ? "grid-rows-[1fr] opacity-100"
+          : "grid-rows-[0fr] opacity-0"
+      }
+    `}
                   >
                     <div className="overflow-hidden">
-                      <div className="relative ml-5">
+                      <div className="relative ml-5 pt-2">
                         {/* Main vertical line */}
-                        <div className="absolute left-0 top-0 bottom-10 w-px bg-white/70" />
+                        <div
+                          className="
+            absolute
+            left-0
+            -top-2
+            bottom-10
+            w-px
+            bg-white/70
+          "
+                        />
 
                         <div className="space-y-4">
                           {item.children!.map((child) => {
@@ -193,28 +203,25 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                 {/* Curve */}
                                 <div
                                   className="
-                                  absolute
-                                  left-0
-                                  top-1
-                                  w-4
-                                  h-5
-                                  border-l
-                                  border-b
-                                  border-white/70
-                                  rounded-bl-2xl
-                                "
+                    absolute
+                    left-0
+                    top-1
+                    w-4
+                    h-5
+                    border-l
+                    border-b
+                    border-white/70
+                    rounded-bl-2xl
+                  "
                                 />
 
                                 <Link
                                   href={child.href!}
                                   onClick={handleNavigation}
-                                  className={`block rounded-md px-4 py-3 transition-all duration-200
-                                  ${
-                                    active
-                                      ? "bg-white/10 text-white"
-                                      : "hover:bg-white/10"
-                                  }
-                                `}
+                                  className={`
+                    block rounded-md px-4 py-3 transition-all duration-200
+                    ${active ? "bg-white/10 text-white" : "hover:bg-white/10"}
+                  `}
                                 >
                                   {child.title}
                                 </Link>
