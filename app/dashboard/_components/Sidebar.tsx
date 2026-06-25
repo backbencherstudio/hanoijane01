@@ -73,6 +73,27 @@ const menuItems: MenuItem[] = [
     ],
   },
   {
+    title: "Payment Tracking",
+    icon: <LayoutDashboard size={18} />,
+    children: [
+      {
+        title: "Pending Payment",
+        href: "/dashboard/payment-tracking",
+        query: { status: "pending" },
+      },
+      {
+        title: "Paid Payment",
+        href: "/dashboard/payment-tracking",
+        query: { status: "paid" },
+      },
+      {
+        title: "Overdue Payment",
+        href: "/dashboard/payment-tracking",
+        query: { status: "overdue" },
+      },
+    ],
+  },
+  {
     title: "Document Review",
     href: "/document-review",
     icon: <FileText size={18} />,
@@ -87,7 +108,7 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
   const isQueryMatched = (query?: Record<string, string>) => {
     if (!query) return true;
     return Object.entries(query).every(
-      ([key, value]) => searchParams.get(key) === value
+      ([key, value]) => searchParams.get(key) === value,
     );
   };
 
@@ -100,7 +121,7 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
   const isParentActive = (item: MenuItem) => {
     return (
       item.children?.some(
-        (child) => pathname === child.href && isQueryMatched(child.query)
+        (child) => pathname === child.href && isQueryMatched(child.query),
       ) ?? false
     );
   };
@@ -124,7 +145,6 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
       setIsOpen(false);
     }
   };
-  
 
   return (
     <>
@@ -158,88 +178,91 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
             />
           </Link>
         </div>
+        <div className="h-[calc(100vh-72px)] overflow-y-auto">
+          <nav className="space-y-2 p-2.5 text-sm font-medium ">
+            {menuItems.map((item) => {
+              const hasChildren = !!item.children?.length;
+              const parentActive = isParentActive(item);
 
-        <nav className="space-y-2 p-2.5 text-sm font-medium">
-          {menuItems.map((item) => {
-            const hasChildren = !!item.children?.length;
-            const parentActive = isParentActive(item);
-
-            return (
-              <div key={item.title}>
-                {/* Parent Menu */}
-                {hasChildren ? (
-                  <div
-                    className={`rounded-lg transition-all duration-200 ${
-                      parentActive ? "pl-0.5 bg-white" : ""
-                    }`}
-                  >
-                    <button
-                      onClick={() => toggleMenu(item.title)}
-                      className={`w-full flex items-center justify-between rounded-lg px-4 py-3 transition-all duration-200 cursor-pointer
+              return (
+                <div key={item.title}>
+                  {/* Parent Menu */}
+                  {hasChildren ? (
+                    <div
+                      className={`rounded-lg transition-all duration-200 ${
+                        parentActive ? "pl-0.5 bg-white" : ""
+                      }`}
+                    >
+                      <button
+                        onClick={() => toggleMenu(item.title)}
+                        className={`w-full flex items-center justify-between rounded-lg px-4 py-3 transition-all duration-200 cursor-pointer
                         ${
                           parentActive
                             ? "bg-[#3f6781] text-white"
                             : "bg-[#114263] hover:bg-white/10"
                         }
                       `}
+                      >
+                        <span className="flex items-center gap-2">
+                          {item.icon}
+                          {item.title}
+                        </span>
+                        <ChevronDown
+                          size={18}
+                          className={`transition-all duration-300 ease-in-out ${
+                            openMenus[item.title] ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      className={`rounded-lg transition-all duration-200 ${
+                        pathname === item.href ? "pl-0.5 bg-white" : ""
+                      }`}
                     >
-                      <span className="flex items-center gap-2">
-                        {item.icon}
-                        {item.title}
-                      </span>
-                      <ChevronDown
-                        size={18}
-                        className={`transition-all duration-300 ease-in-out ${
-                          openMenus[item.title] ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                  </div>
-                ) : (
-                  <div
-                    className={`rounded-lg transition-all duration-200 ${
-                      pathname === item.href ? "pl-0.5 bg-white" : ""
-                    }`}
-                  >
-                    <Link
-                      href={item.href!}
-                      onClick={handleNavigation}
-                      className={`flex items-center gap-2 rounded-lg px-4 py-3 transition-all duration-200
+                      <Link
+                        href={item.href!}
+                        onClick={handleNavigation}
+                        className={`flex items-center gap-2 rounded-lg px-4 py-3 transition-all duration-200
                         ${
                           pathname === item.href
                             ? "bg-[#3f6781] text-white"
                             : "bg-[#114263] hover:bg-[#3f6781]"
                         }
                       `}
+                      >
+                        {item.icon}
+                        {item.title}
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* Children */}
+                  {hasChildren && (
+                    <div
+                      className={`grid transition-all duration-300 ease-in-out ${
+                        openMenus[item.title]
+                          ? "grid-rows-[1fr] opacity-100"
+                          : "grid-rows-[0fr] opacity-0"
+                      }`}
                     >
-                      {item.icon}
-                      {item.title}
-                    </Link>
-                  </div>
-                )}
+                      <div className="overflow-hidden">
+                        <div className="relative ml-5 pt-4">
+                          <div className="absolute left-0 -top-2 bottom-10 w-px bg-white/70" />
+                          <div className="space-y-4">
+                            {item.children!.map((child) => {
+                              const active =
+                                pathname === child.href &&
+                                isQueryMatched(child.query);
 
-                {/* Children */}
-                {hasChildren && (
-                  <div
-                    className={`grid transition-all duration-300 ease-in-out ${
-                      openMenus[item.title]
-                        ? "grid-rows-[1fr] opacity-100"
-                        : "grid-rows-[0fr] opacity-0"
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <div className="relative ml-5 pt-4">
-                        <div className="absolute left-0 -top-2 bottom-10 w-px bg-white/70" />
-                        <div className="space-y-4">
-                          {item.children!.map((child) => {
-                            const active =
-                              pathname === child.href &&
-                              isQueryMatched(child.query);
-
-                            return (
-                              <div key={child.title} className="relative pl-4">
+                              return (
                                 <div
-                                  className="
+                                  key={child.title}
+                                  className="relative pl-4"
+                                >
+                                  <div
+                                    className="
                                     absolute
                                     left-0
                                     top-1
@@ -250,29 +273,30 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
                                     border-white/70
                                     rounded-bl-2xl
                                   "
-                                />
-                                <Link
-                                  href={buildHref(child.href!, child.query)}
-                                  onClick={handleNavigation}
-                                  className={`
+                                  />
+                                  <Link
+                                    href={buildHref(child.href!, child.query)}
+                                    onClick={handleNavigation}
+                                    className={`
                                     block rounded-md px-4 py-3 transition-all duration-200
                                     ${active ? "bg-white/10 text-white" : "hover:bg-white/10"}
                                   `}
-                                >
-                                  {child.title}
-                                </Link>
-                              </div>
-                            );
-                          })}
+                                  >
+                                    {child.title}
+                                  </Link>
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
+        </div>
       </aside>
     </>
   );
