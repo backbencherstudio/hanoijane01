@@ -34,12 +34,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
     >
       <div className="h-20  flex justify-between pl-4 items-center border-b">
         <div>
-          <Image
-            src="/logo.webp"
-            alt="ITBA EXPO The Next 100"
-            width={68}
-            height={56}
-          />
+          <Link href="/" onClick={() => setIsOpen(false)}>
+            <Image
+              src="/logo.webp"
+              alt="ITBA EXPO The Next 100"
+              width={68}
+              height={56}
+            />
+          </Link>
         </div>
         <Button onClick={() => setIsOpen(!isOpen)} variant="ghost">
           <X className="size-6" />
@@ -65,7 +67,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
             {user?.name ? user?.name : "User"}
           </h3>
           <Link href="/profile">
-            <Button className="px-8"><User className="size-5i"/> My Profile</Button>
+            <Button onClick={() => setIsOpen(false)} className="px-8">
+              <User className="size-5i" /> My Profile
+            </Button>
           </Link>
         </div>
 
@@ -79,6 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
+                    onClick={() => setIsOpen(false)}
                     className={`transition-colors ${
                       isActive ? "text-primary " : ""
                     }`}
