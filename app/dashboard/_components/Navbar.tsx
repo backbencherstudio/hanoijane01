@@ -40,14 +40,14 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
 
       <div>
         <div>
-          <div className="flex items-center gap-2 space-y-1">
+          <div className="flex items-center gap-2 space-y-1 justify-center items-center">
             {user?.image ? (
               <Image
                 src={user.image}
                 alt={user.name}
-                height={48}
-                width={48}
-                className="object-cover overflow-hidden rounded-full size-12 shrink-0"
+                height={32}
+                width={32}
+                className="object-cover overflow-hidden rounded-full size-8 shrink-0"
               />
             ) : (
               <div className="size-12 rounded-full bg-gray-300 text-gray-600 flex justify-center items-center shrink-0">
