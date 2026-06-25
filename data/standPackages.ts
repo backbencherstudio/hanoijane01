@@ -1,5 +1,6 @@
 export const standPackages = [
   {
+    id:"1",
     title: "Expo Marquee",
     description:
       "Perfect for small to mid-sized businesses making their exhibition debut.",
@@ -15,6 +16,7 @@ export const standPackages = [
     ],
   },
   {
+    id:"2",
     title: "Main Goffs Sales Complex",
     description:
       "Perfect for small to mid-sized businesses making their exhibition debut.",
@@ -29,6 +31,7 @@ export const standPackages = [
     ],
   },
   {
+    id:"3",
     title: "Double Corner Stand",
     description:
       "Expansive outdoor space for large exhibits, machinery, and vehicles.",
@@ -43,6 +46,7 @@ export const standPackages = [
     ],
   },
   {
+    id: "4",
     title: "Double Corner Stand",
     description:
       "Expansive outdoor space for large exhibits, machinery, and vehicles.",

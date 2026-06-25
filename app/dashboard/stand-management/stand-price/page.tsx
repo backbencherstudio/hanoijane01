@@ -7,9 +7,17 @@ import PriceCardDashboard from "./_components/PriceCardDashboard";
 import CreateStandPriceModal, {
   StandPriceData,
 } from "./_components/CreateStandPriceModal";
+import EditStandPriceModal from "./_components/EditStandPriceModal";
 
 const StandPriceManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedStandId, setSelectedStandId] = useState<string | null>(null);
+
+  const handleEdit = (id: string) => {
+    setSelectedStandId(id);
+    setIsEditModalOpen(true);
+  };
 
   const handleSubmit = (data: StandPriceData) => {
     console.log("New Stand Price:", data);
@@ -37,8 +45,12 @@ const StandPriceManagementPage = () => {
       {/* content */}
       <div className="mt-9">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mt-12">
-          {standPackages.map((standPackage, idx) => (
-            <PriceCardDashboard standPackage={standPackage} key={idx} />
+          {standPackages.map((standPackage) => (
+            <PriceCardDashboard
+              standPackage={standPackage}
+              key={standPackage.id}
+              onEdit={() => handleEdit(standPackage.id)}
+            />
           ))}
         </div>
       </div>
@@ -47,6 +59,15 @@ const StandPriceManagementPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
+      />
+      <EditStandPriceModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        standId={selectedStandId || ""}
+        onUpdate={(data) => {
+          console.log("Updated data:", data);
+          // Update the standPackages state or refetch
+        }}
       />
     </div>
   );

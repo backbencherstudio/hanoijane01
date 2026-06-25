@@ -1,4 +1,4 @@
-import { ChevronRight, User, Bell, CalendarClock } from "lucide-react";
+import { ChevronRight, User, CalendarClock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { BiSolidDownArrow } from "react-icons/bi";

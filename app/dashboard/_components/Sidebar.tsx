@@ -168,31 +168,14 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 )}
 
                 {/* Children */}
-                {/* Children */}
                 {hasChildren && (
                   <div
-                    className={`
-      grid transition-all duration-300 ease-in-out
-      ${
-        openMenus[item.title]
-          ? "grid-rows-[1fr] opacity-100"
-          : "grid-rows-[0fr] opacity-0"
-      }
-    `}
+                    className={`grid transition-all duration-300 ease-in-out ${openMenus[item.title] ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
                   >
                     <div className="overflow-hidden">
-                      <div className="relative ml-5 pt-2">
+                      <div className="relative ml-5 pt-4">
                         {/* Main vertical line */}
-                        <div
-                          className="
-            absolute
-            left-0
-            -top-2
-            bottom-10
-            w-px
-            bg-white/70
-          "
-                        />
+                        <div className="absolute left-0 -top-2 bottom-10 w-px bg-white/70" />
 
                         <div className="space-y-4">
                           {item.children!.map((child) => {
