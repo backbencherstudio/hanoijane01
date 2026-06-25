@@ -31,7 +31,7 @@ const stateData = [
 const BookingManagementPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const statusParam = searchParams.get("status") || "all";
+  const statusParam = searchParams.get("status") || "booked";
 
   const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
   const [bookingModal, setBookingModal] = useState<{

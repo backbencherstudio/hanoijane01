@@ -77,14 +77,14 @@ const menuItems: MenuItem[] = [
     icon: <LayoutDashboard size={18} />,
     children: [
       {
-        title: "Pending Payment",
-        href: "/dashboard/payment-tracking",
-        query: { status: "pending" },
-      },
-      {
         title: "Paid Payment",
         href: "/dashboard/payment-tracking",
         query: { status: "paid" },
+      },
+      {
+        title: "Pending Payment",
+        href: "/dashboard/payment-tracking",
+        query: { status: "pending" },
       },
       {
         title: "Overdue Payment",
