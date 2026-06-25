@@ -125,7 +125,7 @@ const Pagination: React.FC<PaginationProps> = ({
           value={String(itemsPerPage)}
           onValueChange={handleItemsPerPageChange}
         >
-          <SelectTrigger className="w-20 h-8">
+          <SelectTrigger className="w-20 h-8 border-none">
             <SelectValue placeholder={itemsPerPage} />
           </SelectTrigger>
           <SelectContent className="">

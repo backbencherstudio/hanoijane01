@@ -34,7 +34,7 @@ const StandFilters = ({
       {/* Type Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 px-3.5 py-3 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
+          <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
             {type} <ChevronDown size={16} />
           </button>
         </DropdownMenuTrigger>
@@ -43,7 +43,7 @@ const StandFilters = ({
             <DropdownMenuItem
               key={option}
               onClick={() => onTypeChange(option)}
-              className="cursor-pointer px-3.5 py-3"
+              className="cursor-pointer px-3.5 py-2.25"
             >
               {option}
             </DropdownMenuItem>
@@ -54,7 +54,7 @@ const StandFilters = ({
       {/* Block Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 px-3.5 py-3 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
+          <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
             {block} <ChevronDown size={16} />
           </button>
         </DropdownMenuTrigger>
@@ -63,7 +63,7 @@ const StandFilters = ({
             <DropdownMenuItem
               key={option}
               onClick={() => onBlockChange(option)}
-              className="cursor-pointer px-3.5 py-3"
+              className="cursor-pointer px-3.5 py-2.25"
             >
               {option}
             </DropdownMenuItem>
@@ -74,7 +74,7 @@ const StandFilters = ({
       {/* Status Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 px-3.5 py-3 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
+          <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
             {status} <ChevronDown size={16} />
           </button>
         </DropdownMenuTrigger>
@@ -83,7 +83,7 @@ const StandFilters = ({
             <DropdownMenuItem
               key={option}
               onClick={() => onStatusChange(option)}
-              className="cursor-pointer px-3.5 py-3"
+              className="cursor-pointer px-3.5 py-2.25"
             >
               {option}
             </DropdownMenuItem>

@@ -1,8 +1,9 @@
 "use client";
 import StateCard2 from "@/components/dashboard/StateCard2";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import { Eye, X } from "lucide-react";
+import React, { useCallback, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import StandFilters from "./_components/StandFilters";
 import {
   StandManagement,
@@ -13,18 +14,37 @@ import { GoDotFill } from "react-icons/go";
 import { Column } from "@/types/table";
 
 const stateData = [
-  { title: "standard stand", value: 40 },
-  { title: "Double Size Stand", value: 20 },
-  { title: "Outdoor Stand", value: 12 },
+  { title: "Standard Stand", value: standManagementData.filter(s => s.standType === "Standard").length },
+  { title: "Double Size Stand", value: standManagementData.filter(s => s.standType === "Double").length },
+  { title: "Outdoor Stand", value: standManagementData.filter(s => s.standType === "Outdoor").length },
 ];
 
 const StandManagementPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Read filter values from URL
+  const typeFilter = searchParams.get("type") || "All types";
+  const blockFilter = searchParams.get("block") || "All Block";
+  const statusFilter = searchParams.get("status") || "All Status";
+
   const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
+
+  // Check if any filter is active
+  const isAnyFilterActive = typeFilter !== "All types" || blockFilter !== "All Block" || statusFilter !== "All Status";
+
+  // Filter data based on URL params
+  const filteredData = standManagementData.filter((item) => {
+    const typeMatch = typeFilter === "All types" || item.standType === typeFilter;
+    const blockMatch = blockFilter === "All Block" || item.block === blockFilter;
+    const statusMatch = statusFilter === "All Status" || item.status === statusFilter;
+    return typeMatch && blockMatch && statusMatch;
+  });
 
   const startIndex = (filters.currentPage - 1) * filters.perPageItem;
   const endIndex = startIndex + filters.perPageItem;
-  const currentData = standManagementData.slice(startIndex, endIndex);
-  const totalItems = standManagementData.length;
+  const currentData = filteredData.slice(startIndex, endIndex);
+  const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / filters.perPageItem);
 
   const pagination = {
@@ -42,30 +62,30 @@ const StandManagementPage = () => {
     setFilters({ currentPage: 1, perPageItem: newPerPage });
   };
 
-  // Filter states
-  const [typeFilter, setTypeFilter] = useState("All types");
-  const [blockFilter, setBlockFilter] = useState("All Block");
-  const [statusFilter, setStatusFilter] = useState("All Status");
-
-  const params = {
-    type: typeFilter === "All types" ? undefined : typeFilter,
-    block: blockFilter === "All Block" ? undefined : blockFilter,
-    status: statusFilter === "All Status" ? undefined : statusFilter,
+  // Update URL when filter changes
+  const updateFilter = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "All types" || value === "All Block" || value === "All Status") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    router.push(`?${params.toString()}`, { scroll: false });
+    // Reset to page 1 when filter changes
+    setFilters((prev) => ({ ...prev, currentPage: 1 }));
   };
 
-  // ✅ RTK Query auto-fetches when `params` changes
-  // const { data: stands, isLoading, isError } = useGetStandsQuery(params);
+  // Clear all filters
+  const clearFilters = () => {
+    router.push(window.location.pathname, { scroll: false }); // Remove all query params
+    setFilters((prev) => ({ ...prev, currentPage: 1 }));
+  };
 
-  // Log filter values whenever any changes
-  React.useEffect(() => {
-    console.log("Filters:", {
-      type: typeFilter,
-      block: blockFilter,
-      status: statusFilter,
-    });
+  // Log filter changes (optional)
+  useEffect(() => {
+    console.log("Filters:", { type: typeFilter, block: blockFilter, status: statusFilter });
   }, [typeFilter, blockFilter, statusFilter]);
 
-  // table column
   const columns: Column<StandManagement>[] = [
     {
       header: "Booking ID",
@@ -94,9 +114,7 @@ const StandManagementPage = () => {
           Outdoor: "bg-[#FBF5EB] text-[#D79930] border border-[#F3E1C1]",
         };
         return (
-          <span
-            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[type] || ""}`}
-          >
+          <span className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[type] || ""}`}>
             {type}
           </span>
         );
@@ -121,9 +139,7 @@ const StandManagementPage = () => {
           Cancelled: "bg-[#FDECEE] border border-[#F9C5CA] text-[#EB3D4D]",
         };
         return (
-          <span
-            className={`px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 w-fit ${colorMap[status] || ""}`}
-          >
+          <span className={`px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 w-fit ${colorMap[status] || ""}`}>
             <GoDotFill className="size-3" />
             {status}
           </span>
@@ -142,6 +158,7 @@ const StandManagementPage = () => {
       cellClassName: "px-3 py-5 text-center whitespace-nowrap",
     },
   ];
+
   return (
     <div>
       {/* heading */}
@@ -160,31 +177,36 @@ const StandManagementPage = () => {
         </Button>
       </div>
 
-      {/* state card */}
+      {/* state cards */}
       <div className="my-9 grid grid-cols-1 md:grid-cols-3 gap-5">
         {stateData.map((state) => (
-          <StateCard2
-            title={state.title}
-            value={state.value}
-            key={state.title}
-          />
+          <StateCard2 title={state.title} value={state.value} key={state.title} />
         ))}
       </div>
 
       {/* content or data table */}
       <div className="bg-white rounded-2xl px-5 py-4">
-        <div className="flex flex-col lg:flex-row justify-center lg:justify-between items-center gap-4 mb-4">
-          <p className="text-text-primary text-lg font-semibold">
-            All Stand List
-          </p>
-          <StandFilters
-            type={typeFilter}
-            block={blockFilter}
-            status={statusFilter}
-            onTypeChange={setTypeFilter}
-            onBlockChange={setBlockFilter}
-            onStatusChange={setStatusFilter}
-          />
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <p className="text-text-primary text-lg font-semibold">All Stand List</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <StandFilters
+              type={typeFilter}
+              block={blockFilter}
+              status={statusFilter}
+              onTypeChange={(value) => updateFilter("type", value)}
+              onBlockChange={(value) => updateFilter("block", value)}
+              onStatusChange={(value) => updateFilter("status", value)}
+            />
+            {isAnyFilterActive && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-1 px-3 py-2.25 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition whitespace-nowrap"
+              >
+                <X size={16} />
+                Clear Filters
+              </button>
+            )}
+          </div>
         </div>
         {/* table */}
         <CustomTable
@@ -193,7 +215,7 @@ const StandManagementPage = () => {
           showIndex={false}
           indexLabel="SN"
           isLoading={false}
-          emptyMessage="No transactions found"
+          emptyMessage="No stands found"
           pagination={pagination}
           onPageChange={handlePageChange}
           onItemsPerPageChange={handleItemsPerPageChange}
