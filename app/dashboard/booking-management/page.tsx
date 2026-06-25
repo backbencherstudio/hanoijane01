@@ -8,6 +8,7 @@ import { GoDotFill } from "react-icons/go";
 import { useRouter, useSearchParams } from "next/navigation";
 import BookingStatusFilter from "./_components/BookingFilters";
 import { Button } from "@/components/ui/button";
+import BookingDetailsModal from "./_components/BookingDetailsModal";
 
 // Compute status counts from data
 const statusCounts = bookingManagementData.reduce(
@@ -33,6 +34,13 @@ const BookingManagementPage = () => {
   const statusParam = searchParams.get("status") || "all";
 
   const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
+  const [bookingModal, setBookingModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
+  }>({
+    isOpen: false,
+    id: null,
+  });
 
   // Filter data by status
   const filteredData = bookingManagementData.filter((item) => {
@@ -134,11 +142,11 @@ const BookingManagementPage = () => {
       render: (value) => {
         const status = value as string;
         const colorMap: Record<string, string> = {
-          booked: "bg-[#F6F1E9] border border-[#E6C58C] text-[#D79930]",
+          booked: "bg-green-100 border border-green-200 text-green-700",
           reserved: "bg-[#F9EFEA] border border-[#EDCEBF] text-[#C25B29]",
           request: "bg-[#EBF2FD] border border-[#C5D9F7] text-[#2A6BCA]",
-          overdue: "bg-[#FDECEE] border border-[#F9C5CA] text-[#EB3D4D]",
-          cancel: "bg-[#E9E9EA] border border-[#D4DAE3] text-[#777980]",
+          overdue: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
+          cancel: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
         };
         return (
           <span
@@ -155,7 +163,18 @@ const BookingManagementPage = () => {
       header: "Action",
       render: (_, row) => (
         <div className="flex justify-center gap-2 overflow-visible py-2">
-            <Button variant="outline" className="h-6 text-[12px] font-normal rounded-[5px]">View Details</Button>
+          <Button
+            onClick={() => {
+              setBookingModal({
+                isOpen: true,
+                id: row.bookingId,
+              });
+            }}
+            variant="outline"
+            className="h-6 text-[12px] font-normal rounded-[5px]"
+          >
+            View Details
+          </Button>
         </div>
       ),
       cellClassName: "px-3 py-5 text-center",
@@ -211,6 +230,16 @@ const BookingManagementPage = () => {
           onItemsPerPageChange={handleItemsPerPageChange}
         />
       </div>
+      <BookingDetailsModal
+        isOpen={bookingModal.isOpen}
+        bookingId={bookingModal.id}
+        onClose={() => {
+          setBookingModal({
+            isOpen: false,
+            id: null,
+          });
+        }}
+      />
     </div>
   );
 };

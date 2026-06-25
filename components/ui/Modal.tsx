@@ -27,7 +27,7 @@ const Modal = ({
     >
       {/* Modal card – scales and fades */}
       <div className="rounded-xl overflow-hidden">
-        <div className="relative w-fit">
+        <div className="relative w-screen md:w-fit">
           <div
             className={`
           relative bg-white rounded-xl px-4 py-8 lg:p-8 min-w-50 mx-4 xl:mx-0 
