@@ -3,10 +3,11 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronDown, FileText, LayoutDashboard } from "lucide-react";
+import { ChevronDown, FileText, LayoutDashboard, Settings } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import SidebarSkeleton from "./SidebarSkeleton";
+import MenuRender from "./MenuRender.tsx";
 
 type MenuItem = {
   title: string;
@@ -110,6 +111,14 @@ const menuItems: MenuItem[] = [
   },
 ];
 
+const footerItems: MenuItem[] = [
+  {
+    title: "Settings",
+    href: "/dashboard/settings",
+    icon: <Settings size={18} />,
+  },
+];
+
 // Separate component that uses usePathname and useSearchParams
 function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname();
@@ -188,7 +197,8 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
             />
           </Link>
         </div>
-        <div className="h-[calc(100vh-72px)] overflow-y-auto">
+
+        <div className="h-[calc(100vh-144px)] overflow-y-auto">
           <nav className="space-y-2 p-2.5 text-sm font-medium ">
             {menuItems.map((item) => {
               const hasChildren = !!item.children?.length;
@@ -306,6 +316,10 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
               );
             })}
           </nav>
+        </div>
+
+        <div className="h-18 border-t border-gray-500 flex flex-col items-start justify-center px-2.5">
+          <MenuRender menuItems={footerItems} />
         </div>
       </aside>
     </>
