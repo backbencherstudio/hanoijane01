@@ -8,6 +8,7 @@ interface BookingStatusFilterProps {
 }
 
 const statuses = [
+  { label: "All", value: "all" },
   { label: "Booked", value: "booked" },
   { label: "Reserved", value: "reserved" },
   { label: "Request", value: "request" },

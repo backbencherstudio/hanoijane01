@@ -3,7 +3,7 @@ export const bookingManagementData = [
     bookingId: "BK-1042",
     standNo: "A01",
     block: "A",
-    exhibitor: "Acme Corp Inc.",
+    exhibitor: "Acme Corp Inc. hello world developer",
     standType: "Standard",
     price: 200,
     status: "booked",

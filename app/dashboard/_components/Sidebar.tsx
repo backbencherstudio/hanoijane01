@@ -46,6 +46,11 @@ const menuItems: MenuItem[] = [
     icon: <LayoutDashboard size={18} />,
     children: [
       {
+        title: "All Bookings",
+        href: "/dashboard/booking-management",
+        query: { status: "all" },
+      },
+      {
         title: "Booked List",
         href: "/dashboard/booking-management",
         query: { status: "booked" },
@@ -76,6 +81,11 @@ const menuItems: MenuItem[] = [
     title: "Payment Tracking",
     icon: <LayoutDashboard size={18} />,
     children: [
+      {
+        title: "All Payments",
+        href: "/dashboard/payment-tracking",
+        query: { status: "all" },
+      },
       {
         title: "Paid Payment",
         href: "/dashboard/payment-tracking",

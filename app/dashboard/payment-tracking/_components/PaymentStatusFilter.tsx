@@ -8,6 +8,7 @@ interface PaymentStatusFilterProps {
 }
 
 const statuses = [
+  { label: "All", value: "all" },
   { label: "Paid", value: "paid" },
   { label: "Pending", value: "pending" },
   { label: "Overdue", value: "overdue" },
@@ -27,7 +28,7 @@ const PaymentStatusFilter = ({
             "px-4 py-2.25 rounded-lg border text-sm font-medium transition-all duration-200 cursor-pointer",
             currentStatus === status.value
               ? "bg-primary border-primary text-white shadow-md"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200",
           )}
         >
           {status.label}

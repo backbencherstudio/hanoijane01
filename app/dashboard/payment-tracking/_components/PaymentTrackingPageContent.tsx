@@ -1,4 +1,3 @@
-
 "use client";
 import StateCard2 from "@/components/dashboard/StateCard2";
 import CustomTable from "@/components/ui/Table";
@@ -8,6 +7,12 @@ import React, { useCallback, useState, useEffect } from "react";
 import { GoDotFill } from "react-icons/go";
 import { useRouter, useSearchParams } from "next/navigation";
 import PaymentStatusFilter from "./PaymentStatusFilter";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Compute stats from data (static for now, but we'll compute for demo)
 const totalRevenue = paymentTrackingData.reduce(
@@ -35,6 +40,8 @@ const PaymentTrackingPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status") || "paid";
+
+  console.log(statusParam);
 
   const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
 
@@ -68,11 +75,7 @@ const PaymentTrackingPageContent = () => {
   // Update URL when status changes
   const handleStatusChange = (status: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (status === "all") {
-      params.delete("status");
-    } else {
-      params.set("status", status);
-    }
+    params.set("status", status);
     router.push(`?${params.toString()}`, { scroll: false });
     setFilters((prev) => ({ ...prev, currentPage: 1 }));
   };
@@ -85,6 +88,7 @@ const PaymentTrackingPageContent = () => {
   const columns: Column<(typeof paymentTrackingData)[0]>[] = [
     {
       header: "Payment Ref",
+      headerClassName: "text-left",
       accessor: "paymentRef",
       cellClassName: "px-3 py-5 font-medium",
     },
@@ -95,8 +99,25 @@ const PaymentTrackingPageContent = () => {
     },
     {
       header: "Exhibitor",
+      headerClassName: "text-left  pl-12",
       accessor: "exhibitor",
-      cellClassName: "px-3 py-5 whitespace-nowrap",
+      cellClassName: "px-3 py-5 pl-12",
+      render: (value) => {
+        const text = value as string;
+        const displayText = text.length > 20 ? text.slice(0, 20) + "..." : text;
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="block max-w-45 truncate">{displayText}</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{text}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      },
     },
     {
       header: "Stand Type",
@@ -143,7 +164,7 @@ const PaymentTrackingPageContent = () => {
           </span>
         );
       },
-      cellClassName: "px-3 py-5 text-center",
+      cellClassName: "px-3 py-5 text-center flex justify-center items-center",
     },
     {
       header: "Payment / Due Date",
