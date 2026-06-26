@@ -84,10 +84,6 @@ const BookingManagementPageContent = () => {
     setFilters((prev) => ({ ...prev, currentPage: 1 }));
   };
 
-  // Log filter changes
-  useEffect(() => {
-    console.log("Status filter:", statusParam);
-  }, [statusParam]);
 
   const columns: Column<(typeof bookingManagementData)[0]>[] = [
     {

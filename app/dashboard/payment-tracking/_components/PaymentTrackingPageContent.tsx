@@ -41,8 +41,6 @@ const PaymentTrackingPageContent = () => {
   const searchParams = useSearchParams();
   const statusParam = searchParams.get("status") || "paid";
 
-  console.log(statusParam);
-
   const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
 
   // Filter data by status
@@ -79,11 +77,6 @@ const PaymentTrackingPageContent = () => {
     router.push(`?${params.toString()}`, { scroll: false });
     setFilters((prev) => ({ ...prev, currentPage: 1 }));
   };
-
-  // Log filter changes
-  useEffect(() => {
-    console.log("Payment status filter:", statusParam);
-  }, [statusParam]);
 
   const columns: Column<(typeof paymentTrackingData)[0]>[] = [
     {
@@ -167,7 +160,7 @@ const PaymentTrackingPageContent = () => {
       cellClassName: "px-3 py-5 text-center flex justify-center items-center",
     },
     {
-      header: "Payment / Due Date",
+      header: `${statusParam === "all" ? "Payment / Due Date" : statusParam === "paid" ? "Payment Date" : "Due Date"} `,
       render: (_, row) => {
         if (row.status === "paid") {
           return <span className="text-center">{row.paymentDate}</span>;
