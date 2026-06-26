@@ -2,6 +2,8 @@ import { stateData } from "@/data/dashboard/homeData";
 import React from "react";
 import StateCard from "./_components/StateCard";
 import StandOverviewChart from "./_components/StandOverviewChart";
+import RecentBookings from "./_components/RecentBookings";
+import BookingRequest from "./_components/BookingRequest";
 
 const DashboardHome = () => {
   return (
@@ -30,9 +32,16 @@ const DashboardHome = () => {
           <div>
             <StandOverviewChart />
           </div>
+           <div className="my-6">
+        <RecentBookings />
+      </div>
         </div>
         {/* right side */}
-        <div>right side</div>
+        <div>
+          <div>
+            <BookingRequest/>
+          </div>
+        </div>
       </div>
     </div>
   );

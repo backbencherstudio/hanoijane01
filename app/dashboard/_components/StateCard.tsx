@@ -25,7 +25,7 @@ const StateCard = ({ state }: StateCardProps) => {
         <div
           className={`p-2 rounded-xs w-fit h-fit ${state.text_color} ${state.text_bg_color}`}
         >
-          <Icon className="w-4.5 h-4.5 text-primary" />{" "}
+          <Icon className={`w-4.5 h-4.5 ${state.text_color}`} />
         </div>
       </div>
     </div>
