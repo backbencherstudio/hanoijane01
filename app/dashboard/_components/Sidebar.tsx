@@ -8,6 +8,7 @@ import { useState } from "react";
 import Image from "next/image";
 import SidebarSkeleton from "./SidebarSkeleton";
 import MenuRender from "./MenuRender.tsx";
+import { BsShopWindow } from "react-icons/bs";
 
 type MenuItem = {
   title: string;
@@ -30,7 +31,7 @@ const menuItems: MenuItem[] = [
   },
   {
     title: "Stand Management",
-    icon: <LayoutDashboard size={18} />,
+    icon: <BsShopWindow size={18} />,
     children: [
       {
         title: "View All Stands",
