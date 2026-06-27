@@ -1,11 +1,5 @@
-import React from 'react';
+import { redirect } from "next/navigation";
 
-const SettingPage = () => {
-    return (
-        <div className='w-full border border-red-500'>
-            Settings Page
-        </div>
-    );
-};
-
-export default SettingPage;
+export default function SettingsPage() {
+  redirect("/dashboard/settings/my-profile");
+}

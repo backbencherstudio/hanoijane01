@@ -16,6 +16,7 @@ type MenuItem = {
   query?: Record<string, string>;
   icon?: React.ReactNode;
   children?: MenuItem[];
+  matchChildren?: boolean;
 };
 
 type SidebarProps = {
@@ -116,6 +117,7 @@ const footerItems: MenuItem[] = [
   {
     title: "Settings",
     href: "/dashboard/settings",
+    matchChildren: true,
     icon: <Settings size={18} />,
   },
 ];

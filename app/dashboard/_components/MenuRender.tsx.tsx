@@ -1,4 +1,3 @@
-// components/layout/MenuRender.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -12,6 +11,7 @@ type MenuItem = {
   query?: Record<string, string>;
   icon?: React.ReactNode;
   children?: MenuItem[];
+  matchChildren?: boolean;
 };
 
 interface MenuRenderProps {
@@ -68,6 +68,18 @@ const MenuRender = ({ menuItems }: MenuRenderProps) => {
     // For now we do nothing.
   };
 
+  const isLinkActive = (item: MenuItem): boolean => {
+    if (!item.href) return false;
+
+    // Match every child page
+    if (item.matchChildren) {
+      return pathname.startsWith(item.href);
+    }
+
+    // Normal route
+    return pathname === item.href && isQueryMatched(item.query);
+  };
+
   return (
     <div className="space-y-2 text-sm font-medium w-full">
       {menuItems.map((item) => {
@@ -108,7 +120,7 @@ const MenuRender = ({ menuItems }: MenuRenderProps) => {
             ) : (
               <div
                 className={`rounded-lg transition-all duration-200 ${
-                  pathname === item.href ? "pl-0.5 bg-white" : ""
+                  isLinkActive(item) ? "pl-0.5 bg-white" : ""
                 }`}
               >
                 <Link
@@ -116,7 +128,7 @@ const MenuRender = ({ menuItems }: MenuRenderProps) => {
                   onClick={handleNavigation}
                   className={`flex items-center gap-2 rounded-lg px-4 py-3 transition-all duration-200
                   ${
-                    pathname === item.href
+                    isLinkActive(item)
                       ? "bg-[#3f6781] text-white"
                       : "bg-[#114263] hover:bg-[#3f6781]"
                   }

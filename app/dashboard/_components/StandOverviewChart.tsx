@@ -20,14 +20,21 @@ type ChartData = {
 
 const data: ChartData[] = [
   {
-    stand: "Standard Stand",
+    stand: "Expo Marquee",
     total: 120,
     booked: 60,
     reserved: 15,
     available: 45,
   },
   {
-    stand: "Double Stand",
+    stand: "Main Goffs Sales Complex",
+    total: 110,
+    booked: 30,
+    reserved: 18,
+    available: 52,
+  },
+  {
+    stand: "Double Corner Stand",
     total: 100,
     booked: 30,
     reserved: 18,
