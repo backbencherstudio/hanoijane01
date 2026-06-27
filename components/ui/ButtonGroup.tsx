@@ -34,10 +34,14 @@ const ButtonGroup = ({
   type,
   roundButtonSize = "size-13",
 }: ButtonGroupProps) => {
-  // Determine if we should use a Link (if pathName is provided)
   const isLink = !!pathName;
 
-  // Shared button content (the two buttons)
+  const renderIcon = () => (
+    <span className="inline-block transition-transform duration-300 ease-in-out group-hover:rotate-45">
+      {icon ? icon : <ArrowUpRight className="size-6" />}
+    </span>
+  );
+
   const mainButton = (
     <Button
       variant={variant}
@@ -45,29 +49,24 @@ const ButtonGroup = ({
       type={type}
     >
       {children}
-      <span
-        className={`size-9 rounded-full text-5xl relative[#C25B29] flex md:hidden border ${className?.includes("bg-white") && "border-primary"} justify-center items-center`}
-      >
-        {icon ? icon : <ArrowUpRight className="size-5" />}
-      </span>
     </Button>
   );
 
   const iconButton = (
     <Button
       variant={variant}
-      className={`${className} ${roundButtonSize} hidden md:flex text-5xl relative p-0 `}
+      className={`${className} ${roundButtonSize} flex text-5xl relative p-0`}
       type={type}
     >
-      {icon ? icon : <ArrowUpRight className="size-6" />}
+      {renderIcon()}
     </Button>
   );
 
-  // If it's a link, wrap both buttons inside a single Link
+  // If it's a link
   if (isLink) {
     return (
       <div
-        className={`flex justify-center items-center ${fullWidth ? "w-full" : ""}`}
+        className={`group flex justify-center items-center ${fullWidth ? "w-full" : ""}`}
       >
         <div className={fullWidth ? "flex-1" : ""}>
           <Link href={pathName}>{mainButton}</Link>
@@ -82,7 +81,7 @@ const ButtonGroup = ({
   // Otherwise, use button elements with onClick
   return (
     <div
-      className={`flex justify-center items-center ${fullWidth ? "w-full" : ""}`}
+      className={`group flex justify-center items-center ${fullWidth ? "w-full" : ""}`}
     >
       <div onClick={onClick} className={fullWidth ? "flex-1" : ""}>
         {mainButton}
