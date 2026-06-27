@@ -111,7 +111,7 @@ const MyProfilePage = () => {
                     placeholder="Enter your email"
                     disabled={!isEditing}
                     className={`mt-2 ${
-                      !isEditing ? "!opacity-100 !cursor-text select-text" : ""
+                      !isEditing ? "opacity-100! cursor-text! select-text" : ""
                     }`}
                   />
                 )}
@@ -135,7 +135,7 @@ const MyProfilePage = () => {
                 render={({ field }) => (
                   <div
                     className={`relative mt-2 rounded-lg bg-[#F4F5F7] transition-colors ${
-                      !isEditing ? "!opacity-100" : ""
+                      !isEditing ? "opacity-100!" : ""
                     } ${
                       isEditing &&
                       "focus-within:border focus-within:border-gray-400 focus-within:ring-3 focus-within:ring-ring/50"
