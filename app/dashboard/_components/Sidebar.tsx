@@ -3,12 +3,21 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronDown, FileText, LayoutDashboard, Settings } from "lucide-react";
+import {
+  Banknote,
+  CalendarRange,
+  ChevronDown,
+  FileText,
+  LayoutDashboard,
+  Settings,
+} from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import SidebarSkeleton from "./SidebarSkeleton";
 import MenuRender from "./MenuRender.tsx";
 import { BsShopWindow } from "react-icons/bs";
+import { IoMdLogOut } from "react-icons/io";
+import LogOutModal from "@/app/(auth)/_components/LogOutModal";
 
 type MenuItem = {
   title: string;
@@ -46,7 +55,7 @@ const menuItems: MenuItem[] = [
   },
   {
     title: "Booking Management",
-    icon: <LayoutDashboard size={18} />,
+    icon: <CalendarRange size={18} />,
     children: [
       {
         title: "All Bookings",
@@ -82,7 +91,7 @@ const menuItems: MenuItem[] = [
   },
   {
     title: "Payment Tracking",
-    icon: <LayoutDashboard size={18} />,
+    icon: <Banknote size={18} />,
     children: [
       {
         title: "All Payments",
@@ -106,11 +115,11 @@ const menuItems: MenuItem[] = [
       },
     ],
   },
-  {
-    title: "Document Review",
-    href: "/document-review",
-    icon: <FileText size={18} />,
-  },
+  // {
+  //   title: "Document Review",
+  //   href: "/document-review",
+  //   icon: <FileText size={18} />,
+  // },
 ];
 
 const footerItems: MenuItem[] = [
@@ -124,6 +133,7 @@ const footerItems: MenuItem[] = [
 
 // Separate component that uses usePathname and useSearchParams
 function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -201,7 +211,7 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
           </Link>
         </div>
 
-        <div className="h-[calc(100vh-144px)] overflow-y-auto">
+        <div className="h-[calc(100vh-200px)] overflow-y-auto">
           <nav className="space-y-2 p-2.5 text-sm font-medium ">
             {menuItems.map((item) => {
               const hasChildren = !!item.children?.length;
@@ -321,10 +331,21 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
           </nav>
         </div>
 
-        <div className="h-18 border-t border-gray-500 flex flex-col items-start justify-center px-2.5">
+        <div className="h-32  border-t border-gray-500 flex flex-col items-start justify-center px-2.5 gap-4">
           <MenuRender menuItems={footerItems} />
+          <div className="w-full hover:bg-white rounded-lg hover:pl-0.5 transition-all duration-300">
+            <button
+              onClick={() => setOpen(true)}
+              className="text-sm flex items-center gap-2 py-3 px-4 w-full rounded-lg bg-[#114263] cursor-pointer"
+            >
+              {" "}
+              <IoMdLogOut className="size-4.5" />
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
+      <LogOutModal isOpen={open} onClose={() => setOpen(false)} />
     </>
   );
 }

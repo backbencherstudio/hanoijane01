@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PenLine } from "lucide-react";
+import { CalendarDays, PenLine } from "lucide-react";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
@@ -100,15 +100,32 @@ const EventSettingsPage = () => {
                 control={control}
                 rules={{ required: "Event date is required" }}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="eventDate"
-                    type="date"
-                    disabled={!isEditing}
-                    className={`mt-2 ${
-                      !isEditing ? "opacity-100! cursor-text! select-text" : ""
-                    }`}
-                  />
+                  <div className="relative mt-2">
+                    <Input
+                      {...field}
+                      id="eventDate"
+                      type="date"
+                      disabled={!isEditing}
+                      className={`[&::-webkit-calendar-picker-indicator]:hidden pr-10 ${
+                        !isEditing
+                          ? "opacity-100! cursor-text! select-text"
+                          : ""
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 cursor-pointer"
+                      onClick={() => {
+                        const input = document.getElementById(
+                          "eventDate",
+                        ) as HTMLInputElement;
+                        if (input) input.showPicker?.();
+                      }}
+                      disabled={!isEditing}
+                    >
+                      <CalendarDays className="h-4 w-4 text-gray-500" />
+                    </button>
+                  </div>
                 )}
               />
               {errors.eventDate && (
@@ -156,15 +173,32 @@ const EventSettingsPage = () => {
                 control={control}
                 rules={{ required: "Booking deadline is required" }}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="bookingDeadline"
-                    type="date"
-                    disabled={!isEditing}
-                    className={`mt-2 ${
-                      !isEditing ? "opacity-100! cursor-text! select-text" : ""
-                    }`}
-                  />
+                  <div className="relative mt-2">
+                    <Input
+                      {...field}
+                      id="bookingDeadline"
+                      type="date"
+                      disabled={!isEditing}
+                      className={`[&::-webkit-calendar-picker-indicator]:hidden pr-10 ${
+                        !isEditing
+                          ? "opacity-100! cursor-text! select-text"
+                          : ""
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 cursor-pointer"
+                      onClick={() => {
+                        const input = document.getElementById(
+                          "bookingDeadline",
+                        ) as HTMLInputElement;
+                        if (input) input.showPicker?.();
+                      }}
+                      disabled={!isEditing}
+                    >
+                      <CalendarDays className="h-4 w-4 text-gray-500" />
+                    </button>
+                  </div>
                 )}
               />
               {errors.bookingDeadline && (
