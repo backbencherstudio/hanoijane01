@@ -336,7 +336,7 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
           <div className="w-full hover:bg-white rounded-lg hover:pl-0.5 transition-all duration-300">
             <button
               onClick={() => setOpen(true)}
-              className="text-sm flex items-center gap-2 py-3 px-4 w-full rounded-lg bg-[#114263] cursor-pointer"
+              className="text-sm flex items-center gap-2 py-3 px-4 w-full rounded-lg bg-[#114263] hover:bg-[#2e5f80] active:bg-[#3F6781] cursor-pointer"
             >
               {" "}
               <IoMdLogOut className="size-4.5" />
