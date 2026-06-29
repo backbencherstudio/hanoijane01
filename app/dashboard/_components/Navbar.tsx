@@ -2,6 +2,7 @@
 
 import { PanelLeftOpen, User } from "lucide-react";
 import Image from "next/image";
+import DashboardBreadcrumb from "./DashboardBreadcrumb";
 
 type NavbarProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,12 +36,14 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
           <PanelLeftOpen className="size-6 text-accent" />
         </button>
 
-        <p className="font-medium">Breadcrumbs</p>
+        <div className="font-medium">
+            <DashboardBreadcrumb />
+        </div>
       </div>
 
       <div>
         <div>
-          <div className="flex items-center gap-2 space-y-1 justify-center items-center">
+          <div className="flex items-center gap-2 space-y-1 justify-center">
             {user?.image ? (
               <Image
                 src={user.image}
