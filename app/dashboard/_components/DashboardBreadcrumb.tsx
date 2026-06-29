@@ -48,19 +48,23 @@ const breadcrumbMap: Record<string, string> = {
 // Format URL if not found in breadcrumbMap
 // -------------------------------------------
 const formatLabel = (segment: string) =>
-  segment
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+  segment.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
 export default function DashboardBreadcrumb() {
   const pathname = usePathname();
 
   const segments = pathname.split("/").filter(Boolean);
 
-  const breadcrumbs = segments.map((segment, index) => ({
-    href: "/" + segments.slice(0, index + 1).join("/"),
-    label: breadcrumbMap[segment] ?? formatLabel(segment),
-  }));
+  const breadcrumbs = segments
+    .map((segment, index) => ({
+      segment,
+      href: "/" + segments.slice(0, index + 1).join("/"),
+      label: breadcrumbMap[segment] ?? formatLabel(segment),
+    }))
+    .filter(
+      (item) =>
+        item.segment !== "stand-management" && item.segment !== "settings",
+    );
 
   const showEllipsis = breadcrumbs.length > 2;
 
@@ -160,7 +164,12 @@ export default function DashboardBreadcrumb() {
                   )}
                 </BreadcrumbItem>
 
-                {!isLast && <BreadcrumbSeparator> <span className="font-semibold px-1 text-lg">/</span></BreadcrumbSeparator>}
+                {!isLast && (
+                  <BreadcrumbSeparator>
+                    {" "}
+                    <span className="font-semibold px-1 text-lg-">/</span>
+                  </BreadcrumbSeparator>
+                )}
               </div>
             );
           })}
