@@ -38,7 +38,7 @@ const BookingHistoryPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   return (
-    <div className="bg-white p-4 rounded-xl">
+    <div className="bg-white md:p-4 rounded-xl">
       <div>
         <h1 className="text-2xl md:text-3xl lg:text-[32px] text-primary font-semibold flex items-center">
           Personal Information

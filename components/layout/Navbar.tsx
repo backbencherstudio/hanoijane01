@@ -10,10 +10,12 @@ import ProfileDropdown from "./ProfileDropdown";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
 import AuthModal from "@/app/(auth)/_components/AuthModal";
+import LogOutModal from "@/app/(auth)/_components/LogOutModal";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [logOutModalOpen, setLogOutModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const user = {
@@ -73,7 +75,10 @@ const Navbar = () => {
             Book a Stand
           </ButtonGroup>
           <div className="hidden md:block">
-            <ProfileDropdown user={user} />
+            <ProfileDropdown
+              onLogout={() => setLogOutModalOpen(true)}
+              user={user}
+            />
           </div>
           <Button
             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -89,6 +94,10 @@ const Navbar = () => {
       {/* sidebar */}
       <Sidebar user={user} setIsOpen={setSidebarOpen} isOpen={sidebarOpen} />
       <AuthModal open={isOpen} setOpen={setIsOpen} />
+      <LogOutModal
+        isOpen={logOutModalOpen}
+        onClose={() => setLogOutModalOpen(false)}
+      />
     </section>
   );
 };

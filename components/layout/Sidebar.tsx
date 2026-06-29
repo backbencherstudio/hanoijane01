@@ -6,6 +6,8 @@ import Image from "next/image";
 import { UserProp } from "@/types/User";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LogOutModal from "@/app/(auth)/_components/LogOutModal";
+import { useState } from "react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,6 +26,7 @@ const links = [
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
   const pathname = usePathname();
+  const [logOutModalOpen, setLogOutModalOpen] = useState(false);
   return (
     <aside
       className={`
@@ -97,16 +100,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
         </div>
       </div>
       <div className="h-20  flex justify-center items-center border-t">
-        <Button variant="outline" className="px-10 ">
-          Sign In
-        </Button>
+        <Link href="/sign-in">
+          <Button variant="outline" className="px-10 ">
+            Sign In
+          </Button>
+        </Link>
         <Button variant="outline" className="px-10 ring-red-500 text-red-500">
-          <span className="flex items-center gap-2 ">
+          <span
+            onClick={() => setLogOutModalOpen(true)}
+            className="flex items-center gap-2 "
+          >
             <IoLogInOutline className="size-5" />
             Log Out
           </span>
         </Button>
       </div>
+      <LogOutModal
+        isOpen={logOutModalOpen}
+        onClose={() => setLogOutModalOpen(false)}
+      />
     </aside>
   );
 };

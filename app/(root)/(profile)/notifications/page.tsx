@@ -219,7 +219,7 @@ const NotificationHistoryPage = () => {
   ];
 
   return (
-    <div className="bg-white p-4 rounded-xl">
+    <div className="bg-white md:p-4 rounded-xl">
       <h1 className="text-2xl md:text-3xl lg:text-[32px] text-primary font-semibold">
         Notifications
       </h1>

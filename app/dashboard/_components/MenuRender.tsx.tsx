@@ -26,7 +26,7 @@ const MenuRender = ({ menuItems }: MenuRenderProps) => {
   const isQueryMatched = (query?: Record<string, string>) => {
     if (!query) return true;
     return Object.entries(query).every(
-      ([key, value]) => searchParams.get(key) === value
+      ([key, value]) => searchParams.get(key) === value,
     );
   };
 
@@ -41,7 +41,7 @@ const MenuRender = ({ menuItems }: MenuRenderProps) => {
   const isParentActive = (item: MenuItem) => {
     return (
       item.children?.some(
-        (child) => pathname === child.href && isQueryMatched(child.query)
+        (child) => pathname === child.href && isQueryMatched(child.query),
       ) ?? false
     );
   };
