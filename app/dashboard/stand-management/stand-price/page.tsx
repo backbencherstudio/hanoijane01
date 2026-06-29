@@ -28,7 +28,7 @@ const StandPriceManagementPage = () => {
   return (
     <div>
       {/* heading */}
-      <div className="w-full flex flex-col gap-4 sm:flex-row justify-between items-center">
+      <div className="w-full flex gap-4 sm:flex-row justify-between ">
         <div className="w-full">
           <h2 className="text-text-primary text-xl md:text-2xl font-semibold">
             Price Management

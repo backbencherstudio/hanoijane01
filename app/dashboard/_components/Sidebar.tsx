@@ -211,7 +211,7 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
           </Link>
         </div>
 
-        <div className="h-[calc(100vh-200px)] overflow-y-auto">
+        <div className="h-[calc(100vh-200px)] overflow-y-auto custom-sidebar">
           <nav className="space-y-2 p-2.5 text-sm font-medium ">
             {menuItems.map((item) => {
               const hasChildren = !!item.children?.length;

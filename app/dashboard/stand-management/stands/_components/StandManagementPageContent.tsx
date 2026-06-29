@@ -38,7 +38,7 @@ const StandManagementPageContent = () => {
   const viewParam = searchParams.get("view") as ViewType | null;
   const currentView = viewParam && (viewParam === "map" || viewParam === "list") 
     ? viewParam 
-    : "map";
+    : "list";
 
   // Read filter values from URL
   const typeFilter = searchParams.get("type") || "All types";
@@ -209,7 +209,7 @@ const StandManagementPageContent = () => {
   return (
     <div>
       {/* heading */}
-      <div className="w-full flex flex-col gap-4 sm:flex-row justify-between items-center">
+      <div className="w-full flex gap-4 sm:flex-row justify-between">
         <div className="w-full">
           <h2 className="text-text-primary text-xl md:text-2xl font-semibold">
             Stand Management
