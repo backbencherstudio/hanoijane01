@@ -33,7 +33,7 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
     <div className="h-18 border-b border-gray-300 px-4 lg:px-6 flex items-center justify-between">
       <div className="flex items-center gap-4 text-text-primary">
         <button onClick={() => setIsOpen(true)} className="lg:hidden">
-          <PanelLeftOpen className="size-6 text-accent" />
+          <PanelLeftOpen size={20} className="text-accent" />
         </button>
 
         <div className="font-medium">
