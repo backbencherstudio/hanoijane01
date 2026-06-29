@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelLeftOpen, User } from "lucide-react";
+import { Bell, PanelLeftOpen, User } from "lucide-react";
 import Image from "next/image";
 import DashboardBreadcrumb from "./DashboardBreadcrumb";
 
@@ -42,7 +42,13 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
       </div>
 
       <div>
-        <div>
+        <div className="flex items-center gap-2">
+          
+          <div className="relative size-8 border border-[#DFE1E7] rounded-full flex justify-center items-center">
+            <Bell size={16} />
+            <div className="size-1.25 bg-[#DF1C41] rounded-full absolute ring-2 ring-[#F9FAFB] top-2 right-2"></div>
+          </div>
+          <div className="w-px bg-[#DFE1E7] h-6"></div>
           <div className="flex items-center gap-2 space-y-1 justify-center">
             {user?.image ? (
               <Image
