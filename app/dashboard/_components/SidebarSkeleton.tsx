@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const SidebarSkeleton = () => {
   return (
-    <aside className="fixed top-0 left-0 h-screen w-68 bg-[#114263] text-white z-50">
+    <aside className="hidden lg:block fixed top-0 left-0 h-screen w-68 bg-[#114263] text-white z-50">
       {/* Logo area */}
       <div className="h-18 border-b border-gray-500 flex justify-between px-2.5 items-center">
         <Skeleton className="w-14 h-12 bg-white/10" />

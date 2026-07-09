@@ -55,6 +55,19 @@ function isTextTarget(el: EventTarget | null): boolean {
   return false;
 }
 
+// Returns true if the mousedown target is inside a <tr> (i.e. on a th/td),
+// meaning the drag-to-scroll gesture is allowed to start here.
+function isRowTarget(el: EventTarget | null): boolean {
+  if (!el || !(el instanceof Element)) return false;
+  let node: Element | null = el as Element;
+  while (node) {
+    if (node.tagName === "TR") return true;
+    if (node.classList?.contains("custom-table-container")) break;
+    node = node.parentElement;
+  }
+  return false;
+}
+
 export default function CustomTable<T extends object>({
   data,
   columns,
@@ -107,6 +120,13 @@ export default function CustomTable<T extends object>({
 
   const DRAG_THRESHOLD = 5;
 
+  // Refs used to measure thead/tbody height so we can draw fixed
+  // (non-scrolling) border frames on top of the scrollable table.
+  const theadRef = useRef<HTMLTableSectionElement>(null);
+  const tbodyRef = useRef<HTMLTableSectionElement>(null);
+  const [theadHeight, setTheadHeight] = useState(0);
+  const [tbodyHeight, setTbodyHeight] = useState(0);
+
   useEffect(() => {
     const checkScroll = () => {
       const el = tableContainerRef.current;
@@ -117,10 +137,30 @@ export default function CustomTable<T extends object>({
     return () => window.removeEventListener("resize", checkScroll);
   }, [data, columns]);
 
+  useEffect(() => {
+    const theadEl = theadRef.current;
+    const tbodyEl = tbodyRef.current;
+    if (!theadEl || !tbodyEl) return;
+
+    const updateHeights = () => {
+      setTheadHeight(theadEl.offsetHeight);
+      setTbodyHeight(tbodyEl.offsetHeight);
+    };
+    updateHeights();
+
+    const ro = new ResizeObserver(updateHeights);
+    ro.observe(theadEl);
+    ro.observe(tbodyEl);
+    return () => ro.disconnect();
+  }, [data, columns, isLoading]);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!tableContainerRef.current) return;
     // If clicked on a ct-text span, let the browser handle selection normally
     if (isTextTarget(e.target)) return;
+    // Only allow the drag-to-scroll gesture to start on a table row (th/td),
+    // not on empty container space around the table
+    if (!isRowTarget(e.target)) return;
 
     isDown.current = true;
     isDragging.current = false;
@@ -218,20 +258,20 @@ export default function CustomTable<T extends object>({
         .custom-table-container [role="button"] { cursor: pointer !important; }
       `}</style>
 
-      <div className={`${rounded} overflow-hidden `}>
+      <div className={`${rounded} overflow-hidden relative`}>
         <div
           ref={tableContainerRef}
-          className={`custom-table-container overflow-x-auto overflow-y-visible select-none ${cursorClass}`}
+          className={`custom-table-container max-w-full overflow-x-auto overflow-y-visible select-none ${cursorClass}`}
           style={{ userSelect: "none" }}
           onMouseDown={handleMouseDown}
           onMouseLeave={handleMouseLeave}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-          <table className={`w-full overflow-hidden border-collapse ${tableClassName}`}>
-            <thead className={`${theadClassName}`}>
+          <table className={`w-max min-w-full border-collapse ${tableClassName}`}>
+            <thead ref={theadRef} className={`${theadClassName} bg-[#DDEDFE]`}>
               <tr
-                className={`bg-[#DDEDFE] text-[#666D80] border border-[#DDEDFE] ${headerRowClassName}`}
+                className={`bg-[#DDEDFE] text-[#666D80] ${headerRowClassName}`}
               >
                 {displayColumns.map((col, i) => (
                   <th
@@ -256,7 +296,7 @@ export default function CustomTable<T extends object>({
               </tr>
             </thead>
 
-            <tbody className={`bg-white border ${tbodyClassName}`}>
+            <tbody ref={tbodyRef} className={`bg-white overflow-x-auto ${tbodyClassName}`}>
               {isLoading ? (
                 Array.from({ length: itemsPerPage }).map((_, i) => (
                   <tr
@@ -334,6 +374,21 @@ export default function CustomTable<T extends object>({
             </tbody>
           </table>
         </div>
+
+        {/*
+          Fixed border frames — these sit on top of the scrollable table
+          but do NOT scroll themselves. They visually "frame" the header
+          and body sections so both left and right borders stay visible
+          no matter how far the table is scrolled horizontally.
+        */}
+        <div
+          className="pointer-events-none absolute left-0 right-0 top-0 border border-[#DDEDFE]"
+          style={{ height: theadHeight }}
+        />
+        <div
+          className="pointer-events-none absolute left-0 right-0 border border-gray-200"
+          style={{ top: theadHeight, height: tbodyHeight }}
+        />
       </div>
 
       {!hasNoData && totalPages > 1 && (
