@@ -33,7 +33,6 @@ interface BookingState {
     email: string;
     phoneNumber: string;
     companyAddress: string;
-    companyLicense?: File | null; // optional, not stored in Redux for serialization
   };
 }
 

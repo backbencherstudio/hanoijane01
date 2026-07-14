@@ -4,12 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BookingInfo from "./BookingInfo";
 import BookingInfoCard from "./BookingInfoCard";
-import AddOnsForm from "./AddOnsForm";
 import PaymentForm from "./PaymentForm";
 
 const steps = [
   { id: 1, title: "Booking Info" },
-  // { id: 2, title: "Adds On" },
   { id: 2, title: "Payment" },
 ];
 
@@ -48,52 +46,9 @@ export default function BookingContent() {
   return (
     <section className="w-full bg-[#E5EAEC]">
       <div className="container padding-default">
-        {/* Stepper */}
-        <div className="bg-white rounded-xl px-8 py-4">
-          <div className="flex items-center w-full gap-0">
-            {steps.map((step, index) => {
-              const isCompleted = currentStep > step.id;
-              const isActive = currentStep === step.id;
-              const isLast = index === steps.length - 1;
-
-              return (
-                <div
-                  key={step.id}
-                  className={`flex items-center ${isLast ? "flex-initial" : "flex-1 min-w-0"}`}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div
-                      className={`size-8 sm:size-10 rounded-full flex items-center justify-center font-semibold transition-all shrink-0 text-sm sm:text-base ${
-                        isActive || isCompleted
-                          ? "bg-[#D89B29] text-white"
-                          : "bg-[#E8DDCB] text-[#8E8E93]"
-                      }`}
-                    >
-                      {step.id}
-                    </div>
-                    <h3
-                      className={`text-base sm:text-xl font-medium truncate hidden sm:block ${
-                        isActive || isCompleted ? "text-primary" : "text-[#8E8E93]"
-                      }`}
-                    >
-                      {step.title}
-                    </h3>
-                  </div>
-                  {!isLast && (
-                    <div
-                      className={`h-px flex-1 mx-1 sm:mx-2 ${
-                        currentStep > step.id ? "bg-[#D89B29]" : "bg-[#D9D9D9]"
-                      }`}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
+        <h5 className="text-[2rem] font-semibold text-primary mb-12">{currentStep === 1?"Company information":"Payment  information"}</h5>
         {/* Forms */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 ">
           <div className="col-span-full lg:col-span-2">
             {currentStep === 1 && <BookingInfo nextStep={nextStep} />}
             {currentStep === 2 && <PaymentForm prevStep={prevStep} />}
