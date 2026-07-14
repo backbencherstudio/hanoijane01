@@ -26,7 +26,7 @@ const InteractiveFloorPlan = () => {
         </div>
         {/* content */}
         <Image
-          src="/assets/map.png"
+          src="/assets/map-new.png"
           alt="map"
           width={1304}
           height={688}

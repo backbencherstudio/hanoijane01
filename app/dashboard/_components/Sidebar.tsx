@@ -7,7 +7,6 @@ import {
   Banknote,
   CalendarRange,
   ChevronDown,
-  FileText,
   LayoutDashboard,
   Settings,
 } from "lucide-react";

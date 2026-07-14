@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
+import AddOnContactCTA from "../pricing/_components/AddOnContactCTA";
 
 const user: {
   name: string;
@@ -17,7 +18,7 @@ const user: {
   document: string[];
 } = {
   name: "Jacob Jones",
-  image: "/assets/profile.png",
+  image: "/assets/profile-new.png",
   company: "The Walt Disney Company",
   email: "jacob@gmail.com",
   phone: "1999999999",
@@ -47,7 +48,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
 
         {/* Stats box */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-85 md:w-150 lg:w-200 xl:w-300 p-4 md:p-6 lg:p-8 xl:p-10 bg-[url('/assets/texture.webp')] bg-cover bg-center bg-no-repeat rounded-[24px] flex items-center gap-6">
-          <div>
+          <div className=" rounded-3xl overflow-hidden">
             {user?.image ? (
               <Image
                 src={user?.image}
@@ -80,8 +81,8 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       </section>
-      <div className="mt-4 lg:mt-14 pb-14 lg:pb-25 grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-8 container">
-        <div className="col-span-full md:col-span-3 lg:col-span-3">
+      <div className="mt-4 lg:mt-14 pb-14 lg:pb-25 grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4  container">
+        <div className="col-span-full md:col-span-3 lg:col-span-3 md:mr-8">
           {children}
         </div>
         <div className="row-start-1 md:col-start-4 md:col-span-2 lg:col-start-4 ">
@@ -106,6 +107,11 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
             </li>
           </ul>
         </div>
+        {pathname === "/booking-history" && (
+          <div className="col-span-full">
+            <AddOnContactCTA />
+          </div>
+        )}
       </div>
       <LogOutModal isOpen={open} onClose={() => setOpen(false)} />
     </div>

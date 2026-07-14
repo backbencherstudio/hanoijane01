@@ -82,8 +82,7 @@ const Footer = () => {
             {/* Contact Info */}
             <div className="text-[#D2D2D5] mt-6 space-y-4">
               <p className="flex items-center gap-2">
-                <Mail className="size-4 shrink-0" />{" "}
-                exhibitors@industryexpo2027.com
+                <Mail className="size-4 shrink-0" /> office@itba.ie
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0" />
