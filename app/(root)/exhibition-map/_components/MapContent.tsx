@@ -5,12 +5,13 @@ import Image from "next/image";
 import BaseMap from "@/components/map/BaseMap";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapControls from "./MapControls";
+import StandLayer from "./StandLayer";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <section className="w-full min-h-screen  mt-12 flex gap-6">
-      <div className="w-[320px] px-4 py-5 rounded-[20px] bg-white">
+    <section className="w-full  mt-12 flex gap-6">
+      <div className="w-[320px] px-4 py-5 rounded-[20px] bg-white hidden lg:block">
         <Image
           src="/logo-1.png"
           alt="Logo"
@@ -24,7 +25,7 @@ const MapContent = () => {
         </h3>
         <StandCategoryAccordion />
       </div>
-      <div className="w-full overflow-hidden border border-red-500 relative p-4 bg-white rounded-[20px] ">
+      <div className="w-full h-fit  border border-red-500 relative p-4 rounded-[20px] ">
         <TransformWrapper
           initialScale={1}
           minScale={1}
@@ -50,7 +51,11 @@ const MapContent = () => {
             wrapperClass="w-full! h-full! border! border-green-500! "
             contentClass="w-full!"
           >
-            <BaseMap />
+            <svg viewBox="0 0 998 1274" className="w-full h-auto">
+              <BaseMap />
+
+              <StandLayer />
+            </svg>
           </TransformComponent>
         </TransformWrapper>
       </div>
