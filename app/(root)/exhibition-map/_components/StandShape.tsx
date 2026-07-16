@@ -1,6 +1,8 @@
 "use client";
 
 interface StandShapeProps {
+  onMouseEnter?: (e: React.MouseEvent<SVGGElement>) => void;
+  onMouseLeave?: () => void;
   stand_no: string;
   category:
     | "goff-standard"
@@ -20,6 +22,8 @@ interface StandShapeProps {
 }
 
 export default function StandShape({
+  onMouseEnter,
+  onMouseLeave,
   stand_no,
   category,
   fill,
@@ -105,6 +109,8 @@ export default function StandShape({
 
   return (
     <g
+      onMouseEnter={(e) => onMouseEnter?.(e)}
+      onMouseLeave={onMouseLeave}
       transform={`translate(${x}, ${y})`}
       onClick={() => onClick?.(stand_no)}
       style={{ cursor: "pointer" }}

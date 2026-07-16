@@ -1,4 +1,15 @@
-export const standManagementData = [
+export interface StandManagement {
+  stand_no: string;
+  category: string;
+  standType: string;
+  standTypeKey: string;
+  size: string;
+  price: number;
+  status: string;
+  exhibitor: string | null;
+}
+
+export const standManagementData: StandManagement[] = [
   {
     stand_no: "1",
     category: "Goff Complex",

@@ -6,9 +6,21 @@ import BaseMap from "@/components/map/BaseMap";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapControls from "./MapControls";
 import StandLayer from "./StandLayer";
+import type { Stand } from "@/types/stand";
+import StandTooltip from "./StandTooltip";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [tooltip, setTooltip] = useState<{
+    stand: Stand | null;
+    x: number;
+    y: number;
+  }>({
+    stand: null,
+    x: 0,
+    y: 0,
+  });
+
   return (
     <section className="w-full  mt-12 flex gap-6">
       <div className="w-[320px] px-4 py-5 rounded-[20px] bg-white hidden lg:block">
@@ -25,7 +37,7 @@ const MapContent = () => {
         </h3>
         <StandCategoryAccordion />
       </div>
-      <div className="w-full h-fit  border border-red-500 relative p-4 rounded-[20px] ">
+      <div className="w-full h-fit border border-red-500 relative p-4 rounded-[20px] ">
         <TransformWrapper
           initialScale={1}
           minScale={1}
@@ -54,10 +66,13 @@ const MapContent = () => {
             <svg viewBox="0 0 998 1274" className="w-full h-auto">
               <BaseMap />
 
-              <StandLayer />
+              <StandLayer setTooltip={setTooltip} />
             </svg>
           </TransformComponent>
         </TransformWrapper>
+        {tooltip.stand && (
+          <StandTooltip stand={tooltip.stand} x={tooltip.x} y={tooltip.y} />
+        )}
       </div>
     </section>
   );
