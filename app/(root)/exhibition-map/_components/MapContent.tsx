@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import StandCategoryAccordion from "./StandCategoryAccordion";
 import Image from "next/image";
+import BaseMap from "@/components/map/BaseMap";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import MapControls from "./MapControls";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,7 +24,36 @@ const MapContent = () => {
         </h3>
         <StandCategoryAccordion />
       </div>
-      <div className="border border-red-500 flex-1"></div>
+      <div className="w-full overflow-hidden border border-red-500 relative p-4 bg-white rounded-[20px] ">
+        <TransformWrapper
+          initialScale={1}
+          minScale={1}
+          maxScale={8}
+          centerOnInit
+          limitToBounds={true}
+          smooth
+          wheel={{
+            disabled: true,
+          }}
+          doubleClick={{
+            disabled: true,
+          }}
+          pinch={{
+            disabled: false,
+          }}
+          panning={{
+            disabled: false,
+          }}
+        >
+          <MapControls />
+          <TransformComponent
+            wrapperClass="w-full! h-full! border! border-green-500! "
+            contentClass="w-full!"
+          >
+            <BaseMap />
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
     </section>
   );
 };
