@@ -1,25 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import StandCategoryAccordion from "./StandCategoryAccordion";
 import Image from "next/image";
 import BaseMap from "@/components/map/BaseMap";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapControls from "./MapControls";
 import StandLayer from "./StandLayer";
-import type { Stand } from "@/types/stand";
-import StandTooltip from "./StandTooltip";
+import StandTooltip, { type TooltipHandle } from "./StandTooltip";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [tooltip, setTooltip] = useState<{
-    stand: Stand | null;
-    x: number;
-    y: number;
-  }>({
-    stand: null,
-    x: 0,
-    y: 0,
-  });
+
+  /**
+   * tooltipRef is passed down to StandLayer.
+   * Hover events call tooltipRef.current.show/hide() directly — no React
+   * state update, so MapContent (and the entire subtree) never re-renders
+   * when a stand is hovered.
+   */
+  const tooltipRef = useRef<TooltipHandle>(null);
 
   return (
     <section className="w-full  mt-12 flex gap-6">
@@ -66,13 +64,22 @@ const MapContent = () => {
             <svg viewBox="0 0 998 1274" className="w-full h-auto">
               <BaseMap />
 
-              <StandLayer setTooltip={setTooltip} />
+              {/*
+               * StandLayer is React.memo'd and receives only the stable tooltipRef.
+               * It will never re-render from MapContent's own state changes.
+               */}
+              <StandLayer tooltipRef={tooltipRef} />
             </svg>
           </TransformComponent>
         </TransformWrapper>
-        {tooltip.stand && (
-          <StandTooltip stand={tooltip.stand} x={tooltip.x} y={tooltip.y} />
-        )}
+
+        {/*
+         * StandTooltip is always mounted — visibility is driven imperatively
+         * via tooltipRef.current.show/hide(), not by conditional rendering.
+         * This eliminates the mount/unmount cost and the React re-render
+         * that previously occurred on every hover enter/leave.
+         */}
+        <StandTooltip ref={tooltipRef} />
       </div>
     </section>
   );
