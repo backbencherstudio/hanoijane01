@@ -154,6 +154,26 @@ const StandShape = memo(function StandShape({
               </text>
             </>
           );
+        // GOFF PREMIUM 2
+        case "goff-premium-2":
+          return (
+            <>
+              <rect width="48" height="23.5" fill={fill} />
+
+              <text
+                x={24}
+                y={12}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize={10}
+                fontWeight="700"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
         case "outdoor":
           return <></>;
 

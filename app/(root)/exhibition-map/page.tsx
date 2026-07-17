@@ -1,7 +1,7 @@
 import React from "react";
-import ExhibitionMapPageBanner from "./_components/ExhibitionMapPageBanner";
-import ExhibitionMapPageHeadline from "./_components/ExhibitionMapPageHeadline";
-import MapContent from "./_components/MapContent";
+import ExhibitionMapPageBanner from "../../../components/exhibition-map/ExhibitionMapPageBanner";
+import ExhibitionMapPageHeadline from "../../../components/exhibition-map/ExhibitionMapPageHeadline";
+import MapContent from "@/components/exhibition-map/MapContent";
 
 const ExhibitionMapPage = () => {
   return (
