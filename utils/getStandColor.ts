@@ -13,5 +13,9 @@ export function getStandColor(category: string, status: string) {
 
     case "goff-premium-3":
       return "#7F3F98";
+    case "goff-small":
+      return "#27AAE1";
+    case "outdoor":
+      return "#D6992F";
   }
 }

@@ -73,9 +73,9 @@ const StandShape = memo(function StandShape({
                     y={19}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="white"
+                    fill="black"
                     fontSize={8}
-                    fontWeight="700"
+                    fontWeight="500"
                     pointerEvents="none"
                   >
                     {stand_no}
@@ -94,9 +94,9 @@ const StandShape = memo(function StandShape({
                     y={20}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="white"
+                    fill="black"
                     fontSize={10}
-                    fontWeight="700"
+                    fontWeight="500"
                     pointerEvents="none"
                   >
                     {stand_no}
@@ -121,9 +121,9 @@ const StandShape = memo(function StandShape({
                     y={11}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="white"
+                    fill="black"
                     fontSize={8}
-                    fontWeight="700"
+                    fontWeight="500"
                     pointerEvents="none"
                   >
                     {stand_no}
@@ -145,9 +145,9 @@ const StandShape = memo(function StandShape({
                 y={12}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill="white"
+                fill="black"
                 fontSize={10}
-                fontWeight="700"
+                fontWeight="500"
                 pointerEvents="none"
               >
                 {stand_no}
@@ -167,7 +167,55 @@ const StandShape = memo(function StandShape({
                 dominantBaseline="middle"
                 fill="white"
                 fontSize={10}
-                fontWeight="700"
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
+        // GOFF PREMIUM 3
+        case "goff-premium-3":
+          return (
+            <svg
+              width="48"
+              height="43"
+              viewBox="0 0 50 44"
+              fill={fill}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 43.2973H43.2973L49.4927 37.1725V0H24.7464V18.6216H0V43.2973Z"
+                fill={fill}
+              />
+              <text
+                x={36}
+                y={30}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize={10}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </svg>
+          );
+        // GOFF SMALL
+        case "goff-small":
+          return (
+            <>
+              <rect width="30" height="18" fill={fill} />
+
+              <text
+                x={15}
+                y={9}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="black"
+                fontSize={10}
+                fontWeight="500"
                 pointerEvents="none"
               >
                 {stand_no}
@@ -175,7 +223,24 @@ const StandShape = memo(function StandShape({
             </>
           );
         case "outdoor":
-          return <></>;
+          return (
+            <>
+              <rect width="135" height="96" fill={fill} />
+
+              <text
+                x={67}
+                y={49}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="black"
+                fontSize={10}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
 
         default:
           return null;
