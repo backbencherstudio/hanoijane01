@@ -39,7 +39,7 @@ const StandLayer = memo(function StandLayer({ tooltipRef }: StandLayerProps) {
         ...standLookup[stand.stand_no],
         category: stand.category,
       })),
-    [] // static imports never change
+    [], // static imports never change
   );
 
   // ── Stable per-stand onMouseEnter handlers (desktop hover preview) ────────
@@ -53,12 +53,12 @@ const StandLayer = memo(function StandLayer({ tooltipRef }: StandLayerProps) {
             tooltipRef.current?.show(
               stand,
               rect.left + rect.width / 2,
-              rect.bottom + 12
+              rect.bottom + 12,
             );
           },
-        ])
+        ]),
       ),
-    [stands, tooltipRef]
+    [stands, tooltipRef],
   );
 
   // ── Stable per-stand onTap handlers (click + touch via pointer events) ────
@@ -74,12 +74,12 @@ const StandLayer = memo(function StandLayer({ tooltipRef }: StandLayerProps) {
             tooltipRef.current?.show(
               stand,
               rect.left + rect.width / 2,
-              rect.bottom + 12
+              rect.bottom + 12,
             );
           },
-        ])
+        ]),
       ),
-    [stands, tooltipRef]
+    [stands, tooltipRef],
   );
 
   return (

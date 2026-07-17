@@ -1,11 +1,8 @@
 "use client";
 
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import type { Stand } from "@/types/stand";
+import { BadgeCheck } from "lucide-react";
 
 // ─── Imperative handle exposed to parent ────────────────────────────────────
 export interface TooltipHandle {
@@ -72,15 +69,16 @@ const StandTooltip = forwardRef<TooltipHandle>((_, ref) => {
         r.statusBadge.current.textContent = stand.status;
         if (stand.status === "booked") {
           r.statusBadge.current.className =
-            "rounded-full px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-700";
+            "rounded-sm px-1.5 py-1 text-sm font-semibold bg-gray-200 text-gray-700";
         } else {
           r.statusBadge.current.className =
-            "rounded-full px-2 py-1 text-xs font-semibold bg-green-100 text-green-700";
+            "rounded-sm px-1.5 py-1 text-sm font-semibold bg-green-100 text-green-700";
         }
       }
 
       // ── other fields ──────────────────────────────────────────────────────
-      if (r.standType.current) r.standType.current.textContent = stand.standType;
+      if (r.standType.current)
+        r.standType.current.textContent = stand.standType;
       if (r.size.current) r.size.current.textContent = stand.size;
       if (r.price.current) r.price.current.textContent = `€ ${stand.price}`;
 
@@ -164,7 +162,7 @@ const StandTooltip = forwardRef<TooltipHandle>((_, ref) => {
   return (
     <div
       ref={r.root}
-      className="fixed z-[9999] w-64 rounded-xl border border-[#E4E7EC] bg-white p-4 shadow-xl
+      className="fixed z-9999 w-52 rounded-xl border border-[#E4E7EC] bg-white p-4 shadow-xl
                  transition-opacity duration-150"
       style={{
         opacity: 0,
@@ -178,37 +176,35 @@ const StandTooltip = forwardRef<TooltipHandle>((_, ref) => {
       {/* Arrow */}
       <div className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-[#E4E7EC] bg-white" />
 
-      <h3 className="text-lg font-semibold text-primary">
-        Stand <span ref={r.standNo} />
+      <h3 className="text-sm font-semibold text-primary flex items-center justify-between">
+        <span className="space-x-1">
+          {" "}
+          Stand <span ref={r.standNo} />
+        </span>{" "}
+        <span ref={r.statusBadge} />
       </h3>
 
-      <div className="mt-4 space-y-3 text-sm">
-        {/* Status */}
-        <div className="flex items-center justify-between">
-          <span className="text-accent">Status</span>
-          <span ref={r.statusBadge} />
-        </div>
-
+      <div className="mt-4 text-sm">
         {/* Type */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-2">
           <span className="text-accent">Type</span>
-          <span ref={r.standType} className="font-medium text-primary" />
+          <span ref={r.standType} className="font-medium text-[#4A4C56]" />
         </div>
 
         {/* Size */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-2">
           <span className="text-accent">Size</span>
-          <span ref={r.size} className="font-medium text-primary" />
+          <span ref={r.size} className="font-medium text-[#4A4C56]" />
         </div>
 
         {/* Price */}
         <div className="flex items-center justify-between">
           <span className="text-accent">Price</span>
-          <span ref={r.price} className="font-semibold text-primary" />
+          <span ref={r.price} className="font-semibold text-[#4A4C56]" />
         </div>
 
         {/* Exhibitor — shown/hidden imperatively */}
-        <div
+        {/* <div
           ref={r.exhibitorRow}
           className="items-center justify-between"
           style={{ display: "none" }}
@@ -216,19 +212,19 @@ const StandTooltip = forwardRef<TooltipHandle>((_, ref) => {
           <span className="text-accent">Exhibitor</span>
           <span
             ref={r.exhibitorName}
-            className="max-w-[120px] truncate text-right font-medium text-primary"
+            className="max-w-30 truncate text-right font-medium text-primary"
           />
-        </div>
+        </div> */}
 
         {/* Book Now button — shown/hidden imperatively */}
         <button
           ref={r.bookBtn}
           type="button"
-          className="mt-2 w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+          className="mt-2 w-full rounded-full bg-primary h-8.5 text-sm font-medium text-white hover:opacity-90 transition-opacity cursor-pointer active:scale-99"
           style={{ display: "none" }}
           onClick={(e) => e.stopPropagation()}
         >
-          Book Now
+         <span className="flex gap-1.5 items-center justify-center"> <BadgeCheck size={16} /> Book Now</span>
         </button>
       </div>
     </div>

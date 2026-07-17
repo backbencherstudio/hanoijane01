@@ -35,7 +35,7 @@ const MapContent = () => {
         </h3>
         <StandCategoryAccordion />
       </div>
-      <div className="w-full h-fit border border-red-500 relative p-4 rounded-[20px] ">
+      <div className="w-full h-fit bg-white overflow-hidden relative p-4 rounded-[20px] ">
         <TransformWrapper
           initialScale={1}
           minScale={1}
@@ -58,7 +58,7 @@ const MapContent = () => {
         >
           <MapControls />
           <TransformComponent
-            wrapperClass="w-full! h-full! border! border-green-500! "
+            wrapperClass="w-full! h-full! "
             contentClass="w-full!"
           >
             <svg viewBox="0 0 998 1274" className="w-full h-auto">

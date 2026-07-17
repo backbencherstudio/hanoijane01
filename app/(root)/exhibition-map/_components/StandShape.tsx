@@ -9,6 +9,14 @@ interface StandShapeProps {
    *  The caller receives the element's DOMRect for tooltip positioning. */
   onTap?: (rect: DOMRect) => void;
   stand_no: string;
+  type?:
+    | "vertical"
+    | "horizontal"
+    | "corner-left"
+    | "corner-right"
+    | "square"
+    | "large";
+
   category:
     | "goff-standard"
     | "goff-premium-1"
@@ -41,6 +49,7 @@ const StandShape = memo(function StandShape({
   onTap,
   stand_no,
   category,
+  type,
   fill,
   x,
   y,
@@ -49,78 +58,108 @@ const StandShape = memo(function StandShape({
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
 
   const renderShape = () => {
-    switch (category) {
-      // ===============================
-      // GOFF STANDARD
-      // ===============================
-      case "goff-standard":
-        return (
-          <>
-            <rect width="23" height="35" fill={fill} />
+    if (type) {
+      switch (type) {
+        case "vertical":
+          switch (category) {
+            // GOFF STANDARD
+            case "goff-standard":
+              return (
+                <>
+                  <rect width="23" height="35" fill={fill} />
 
-            <text
-              x={12.5}
-              y={19}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fill="white"
-              fontSize={8}
-              fontWeight="700"
-              pointerEvents="none"
-            >
-              {stand_no}
-            </text>
-          </>
-        );
+                  <text
+                    x={12.5}
+                    y={19}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize={8}
+                    fontWeight="700"
+                    pointerEvents="none"
+                  >
+                    {stand_no}
+                  </text>
+                </>
+              );
 
-      // ===============================
-      // GOFF PREMIUM 1
-      // ===============================
-      case "goff-premium-1":
-        return (
-          <>
-            <rect width="50" height="50" fill={fill} />
+            // GOFF PREMIUM 2
+            case "goff-premium-2":
+              return (
+                <>
+                  <rect width="60" height="40" fill={fill} />
 
-            <text
-              x={25}
-              y={25}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fill="white"
-              fontSize={10}
-              fontWeight="700"
-              pointerEvents="none"
-            >
-              {stand_no}
-            </text>
-          </>
-        );
+                  <text
+                    x={30}
+                    y={20}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize={10}
+                    fontWeight="700"
+                    pointerEvents="none"
+                  >
+                    {stand_no}
+                  </text>
+                </>
+              );
 
-      // ===============================
-      // GOFF PREMIUM 2
-      // ===============================
-      case "goff-premium-2":
-        return (
-          <>
-            <rect width="60" height="40" fill={fill} />
+            default:
+              return null;
+          }
 
-            <text
-              x={30}
-              y={20}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fill="white"
-              fontSize={10}
-              fontWeight="700"
-              pointerEvents="none"
-            >
-              {stand_no}
-            </text>
-          </>
-        );
+        case "horizontal":
+          switch (category) {
+            // GOFF STANDARD
+            case "goff-standard":
+              return (
+                <>
+                  <rect width="35" height="23" fill={fill} />
 
-      default:
-        return null;
+                  <text
+                    x={17}
+                    y={11}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="white"
+                    fontSize={8}
+                    fontWeight="700"
+                    pointerEvents="none"
+                  >
+                    {stand_no}
+                  </text>
+                </>
+              );
+          }
+      }
+    } else {
+      switch (category) {
+        // GOFF PREMIUM 1
+        case "goff-premium-1":
+          return (
+            <>
+              <rect width="72.5" height="23.5" fill={fill} />
+
+              <text
+                x={36}
+                y={12}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize={10}
+                fontWeight="700"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
+        case "outdoor":
+          return <></>;
+
+        default:
+          return null;
+      }
     }
   };
 
