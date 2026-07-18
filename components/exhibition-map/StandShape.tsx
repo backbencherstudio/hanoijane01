@@ -128,6 +128,26 @@ const StandShape = memo(function StandShape({
                   </text>
                 </>
               );
+            // MARQUEE STANDARD
+            case "marquee-standard":
+              return (
+                <>
+                  <rect width="36.5" height="23.5" fill={fill} />
+
+                  <text
+                    x={17}
+                    y={11}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="black"
+                    fontSize={8}
+                    fontWeight="500"
+                    pointerEvents="none"
+                  >
+                    {stand_no}
+                  </text>
+                </>
+              );
           }
       }
     } else {
