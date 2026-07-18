@@ -191,6 +191,16 @@ export const standManagementData: StandManagement[] = [
     exhibitor: null,
   },
   {
+    stand_no: "M1",
+    category: "Marquee",
+    standType: "Standard",
+    standTypeKey: "marquee-standard",
+    size: "(3m × 2m)",
+    price: 1250,
+    status: "available",
+    exhibitor: null,
+  },
+  {
     stand_no: "Outdoor-1",
     category: "Outdoor",
     standType: "Standard",
@@ -200,7 +210,7 @@ export const standManagementData: StandManagement[] = [
     status: "available",
     exhibitor: null,
   },
-    {
+  {
     stand_no: "Outdoor-2",
     category: "Outdoor",
     standType: "Standard",
@@ -210,7 +220,7 @@ export const standManagementData: StandManagement[] = [
     status: "available",
     exhibitor: null,
   },
-    {
+  {
     stand_no: "Outdoor-3",
     category: "Outdoor",
     standType: "Standard",
@@ -220,7 +230,7 @@ export const standManagementData: StandManagement[] = [
     status: "available",
     exhibitor: null,
   },
-    {
+  {
     stand_no: "Outdoor-4",
     category: "Outdoor",
     standType: "Standard",
@@ -230,7 +240,7 @@ export const standManagementData: StandManagement[] = [
     status: "available",
     exhibitor: null,
   },
-    {
+  {
     stand_no: "Outdoor-5",
     category: "Outdoor",
     standType: "Standard",
@@ -240,7 +250,7 @@ export const standManagementData: StandManagement[] = [
     status: "available",
     exhibitor: null,
   },
-    {
+  {
     stand_no: "Outdoor-6",
     category: "Outdoor",
     standType: "Standard",

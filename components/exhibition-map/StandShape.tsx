@@ -82,20 +82,18 @@ const StandShape = memo(function StandShape({
                   </text>
                 </>
               );
-
-            // GOFF PREMIUM 2
-            case "goff-premium-2":
+            case "marquee-standard":
               return (
                 <>
-                  <rect width="60" height="40" fill={fill} />
+                  <rect width="24" height="36" fill={fill} />
 
                   <text
-                    x={30}
-                    y={20}
+                    x={12.5}
+                    y={19}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="black"
-                    fontSize={10}
+                    fontSize={8}
                     fontWeight="500"
                     pointerEvents="none"
                   >
