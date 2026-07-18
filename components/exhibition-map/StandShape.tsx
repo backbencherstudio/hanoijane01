@@ -24,9 +24,10 @@ interface StandShapeProps {
     | "goff-premium-3"
     | "goff-small"
     | "marquee-standard"
-    | "marquee-premium-1"
-    | "marquee-premium-2"
-    | "marquee-premium-3"
+    | "marquee-premium-a"
+    | "marquee-premium-b"
+    | "marquee-premium-c"
+    | "marquee-premium-d"
     | "outdoor";
   fill: string | undefined;
   x: number;
@@ -240,6 +241,45 @@ const StandShape = memo(function StandShape({
               </text>
             </>
           );
+        case "marquee-premium-b":
+          return (
+            <>
+              <rect width="36.5" height="49.5" fill={fill} />
+
+              <text
+                x={18}
+                y={25}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize={8}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
+        case "marquee-premium-c":
+          return (
+            <>
+              <rect width="24" height="66" fill={fill} />
+
+              <text
+                x={12}
+                y={33}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize={8}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
+
         case "outdoor":
           return (
             <>

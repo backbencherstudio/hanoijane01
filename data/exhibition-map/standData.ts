@@ -5,9 +5,10 @@ export type StandCategory =
   | "goff-premium-3"
   | "goff-small"
   | "marquee-standard"
-  | "marquee-premium-1"
-  | "marquee-premium-2"
-  | "marquee-premium-3"
+  | "marquee-premium-a"
+  | "marquee-premium-b"
+  | "marquee-premium-c"
+  | "marquee-premium-d"
   | "outdoor";
 
 export type StandShape =
@@ -465,12 +466,24 @@ export const standData: StandData[] = [
     x: 687.5,
     y: 393.5,
   },
-      {
+  {
     stand_no: "M49",
     category: "marquee-standard",
     type: "horizontal",
     x: 687.5,
     y: 367.5,
+  },
+  {
+    stand_no: "M50",
+    category: "marquee-premium-b",
+    x: 687.5,
+    y: 276.5,
+  },
+  {
+    stand_no: "M51",
+    category: "marquee-premium-c",
+    x: 627,
+    y: 320,
   },
   {
     stand_no: "M52",
