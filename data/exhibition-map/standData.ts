@@ -151,6 +151,12 @@ export const standData: StandData[] = [
     y: 240.5,
   },
   {
+    stand_no: "M2",
+    category: "marquee-premium-a",
+    x: 629.5,
+    y: 201,
+  },
+  {
     stand_no: "M3",
     category: "marquee-standard",
     type: "vertical",
@@ -318,7 +324,13 @@ export const standData: StandData[] = [
     x: 758,
     y: 1148,
   },
-
+  {
+    stand_no: "M27",
+    category: "marquee-premium-d",
+    type: "corner-right",
+    x: 745,
+    y: 1186,
+  },
   {
     stand_no: "M28",
     category: "marquee-standard",
@@ -624,6 +636,13 @@ export const standData: StandData[] = [
     type: "vertical",
     x: 629.5,
     y: 1148,
+  },
+  {
+    stand_no: "M72",
+    category: "marquee-premium-d",
+    type: "corner-left",
+    x: 629.5,
+    y: 1185.5,
   },
   {
     stand_no: "Outdoor-1",

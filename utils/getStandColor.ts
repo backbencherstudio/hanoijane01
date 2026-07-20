@@ -17,10 +17,14 @@ export function getStandColor(category: string, status: string) {
       return "#27AAE1";
     case "marquee-standard":
       return "#D6992F";
+    case "marquee-premium-a":
+      return "#2E3192";
     case "marquee-premium-b":
       return "#EC008C";
     case "marquee-premium-c":
       return "#F15A29";
+    case "marquee-premium-d":
+      return "#00A79D";
     case "outdoor":
       return "#D6992F";
   }

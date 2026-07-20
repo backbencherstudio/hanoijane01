@@ -150,6 +150,68 @@ const StandShape = memo(function StandShape({
                 </>
               );
           }
+        //type corner left
+        case "corner-left":
+          switch (category) {
+            case "marquee-premium-d":
+              return (
+                <svg
+                  width="37"
+                  height="52"
+                  viewBox="0 2 39 55"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M25.7168 0V37.8477H39.5938V54.0859H0.00878906V38.585H0V0H20.7168Z"
+                    fill={fill}
+                  />
+                  <text
+                    x={12}
+                    y={33}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="black"
+                    fontSize={8}
+                    fontWeight="500"
+                    pointerEvents="none"
+                  >
+                    {stand_no}
+                  </text>
+                </svg>
+              );
+          }
+        //type corner right
+        case "corner-right":
+          switch (category) {
+            case "marquee-premium-d":
+              return (
+                <svg
+                  width="39"
+                  height="51"
+                  viewBox="0 0.5 39 51"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M36.5869 0V38.585H36.5869V49.1104H0V34.8721H12.8701V0H38.5869Z"
+                    fill={fill}
+                  />
+                  <text
+                    x={25}
+                    y={33}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="black"
+                    fontSize={8}
+                    fontWeight="500"
+                    pointerEvents="none"
+                  >
+                    {stand_no}
+                  </text>
+                </svg>
+              );
+          }
       }
     } else {
       switch (category) {
@@ -278,6 +340,30 @@ const StandShape = memo(function StandShape({
                 {stand_no}
               </text>
             </>
+          );
+        case "marquee-premium-a":
+          return (
+            <svg
+              width="49"
+              height="38"
+              viewBox="0 0 50 38"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M50 22H24.5V38H0V0H50V23Z" fill={fill} />
+              <text
+                x={20}
+                y={12}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="white"
+                fontSize={8}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </svg>
           );
 
         case "outdoor":
