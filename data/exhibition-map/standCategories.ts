@@ -134,7 +134,7 @@ export const standCategories: StandCategory[] = [
   {
     id: 3,
     title: "Outdoor",
-    count: 0,
+    count: 6,
     types: [
       {
         id: 1,
