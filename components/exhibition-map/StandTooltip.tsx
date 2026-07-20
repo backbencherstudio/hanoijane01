@@ -10,6 +10,11 @@ export interface TooltipHandle {
   hide: () => void;
   /** Toggle open/close — same stand tap closes, different stand tap switches. */
   toggle: (stand: Stand, x: number, y: number) => void;
+  /**
+   * Re-read the currently-shown stand's bounding rect and reposition the
+   * tooltip. Call this during pan/zoom so the tooltip follows the stand.
+   */
+  refreshPosition: () => void;
 }
 
 // ─── Internal DOM refs (one per text node we need to update) ─────────────────
@@ -141,6 +146,20 @@ const StandTooltip = forwardRef<TooltipHandle>((_, ref) => {
         document.removeEventListener("pointerdown", outsideHandler.current);
         outsideHandler.current = null;
       }
+    },
+
+    refreshPosition() {
+      const el = r.root.current;
+      if (!el) return;
+      const standNo = currentStandNo.current;
+      if (!standNo) return;
+      const standEl = document.querySelector<Element>(
+        `[data-stand-no="${standNo}"]`,
+      );
+      if (!standEl) return;
+      const rect = standEl.getBoundingClientRect();
+      el.style.left = `${rect.left + rect.width / 2}px`;
+      el.style.top = `${rect.bottom + 12}px`;
     },
 
     toggle(stand: Stand, x: number, y: number) {

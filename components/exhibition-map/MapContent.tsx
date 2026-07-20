@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import StandCategoryAccordion from "./StandCategoryAccordion";
 import Image from "next/image";
 import BaseMap from "@/components/map/BaseMap";
@@ -18,6 +18,18 @@ const MapContent = () => {
    * when a stand is hovered.
    */
   const tooltipRef = useRef<TooltipHandle>(null);
+
+  // ── Reposition tooltip on page scroll ──────────────────────────────────
+  // The tooltip uses fixed positioning with viewport coordinates. When the
+  // page scrolls, the stand moves visually but the tooltip stays put unless
+  // we re-read the stand's bounding rect.
+  useEffect(() => {
+    const onScroll = () => {
+      tooltipRef.current?.refreshPosition();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section className="w-full  mt-12 flex gap-6">
@@ -54,6 +66,12 @@ const MapContent = () => {
           }}
           panning={{
             disabled: false,
+          }}
+          onPanning={() => {
+            tooltipRef.current?.refreshPosition();
+          }}
+          onZoom={() => {
+            tooltipRef.current?.refreshPosition();
           }}
         >
           <MapControls />

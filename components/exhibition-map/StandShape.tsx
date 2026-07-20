@@ -309,6 +309,7 @@ const StandShape = memo(function StandShape({
   return (
     <g
       data-stand="true"
+      data-stand-no={stand_no}
       onMouseEnter={(e) => onMouseEnter?.(e)}
       onPointerDown={(e) => {
         // Record start position to measure drag distance later
