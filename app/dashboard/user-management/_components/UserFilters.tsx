@@ -8,61 +8,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RiArrowDownSFill } from "react-icons/ri";
 
-interface StandFiltersProps {
-  type: string;
-  block: string;
+interface UserFiltersProps {
+  role: string;
   status: string;
-  onTypeChange: (value: string) => void;
-  onBlockChange: (value: string) => void;
+  onRoleChange: (value: string) => void;
   onStatusChange: (value: string) => void;
 }
 
-const typeOptions = ["All types", "Standard", "Double", "Outdoor"];
-const blockOptions = ["All Block", "A", "B", "C", "D", "E"];
-const statusOptions = ["All Status", "Available", "Reserved", "Booked"];
+const roleOptions = ["All Roles", "Super Admin", "Admin", "User"];
+const statusOptions = ["All Status", "Active", "Banned"];
 
-const StandFilters = ({
-  type,
-  block,
+const UserFilters = ({
+  role,
   status,
-  onTypeChange,
-  onBlockChange,
+  onRoleChange,
   onStatusChange,
-}: StandFiltersProps) => {
+}: UserFiltersProps) => {
   return (
     <div className="flex flex-wrap justify-center items-center gap-3">
-      {/* Type Filter */}
+      {/* Role Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
-            {type} <RiArrowDownSFill size={16} />
+            {role} <RiArrowDownSFill size={16} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          {typeOptions.map((option) => (
+          {roleOptions.map((option) => (
             <DropdownMenuItem
               key={option}
-              onClick={() => onTypeChange(option)}
-              className="cursor-pointer px-3.5 py-2.25"
-            >
-              {option}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* Block Filter */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
-            {block} <RiArrowDownSFill size={16} />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          {blockOptions.map((option) => (
-            <DropdownMenuItem
-              key={option}
-              onClick={() => onBlockChange(option)}
+              onClick={() => onRoleChange(option)}
               className="cursor-pointer px-3.5 py-2.25"
             >
               {option}
@@ -94,4 +69,4 @@ const StandFilters = ({
   );
 };
 
-export default StandFilters;
+export default UserFilters;

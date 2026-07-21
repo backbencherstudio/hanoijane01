@@ -48,6 +48,8 @@ const MapContent = () => {
         <StandCategoryAccordion />
       </div>
       <div className="w-full h-fit bg-white overflow-hidden relative p-4 rounded-[20px] ">
+        {/* i want to show the mapcontrols here
+        but i cant because map controls have to be inside transformwrapper */}
         <TransformWrapper
           initialScale={1}
           minScale={1}

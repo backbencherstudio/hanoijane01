@@ -268,7 +268,7 @@ export default function CustomTable<T extends object>({
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-          <table className={`w-max min-w-full border-collapse ${tableClassName}`}>
+          <table className={`w-max min-w-full text-sm border-collapse ${tableClassName}`}>
             <thead ref={theadRef} className={`${theadClassName} bg-[#DDEDFE]`}>
               <tr
                 className={`bg-[#DDEDFE] text-[#666D80] ${headerRowClassName}`}

@@ -10,10 +10,11 @@ interface BookingStatusFilterProps {
 const statuses = [
   { label: "All", value: "all" },
   { label: "Booked", value: "booked" },
-  { label: "Reserved", value: "reserved" },
-  { label: "Request", value: "request" },
-  { label: "Overdue", value: "overdue" },
-  { label: "Cancel", value: "cancel" },
+  { label: "Pending", value: "pending" },
+  // { label: "Reserved", value: "reserved" },
+  // { label: "Request", value: "request" },
+  // { label: "Overdue", value: "overdue" },
+  // { label: "Cancel", value: "cancel" },
 ];
 
 const BookingStatusFilter = ({
@@ -30,7 +31,7 @@ const BookingStatusFilter = ({
             "px-4 py-2.25 rounded-lg border text-sm font-medium transition-all duration-200 cursor-pointer",
             currentStatus === status.value
               ? "bg-primary border-primary text-white shadow-md"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200",
           )}
         >
           {status.label}

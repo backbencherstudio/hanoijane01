@@ -32,16 +32,16 @@ const DashboardHome = () => {
           <div>
             <StandOverviewChart />
           </div>
-           <div className="my-6">
-        <RecentBookings />
-      </div>
         </div>
         {/* right side */}
         <div>
           <div>
-            <BookingRequest/>
+            {/* <BookingRequest /> */}
           </div>
         </div>
+      </div>
+      <div className="my-6">
+        <RecentBookings />
       </div>
     </div>
   );

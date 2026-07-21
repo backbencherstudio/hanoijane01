@@ -14,7 +14,6 @@ type ChartData = {
   stand: string;
   total: number;
   booked: number;
-  reserved: number;
   available: number;
 };
 
@@ -23,28 +22,18 @@ const data: ChartData[] = [
     stand: "Expo Marquee",
     total: 120,
     booked: 60,
-    reserved: 15,
     available: 45,
   },
   {
     stand: "Main Goffs Sales Complex",
     total: 110,
     booked: 30,
-    reserved: 18,
-    available: 52,
-  },
-  {
-    stand: "Double Corner Stand",
-    total: 100,
-    booked: 30,
-    reserved: 18,
     available: 52,
   },
   {
     stand: "Outdoor Stand",
     total: 90,
     booked: 60,
-    reserved: 15,
     available: 15,
   },
 ];
@@ -85,8 +74,6 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
         <Row color={COLORS.total} label="Total Seats" value={values.total} />
 
         <Row color={COLORS.booked} label="Booked" value={values.booked} />
-
-        <Row color={COLORS.reserved} label="Reserved" value={values.reserved} />
 
         <Row
           color={COLORS.available}
@@ -153,13 +140,6 @@ export default function StandOverviewChart() {
           <Bar
             dataKey="booked"
             fill={COLORS.booked}
-            radius={[4, 4, 1, 1]}
-            barSize={40}
-          />
-
-          <Bar
-            dataKey="reserved"
-            fill={COLORS.reserved}
             radius={[4, 4, 1, 1]}
             barSize={40}
           />

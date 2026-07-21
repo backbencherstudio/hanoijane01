@@ -2,7 +2,7 @@
 import StateCard2 from "@/components/dashboard/StateCard2";
 import { Button } from "@/components/ui/button";
 import { Eye, X } from "lucide-react";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import StandFilters from "./StandFilters";
 import {
@@ -12,6 +12,13 @@ import {
 import CustomTable from "@/components/ui/Table";
 import { GoDotFill } from "react-icons/go";
 import { Column } from "@/types/table";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import MapControls from "@/components/exhibition-map/MapControls";
+import BaseMap from "@/components/map/BaseMap";
+import StandLayer from "@/components/exhibition-map/StandLayer";
+import StandTooltip, {
+  TooltipHandle,
+} from "@/components/exhibition-map/StandTooltip";
 
 const stateData = [
   {
@@ -33,12 +40,24 @@ type ViewType = "map" | "list";
 const StandManagementPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // for map -start
+  const tooltipRef = useRef<TooltipHandle>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      tooltipRef.current?.refreshPosition();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  // for map -end
 
   // Read view from URL
   const viewParam = searchParams.get("view") as ViewType | null;
-  const currentView = viewParam && (viewParam === "map" || viewParam === "list") 
-    ? viewParam 
-    : "list";
+  const currentView =
+    viewParam && (viewParam === "map" || viewParam === "list")
+      ? viewParam
+      : "list";
 
   // Read filter values from URL
   const typeFilter = searchParams.get("type") || "All types";
@@ -276,8 +295,47 @@ const StandManagementPageContent = () => {
           />
         </div>
       ) : (
-        <div className="bg-white rounded-2xl px-5 py-4 flex items-center justify-center h-64">
-          <p className="text-gray-500 text-lg">Map View Coming Soon</p>
+        <div className="bg-white rounded-[20px] overflow-hidden flex items-center justify-center">
+          <div className="w-full relative h-fit bg-white  p-4  ">
+            <TransformWrapper
+              initialScale={1}
+              minScale={1}
+              maxScale={8}
+              centerOnInit
+              limitToBounds={true}
+              smooth
+              wheel={{
+                disabled: true,
+              }}
+              doubleClick={{
+                disabled: true,
+              }}
+              pinch={{
+                disabled: false,
+              }}
+              panning={{
+                disabled: false,
+              }}
+              onPanning={() => {
+                tooltipRef.current?.refreshPosition();
+              }}
+              onZoom={() => {
+                tooltipRef.current?.refreshPosition();
+              }}
+            >
+              <MapControls />
+              <TransformComponent
+                wrapperClass="w-full! h-full! "
+                contentClass="w-full!"
+              >
+                <svg viewBox="0 0 998 1274" className="w-full h-auto">
+                  <BaseMap />
+                  <StandLayer tooltipRef={tooltipRef} />
+                </svg>
+              </TransformComponent>
+            </TransformWrapper>
+            <StandTooltip ref={tooltipRef} />
+          </div>
         </div>
       )}
     </div>

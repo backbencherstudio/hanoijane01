@@ -36,7 +36,7 @@ const breadcrumbMap: Record<string, string> = {
   "event-setting": "Event Setting",
 
   "stand-management": "Stand Management",
-  stands: "View All Stands",
+  stands: "Stand Management",
   "stand-price": "Stand Price",
 
   "booking-management": "Booking Management",

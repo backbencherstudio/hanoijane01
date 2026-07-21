@@ -9,6 +9,7 @@ import {
   ChevronDown,
   LayoutDashboard,
   Settings,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
@@ -43,13 +44,19 @@ const menuItems: MenuItem[] = [
     icon: <BsShopWindow size={18} />,
     children: [
       {
-        title: "View All Stands",
+        title: "Stand List",
         href: "/dashboard/stand-management/stands",
+        query: { view: "list" },
       },
       {
-        title: "Stand Price",
-        href: "/dashboard/stand-management/stand-price",
+        title: "Stand Map",
+        href: "/dashboard/stand-management/stands",
+        query: { view: "map" },
       },
+      // {
+      //   title: "Stand Price",
+      //   href: "/dashboard/stand-management/stand-price",
+      // },
     ],
   },
   {
@@ -113,6 +120,11 @@ const menuItems: MenuItem[] = [
         query: { status: "overdue" },
       },
     ],
+  },
+  {
+    title: "User Management",
+    href: "/dashboard/user-management",
+    icon: <Users size={18} />,
   },
   // {
   //   title: "Document Review",

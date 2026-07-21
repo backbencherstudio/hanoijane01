@@ -13,9 +13,8 @@ const Footer = () => {
   const navigation = {
     platform: [
       { name: "Exhibition Map", href: "/exhibition-map" },
-      { name: "Browse Stands", href: "/" },
-      { name: "Pricing", href: "/" },
-      { name: "Exhibitor Login", href: "/" },
+      { name: "Browse Stands", href: "/exhibition-map" },
+      { name: "Exhibitor Login", href: "/sign-in" },
       { name: "Admin Portal", href: "/" },
     ],
     resources: [
@@ -86,11 +85,11 @@ const Footer = () => {
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0" />
-                +971 4 XXX XXXX
+                +353 (0)45 877543
               </p>
               <p className="flex items-center gap-2">
-                <MapPin className="size-4 shrink-0" />{" "}
-                exhibitors@industryexpo2027.com
+                <MapPin className="size-4 shrink-0" /> ITBA, Greenhills. Kill ,
+                Co Kildare W91 FY62 Ireland
               </p>
             </div>
           </div>

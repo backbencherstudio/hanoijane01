@@ -180,54 +180,6 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
                 )}
               </div>
             </div>
-
-            {/* Option 2: Payment Later – NO DATE PICKER */}
-            <div
-              className={`
-                border-2 rounded-xl p-2 md:p-5 cursor-pointer transition-all
-                ${paymentOption === "later" ? "border-primary/10" : "border-gray-200"}
-              `}
-              onClick={() => setPaymentOption("later")}
-            >
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-start gap-3">
-                  <RadioGroupItem
-                    value="later"
-                    id="later"
-                    className="mt-1
-                      [&>span]:hidden 
-                      size-6
-                      data-[state=unchecked]:border-2 border-gray-300
-                      data-[state=checked]:border-3
-                      data-[state=checked]:bg-primary
-                      data-[state=checked]:border-[#ffffff] data-[state=checked]:ring-2 data-[state=checked]:ring-primary"
-                  />
-                  <div className="flex-1">
-                    <Label
-                      htmlFor="later"
-                      className="text-xl lg:text-2xl font-semibold cursor-pointer"
-                    >
-                      Payment Later
-                    </Label>
-                    <p className="text-[#777980] mt-1 lg:text-xl">
-                      To reserve your stand with pay later, you&apos;ll need to
-                      pay up two months before the event starts.
-                    </p>
-                  </div>
-                </div>
-                {paymentOption === "later" && (
-                  <div className="bg-primary/5 p-2 md:p-5 rounded-xl">
-                    <div className="font-medium bg-primary/10 border px-4 py-3 rounded-lg flex items-start gap-2 text-primary">
-                      <Info className="shrink-0" size={16} />
-                      <span>
-                        You&apos;ll need to pay up two months before the event
-                        starts. Missing the payment will cancel your booking.
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
           </RadioGroup>
         </div>
 
