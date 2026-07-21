@@ -11,6 +11,7 @@ import { Column } from "@/types/table";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CreateAdminModal from "./CreateAdminModal";
+import DeleteUserModal from "./DeleteUserModal";
 
 const stateData = [
   {
@@ -41,6 +42,8 @@ const UserManagementContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [createAdminModalOpen, setCreateAdminModalOpen] = useState(false);
+  const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 
   // Read filter values from URL
   const roleFilter = searchParams.get("role") || "All Roles";
@@ -194,7 +197,13 @@ const UserManagementContent = () => {
           <button className="cursor-pointer">
             <PenLine className="size-5" />
           </button>
-          <button className="cursor-pointer">
+          <button
+            onClick={() => {
+              setSelectedUser(row);
+              setDeleteUserModalOpen(true);
+            }}
+            className="cursor-pointer"
+          >
             <Trash2 className="size-5 text-[#DC3545]" />
           </button>
         </div>
@@ -273,6 +282,20 @@ const UserManagementContent = () => {
         />
       </div>
       <CreateAdminModal isOpen={createAdminModalOpen} onClose={() => setCreateAdminModalOpen(false)} />
+      <DeleteUserModal
+        isOpen={deleteUserModalOpen}
+        onClose={() => {
+          setDeleteUserModalOpen(false);
+          setSelectedUser(null);
+        }}
+        onConfirm={() => {
+          console.log("Delete user:", selectedUser?.username);
+          // TODO: API Call to delete user
+          setDeleteUserModalOpen(false);
+          setSelectedUser(null);
+        }}
+        username={selectedUser?.username || ""}
+      />
     </div>
   );
 };
