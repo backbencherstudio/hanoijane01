@@ -47,6 +47,13 @@ const StandManagementPageContent = () => {
     const onScroll = () => {
       tooltipRef.current?.refreshPosition();
     };
+    // Dashboard layout scrolls inside <main>, not on window
+    const scrollContainer = document.querySelector("main");
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", onScroll, { passive: true });
+      return () => scrollContainer.removeEventListener("scroll", onScroll);
+    }
+    // Fallback for layouts where window scrolls
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

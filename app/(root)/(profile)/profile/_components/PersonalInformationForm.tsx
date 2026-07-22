@@ -51,7 +51,7 @@ export default function PersonalInformationForm() {
         <div>
           <div className="flex items-center gap-2 text-primary">
             {" "}
-            <h2 className="text-3xl  font-semibold">Personal Information</h2>
+            <h2 className="text-3xl  font-semibold">Company Details</h2>
             <div>
               {!editing ? (
                 <PenLine
@@ -62,7 +62,7 @@ export default function PersonalInformationForm() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Manage your personal and company information.
+            Manage your company details.
           </p>
         </div>
 

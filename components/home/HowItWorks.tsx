@@ -16,13 +16,13 @@ const HowItWorks = () => {
         "Explore the interactive floor plan. Filter by hall, size, and price. View real-time stand availability across all exhibition zones.",
     },
     {
-      icon: "/icons/MagnifyinGlass.svg",
+      icon: "/icons/horse-stall.png",
       title: "Select Your Stand",
       subtitle:
         "Click any available stand to view full details, dimensions, pricing, location advantages, and neighbouring exhibitors.",
     },
     {
-      icon: "/icons/MagnifyinGlass.svg",
+      icon: "/icons/valid-icon.png",
       title: "Complete Payment",
       subtitle:
         "Review your booking, upload required documents, and complete your payment securely. Receive instant confirmation via email.",
