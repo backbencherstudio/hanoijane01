@@ -14,7 +14,6 @@ interface BookingInfoData {
   email: string;
   phoneNumber: string;
   companyAddress: string;
-  submitLater: boolean;
 }
 
 const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
@@ -22,6 +21,10 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
   const dispatch = useDispatch();
   const storedInfo = useSelector(
     (state: RootState) => state.booking.bookingInfo,
+  );
+  const stand = useSelector((state: RootState) => state.booking.stand);
+  const termsAndConditions = useSelector(
+    (state: RootState) => state.booking.termsAndConditions,
   );
 
   const {
@@ -36,7 +39,6 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
       email: storedInfo.email || "",
       phoneNumber: storedInfo.phoneNumber || "",
       companyAddress: storedInfo.companyAddress || "",
-      submitLater: false,
     },
   });
 
@@ -48,13 +50,23 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
       email: storedInfo.email || "",
       phoneNumber: storedInfo.phoneNumber || "",
       companyAddress: storedInfo.companyAddress || "",
-      submitLater: false,
     });
   }, [storedInfo, reset]);
 
   const onSubmit = (data: BookingInfoData) => {
     dispatch(updateBookingInfo(data));
-    console.log("Booking Info Data:", data);
+    console.log("===== BOOKING INFO SUBMIT =====");
+    console.log(
+      JSON.stringify(
+        {
+          stand,
+          termsAndConditions,
+          bookingInfo: data,
+        },
+        null,
+        2,
+      ),
+    );
     nextStep();
   };
 

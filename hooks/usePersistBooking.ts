@@ -15,8 +15,7 @@ export const usePersistBooking = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Only restore if it has some data (not empty)
-        if (parsed.bookingInfo?.companyName || parsed.addOns?.length) {
+        if (parsed.stand?.id) {
           dispatch(restoreBooking(parsed));
         }
       } catch (e) {
@@ -30,11 +29,10 @@ export const usePersistBooking = () => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(bookingState));
   }, [bookingState]);
 
-  // 3) On unmount (leaving page): clear storage and reset state
+  // 3) On unmount (leaving page): clear storage
   useEffect(() => {
     return () => {
       sessionStorage.removeItem(STORAGE_KEY);
-      // Optionally, you can also reset redux, but we'll rely on the slice's reset actions
     };
   }, []);
 };
