@@ -46,13 +46,16 @@ export default function BookingContent() {
   return (
     <section className="w-full bg-[#E5EAEC]">
       <div className="container padding-default">
-        <h5 className="text-[2rem] font-semibold text-primary mb-12">{currentStep === 1?"Company information":"Payment  information"}</h5>
+        <h5 className="text-[2rem] font-semibold text-primary mb-12">
+          {currentStep === 1
+            ? "Company information"
+            : "Payment  information"}
+        </h5>
         {/* Forms */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 ">
           <div className="col-span-full lg:col-span-2">
             {currentStep === 1 && <BookingInfo nextStep={nextStep} />}
             {currentStep === 2 && <PaymentForm prevStep={prevStep} />}
-            {/* {currentStep === 3 && <AddOnsForm nextStep={nextStep} prevStep={prevStep} />} */}
           </div>
           <div className="border">
             <BookingInfoCard />
