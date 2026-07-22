@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { Check, Upload, X, Signature, Calendar, MapPin } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { Upload, X, Signature } from "lucide-react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -10,14 +12,26 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { sections } from "@/data/termsAndConditions";
 import { Input } from "@/components/ui/input";
 import ButtonGroup from "@/components/ui/ButtonGroup";
+import { updateTermsAndConditions } from "@/src/redux/slice/bookingSlice";
+import { RootState } from "@/src/redux/store";
 
 interface TermsFormData {
   accepted: boolean;
   signature: FileList | null;
+  onBehalfOf: string;
+  title: string;
 }
 
 const TermsAndConditionsPage = () => {
-  const [signaturePreview, setSignaturePreview] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const storedTerms = useSelector(
+    (state: RootState) => state.booking.termsAndConditions,
+  );
+
+  const [signaturePreview, setSignaturePreview] = useState<string | null>(
+    storedTerms.signature || null,
+  );
   const [isAccepted, setIsAccepted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,6 +46,19 @@ const TermsAndConditionsPage = () => {
     defaultValues: {
       accepted: false,
       signature: null,
+      onBehalfOf: storedTerms.onBehalfOf || "",
+      title: storedTerms.title || "",
+    },
+  });
+
+  // Register accepted and signature with custom validators
+  register("accepted", {
+    validate: (value) => value === true || "You must accept the terms and conditions",
+  });
+  register("signature", {
+    validate: (value) => {
+      if (!signaturePreview) return "Signature is required";
+      return true;
     },
   });
 
@@ -67,16 +94,30 @@ const TermsAndConditionsPage = () => {
   };
 
   const onSubmit = (data: TermsFormData) => {
-    console.log({
-      accepted: data.accepted,
-      signature: data.signature?.[0] || null,
-    });
-    // TODO: API Call
+    if (!data.accepted) {
+      setValue("accepted", false, { shouldValidate: true });
+      return;
+    }
+
+    if (!signaturePreview) {
+      setValue("signature", null, { shouldValidate: true });
+      return;
+    }
+
+    dispatch(
+      updateTermsAndConditions({
+        onBehalfOf: data.onBehalfOf,
+        title: data.title,
+        signature: signaturePreview || "",
+        accepted: true,
+      }),
+    );
+    router.push("/booking-info");
   };
 
   return (
     <section className="padding-default">
-      <div className=" container">
+      <div className=" container px-4 xl:px-0">
         {/* Header */}
         <div className="text-center pb-8 text-3xl md:text-5xl font-bold text-primary space-y-3 mb-12">
           <h1>ITBA EXPO 2027</h1>
@@ -132,6 +173,7 @@ const TermsAndConditionsPage = () => {
                 onCheckedChange={(checked) => {
                   setIsAccepted(checked as boolean);
                   setValue("accepted", checked as boolean);
+                  clearErrors("accepted");
                 }}
                 className="mt-1 size-4 lg:size-6"
               />
@@ -156,31 +198,47 @@ const TermsAndConditionsPage = () => {
           <div>
             <div className="flex items-center gap-5 w-ful mb-5">
               <div className="flex-1">
-                <label htmlFor="standName" className="text-lg font-medium">
-                  On behalf of
+                <label htmlFor="onBehalfOf" className="text-lg font-medium">
+                  On behalf of <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="text"
-                  id="standName"
+                  id="onBehalfOf"
                   placeholder="On behalf of..."
                   className=" mt-2"
+                  {...register("onBehalfOf", {
+                    required: "On behalf of is required",
+                  })}
                 />
+                {errors.onBehalfOf && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.onBehalfOf.message}
+                  </p>
+                )}
               </div>
               <div className="flex-1">
-                <label htmlFor="standName" className="text-lg font-medium">
-                  Title <span className="text-red-600">*</span>
+                <label htmlFor="title" className="text-lg font-medium">
+                  Title <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="text"
-                  id="standName"
+                  id="title"
                   placeholder="Write the title here..."
                   className=" mt-2"
+                  {...register("title", {
+                    required: "Title is required",
+                  })}
                 />
+                {errors.title && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.title.message}
+                  </p>
+                )}
               </div>
             </div>
             <label className="text-lg font-medium text-text-primary block mb-3">
               <Signature className="inline-block mr-2 size-5" />
-              Upload Signature
+              Upload Signature <span className="text-red-500">*</span>
             </label>
 
             <input
