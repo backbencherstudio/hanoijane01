@@ -2,21 +2,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
-import {
-  selectSubtotal,
-  selectVat,
-  selectTotal,
-  selectSelectedAddOns,
-} from "@/src/redux/slice/bookingSlice";
 
 const BookingInfoCard = () => {
   const { stand } = useSelector((state: RootState) => state.booking);
-  const selectedAddOns = useSelector(selectSelectedAddOns);
-  const subtotal = useSelector(selectSubtotal);
-  const vat = useSelector(selectVat);
-  const total = useSelector(selectTotal);
-
-  const hasAddOns = selectedAddOns.length > 0;
 
   return (
     <div className="space-y-4">
@@ -66,35 +54,19 @@ const BookingInfoCard = () => {
           </div>
           <div className="flex items-center justify-between">
             <p className="text-lg">VAT ({Math.round(stand.vatRate * 100)}%)</p>
-            <p className="text-lg font-semibold">${vat.toFixed(2)}</p>
+            <p className="text-lg font-semibold">
+              ${(stand.price * stand.vatRate).toFixed(2)}
+            </p>
           </div>
-
-          {/* Additional Charge Section – only if add‑ons exist */}
-          {hasAddOns && (
-            <div className="space-y-2 border-t border-gray-200 pt-2">
-              <p className="font-semibold text-primary">Additional Charge</p>
-              {selectedAddOns.map((addOn) => (
-                <div
-                  key={addOn.id}
-                  className="flex items-center justify-between text-lg"
-                >
-                  <p>
-                    {addOn.name} × {addOn.quantity}
-                  </p>
-                  <p className="font-semibold">
-                    ${addOn.price * addOn.quantity}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
 
           <div className="h-px bg-gray-400"></div>
         </div>
 
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Total Due</p>
-          <p className="text-xl text-primary font-bold">${total.toFixed(2)}</p>
+          <p className="text-xl text-primary font-bold">
+            ${(stand.price + stand.price * stand.vatRate).toFixed(2)}
+          </p>
         </div>
       </div>
     </div>

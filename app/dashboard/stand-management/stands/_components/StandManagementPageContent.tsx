@@ -19,6 +19,9 @@ import StandLayer from "@/components/exhibition-map/StandLayer";
 import StandTooltip, {
   TooltipHandle,
 } from "@/components/exhibition-map/StandTooltip";
+import { useDispatch } from "react-redux";
+import { updateStand } from "@/src/redux/slice/bookingSlice";
+import type { Stand } from "@/types/stand";
 
 const stateData = [
   {
@@ -39,6 +42,7 @@ type ViewType = "map" | "list";
 
 const StandManagementPageContent = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const searchParams = useSearchParams();
   // for map -start
   const tooltipRef = useRef<TooltipHandle>(null);
@@ -58,6 +62,23 @@ const StandManagementPageContent = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   // for map -end
+
+  // ── Book Now handler ────────────────────────────────────────────────────
+  const handleBookNow = useCallback(
+    (stand: Stand) => {
+      dispatch(
+        updateStand({
+          id: stand.stand_no,
+          name: `Stand ${stand.stand_no}`,
+          type: stand.standType,
+          size: stand.size,
+          price: stand.price,
+        }),
+      );
+      router.push("/terms-and-conditions");
+    },
+    [dispatch, router],
+  );
 
   // Read view from URL
   const viewParam = searchParams.get("view") as ViewType | null;
@@ -341,7 +362,7 @@ const StandManagementPageContent = () => {
                 </svg>
               </TransformComponent>
             </TransformWrapper>
-            <StandTooltip ref={tooltipRef} />
+            <StandTooltip ref={tooltipRef} onBookNow={handleBookNow} />
           </div>
         </div>
       )}
