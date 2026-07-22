@@ -181,7 +181,7 @@ const StandTooltip = forwardRef<TooltipHandle>((_, ref) => {
   return (
     <div
       ref={r.root}
-      className="fixed z-9999 w-52 rounded-xl border border-[#E4E7EC] bg-white p-4 shadow-xl
+      className="fixed z-500 w-52 rounded-xl border border-[#E4E7EC] bg-white p-4 shadow-xl
                  transition-opacity duration-150"
       style={{
         opacity: 0,

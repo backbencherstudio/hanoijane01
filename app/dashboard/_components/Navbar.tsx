@@ -30,7 +30,7 @@ const user: {
 
 const Navbar = ({ setIsOpen }: NavbarProps) => {
   return (
-    <div className="h-18 border-b border-gray-300 px-4 lg:px-6 flex items-center justify-between">
+    <div className="h-18 border-b border-gray-300 px-4 lg:px-6 flex items-center justify-between z-501 bg-[#F9FAFB]">
       <div className="flex items-center gap-4 text-text-primary">
         <button onClick={() => setIsOpen(true)} className="lg:hidden">
           <PanelLeftOpen size={20} className="text-accent" />

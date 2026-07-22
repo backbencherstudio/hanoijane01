@@ -19,7 +19,7 @@ const Modal = ({
     // Backdrop – fades in/out
     <div
       className={`
-        fixed inset-0 bg-black/50 flex items-center justify-center z-50
+        fixed inset-0 bg-black/50 flex items-center justify-center z-999
         transition-opacity duration-300 ease-in-out 
         ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}

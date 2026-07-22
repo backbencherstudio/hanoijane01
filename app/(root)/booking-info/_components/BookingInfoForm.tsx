@@ -184,7 +184,7 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
       </div>
 
       {/* Next button */}
-      <div className="flex justify-between mt-8">
+      <div className="flex flex-col md:flex-row gap-4 justify-between mt-8">
         <Button
           onClick={() => router.back()}
           className="px-8"
@@ -192,9 +192,11 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
         >
           Back
         </Button>
-        <ButtonGroup type="submit" className="px-12.5">
-          Next
-        </ButtonGroup>
+        <div className="w-full md:w-fit">
+          <ButtonGroup fullWidth={true} type="submit" className="px-12.5 ">
+            Next
+          </ButtonGroup>
+        </div>
       </div>
     </form>
   );
