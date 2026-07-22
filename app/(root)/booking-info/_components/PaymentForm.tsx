@@ -3,12 +3,11 @@ import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/src/redux/store";
-import { resetBookingInfo, resetAddOns } from "@/src/redux/slice/bookingSlice";
+import { resetBookingInfo } from "@/src/redux/slice/bookingSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Info } from "lucide-react";
 import { FaCreditCard } from "react-icons/fa";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import CardForm, { CardFormRef } from "./CardForm";
@@ -24,8 +23,9 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
     (state: RootState) => state.booking.bookingInfo,
   );
   const stand = useSelector((state: RootState) => state.booking.stand);
-  const addOns = useSelector((state: RootState) => state.booking.addOns);
-  const selectedAddOns = addOns.filter((a) => a.selected);
+  const termsAndConditions = useSelector(
+    (state: RootState) => state.booking.termsAndConditions,
+  );
 
   const [paymentOption, setPaymentOption] = useState<"now" | "later">("now");
   const cardFormRef = useRef<CardFormRef | null>(null);
@@ -43,26 +43,19 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
         alert("Please fill in all card details correctly.");
         return;
       }
-      // Read card data directly from the form
       cardDetails = cardFormRef.current.getValues();
     }
 
     // Build the final payload
     const payload = {
-      bookingInfo,
       stand: {
         id: stand.id,
         name: stand.name,
         price: stand.price,
         vatRate: stand.vatRate,
       },
-      addOns: selectedAddOns.map((a) => ({
-        id: a.id,
-        name: a.name,
-        quantity: a.quantity,
-        price: a.price,
-        total: a.price * a.quantity,
-      })),
+      termsAndConditions,
+      bookingInfo,
       paymentOption,
       cardDetails,
     };
@@ -71,9 +64,7 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
     console.log(JSON.stringify(payload, null, 2));
 
     // Simulate payment success
-    // On success:
     dispatch(resetBookingInfo());
-    dispatch(resetAddOns());
     sessionStorage.removeItem("bookingState");
     router.push(
       `/booking-success?payment_option=${paymentOption === "now" ? "now" : "later"}`,
@@ -117,6 +108,22 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
               <span className="font-medium text-lg">Address:</span>
               <span className="text-lg font-semibold">
                 {bookingInfo.companyAddress}
+              </span>
+            </p>
+            <p className="flex justify-between items-center">
+              <span className="font-medium text-lg">Stand:</span>
+              <span className="text-lg font-semibold">{stand.name}</span>
+            </p>
+            <p className="flex justify-between items-center">
+              <span className="font-medium text-lg">On behalf of:</span>
+              <span className="text-lg font-semibold">
+                {termsAndConditions.onBehalfOf}
+              </span>
+            </p>
+            <p className="flex justify-between items-center">
+              <span className="font-medium text-lg">Title:</span>
+              <span className="text-lg font-semibold">
+                {termsAndConditions.title}
               </span>
             </p>
           </div>

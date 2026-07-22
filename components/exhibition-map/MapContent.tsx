@@ -1,5 +1,7 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import StandCategoryAccordion from "./StandCategoryAccordion";
 import Image from "next/image";
 import BaseMap from "@/components/map/BaseMap";
@@ -7,22 +9,34 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapControls from "./MapControls";
 import StandLayer from "./StandLayer";
 import StandTooltip, { type TooltipHandle } from "./StandTooltip";
+import { updateStand } from "@/src/redux/slice/bookingSlice";
+import type { Stand } from "@/types/stand";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  /**
-   * tooltipRef is passed down to StandLayer.
-   * Hover events call tooltipRef.current.show/hide() directly — no React
-   * state update, so MapContent (and the entire subtree) never re-renders
-   * when a stand is hovered.
-   */
   const tooltipRef = useRef<TooltipHandle>(null);
 
+  // ── Book Now handler ────────────────────────────────────────────────────
+  const handleBookNow = useCallback(
+    (stand: Stand) => {
+      dispatch(
+        updateStand({
+          id: stand.stand_no,
+          name: `Stand ${stand.stand_no}`,
+          type: stand.standType,
+          size: stand.size,
+          price: stand.price,
+        }),
+      );
+      router.push("/terms-and-conditions");
+    },
+    [dispatch, router],
+  );
+
   // ── Reposition tooltip on page scroll ──────────────────────────────────
-  // The tooltip uses fixed positioning with viewport coordinates. When the
-  // page scrolls, the stand moves visually but the tooltip stays put unless
-  // we re-read the stand's bounding rect.
   useEffect(() => {
     const onScroll = () => {
       tooltipRef.current?.refreshPosition();
@@ -48,8 +62,6 @@ const MapContent = () => {
         <StandCategoryAccordion />
       </div>
       <div className="w-full h-fit bg-white overflow-hidden relative p-4 rounded-[20px] ">
-        {/* i want to show the mapcontrols here
-        but i cant because map controls have to be inside transformwrapper */}
         <TransformWrapper
           initialScale={1}
           minScale={1}
@@ -84,22 +96,12 @@ const MapContent = () => {
             <svg viewBox="0 0 998 1274" className="w-full h-auto">
               <BaseMap />
 
-              {/*
-               * StandLayer is React.memo'd and receives only the stable tooltipRef.
-               * It will never re-render from MapContent's own state changes.
-               */}
               <StandLayer tooltipRef={tooltipRef} />
             </svg>
           </TransformComponent>
         </TransformWrapper>
 
-        {/*
-         * StandTooltip is always mounted — visibility is driven imperatively
-         * via tooltipRef.current.show/hide(), not by conditional rendering.
-         * This eliminates the mount/unmount cost and the React re-render
-         * that previously occurred on every hover enter/leave.
-         */}
-        <StandTooltip ref={tooltipRef} />
+        <StandTooltip ref={tooltipRef} onBookNow={handleBookNow} />
       </div>
     </section>
   );
