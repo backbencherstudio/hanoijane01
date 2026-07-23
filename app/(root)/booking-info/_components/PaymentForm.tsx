@@ -2,7 +2,7 @@
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { RootState } from "@/src/redux/store";
+import { RootState } from "@/redux/store";
 import { resetBookingInfo } from "@/src/redux/slice/bookingSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

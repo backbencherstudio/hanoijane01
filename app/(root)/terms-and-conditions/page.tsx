@@ -13,7 +13,7 @@ import { sections } from "@/data/termsAndConditions";
 import { Input } from "@/components/ui/input";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { updateTermsAndConditions } from "@/src/redux/slice/bookingSlice";
-import { RootState } from "@/src/redux/store";
+import { RootState } from "@/redux/store";
 
 interface TermsFormData {
   accepted: boolean;

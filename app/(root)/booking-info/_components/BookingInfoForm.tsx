@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/src/redux/store";
+import { RootState } from "@/redux/store";
 import { updateBookingInfo } from "@/src/redux/slice/bookingSlice";
 
 interface BookingInfoData {

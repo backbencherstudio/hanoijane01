@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import {
@@ -11,6 +10,12 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import {
+  useResendVerificationEmailMutation,
+  useVerifyEmailMutation,
+} from "@/src/redux/api/auth/authApi";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
 
 interface FormData {
   otp: string;
@@ -18,8 +23,12 @@ interface FormData {
 
 const VerifyEmailForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [verifyEmail, { isLoading: isVerifying }] = useVerifyEmailMutation();
 
-  const [loading, setLoading] = useState(false);
+  const [resendVerificationEmail, { isLoading: isResending }] =
+    useResendVerificationEmailMutation();
+  const email = searchParams.get("email");
 
   const {
     handleSubmit,
@@ -35,25 +44,63 @@ const VerifyEmailForm = () => {
   const otp = watch("otp");
 
   const onSubmit = async (data: FormData) => {
-    setLoading(true);
+    if (!email) {
+      toast.error("Email is missing. Please sign up again.");
+      return;
+    }
 
-    console.log(data);
+    const toastId = toast.loading("Verifying your email...");
 
-    // TODO:
-    // await verifyEmail({
-    //   otp: data.otp,
-    // });
+    try {
+      await verifyEmail({
+        email,
+        otp: data.otp,
+      }).unwrap();
 
-    router.push("/"); // or /dashboard
+      toast.success("Email verified successfully!", {
+        id: toastId,
+      });
 
-    setLoading(false);
+      router.push("/");
+    } catch (error: unknown) {
+      const fetchError = error as FetchBaseQueryError;
+
+      toast.error(
+        (fetchError.data as { message?: string; error?: string })?.message ||
+          (fetchError.data as { message?: string; error?: string })?.error ||
+          "Failed to verify email.",
+        {
+          id: toastId,
+        },
+      );
+    }
   };
-
   const handleResendOTP = async () => {
-    // TODO:
-    // await resendEmailVerificationOTP();
+    if (!email) {
+      toast.error("Email is missing. Please sign up again.");
+      return;
+    }
 
-    console.log("Resend verification OTP");
+    const toastId = toast.loading("Sending verification code...");
+
+    try {
+      await resendVerificationEmail({ email }).unwrap();
+
+      toast.success("Verification code sent successfully!", {
+        id: toastId,
+      });
+    } catch (error: unknown) {
+      const fetchError = error as FetchBaseQueryError;
+
+      toast.error(
+        (fetchError.data as { message?: string; error?: string })?.message ||
+          (fetchError.data as { message?: string; error?: string })?.error ||
+          "Failed to resend verification code.",
+        {
+          id: toastId,
+        },
+      );
+    }
   };
 
   return (
@@ -98,7 +145,7 @@ const VerifyEmailForm = () => {
 
         <div className="mt-8">
           <ButtonGroup type="submit" fullWidth className="w-full">
-            {loading ? "Verifying..." : "Verify Email"}
+            {isVerifying ? "Verifying..." : "Verify Email"}
           </ButtonGroup>
         </div>
       </form>
@@ -107,11 +154,11 @@ const VerifyEmailForm = () => {
         <p className="text-accent font-medium">
           Didn&apos;t receive the code?
           <button
-            type="button"
             onClick={handleResendOTP}
-            className="ml-1 text-primary hover:underline"
+            disabled={isResending}
+            className="ml-1 text-primary hover:underline disabled:opacity-50 cursor-pointer"
           >
-            Resend OTP
+            {isResending ? "Sending..." : "Resend OTP"}
           </button>
         </p>
 

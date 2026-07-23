@@ -4,6 +4,10 @@ import { useForm } from "react-hook-form";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useSignUpMutation } from "@/src/redux/api/auth/authApi";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 // Form data interface
 interface FormData {
@@ -18,6 +22,8 @@ interface FormData {
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [signUp, { isLoading }] = useSignUpMutation();
+  const router = useRouter();
 
   const {
     register,
@@ -37,9 +43,37 @@ const RegisterForm = () => {
 
   const passwordValue = watch("password");
 
-  const onSubmit = (data: FormData) => {
-    console.log("Registration data:", data);
-    // Send data to your API
+  const onSubmit = async (data: FormData) => {
+    const payload = {
+      name: data.fullName,
+      email: data.email,
+      password: data.password,
+      companyName: data.companyName,
+      phoneNumber: data.phoneNumber,
+    };
+
+    const toastId = toast.loading("Creating your account...");
+
+    try {
+      await signUp(payload).unwrap();
+
+      toast.success("Account created successfully!", {
+        id: toastId,
+      });
+
+      router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+    } catch (error: unknown) {
+      const fetchError = error as FetchBaseQueryError;
+
+      toast.error(
+        (fetchError.data as { message?: string; error?: string })?.message ||
+          (fetchError.data as { message?: string; error?: string })?.error ||
+          "Failed to create your account.",
+        {
+          id: toastId,
+        },
+      );
+    }
   };
 
   return (

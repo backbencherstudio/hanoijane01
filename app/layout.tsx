@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import { ReduxProvider } from "@/src/redux/provider";
+import ReduxProvider from "@/providers/ReduxProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col"
       >
         <ReduxProvider>{children}</ReduxProvider>
+         <Toaster position="top-right" />
       </body>
     </html>
   );

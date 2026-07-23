@@ -29,7 +29,7 @@ export interface SignUpResponse {
   };
 }
 
-//    Sign In
+// Sign In
 
 export interface LoginRequest {
   email: string;
@@ -42,4 +42,13 @@ export interface LoginResponse {
     token: string;
     user: User;
   };
+}
+
+export interface ResendVerificationEmailRequest {
+  email: string;
+}
+
+export interface VerifyEmailRequest {
+  email: string;
+  otp: string;
 }
