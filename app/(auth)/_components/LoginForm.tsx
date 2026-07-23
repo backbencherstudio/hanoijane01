@@ -5,6 +5,14 @@ import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
+import {
+  useResendVerificationEmailMutation,
+  useSignInMutation,
+} from "@/src/redux/api/auth/authApi";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 interface FormData {
   email: string;
@@ -14,6 +22,10 @@ interface FormData {
 const LoginForm = () => {
   const [show, setShow] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const router = useRouter();
+
+  const [signIn, { isLoading }] = useSignInMutation();
+  const [resendVerificationEmail] = useResendVerificationEmailMutation();
 
   const {
     register,
@@ -23,8 +35,54 @@ const LoginForm = () => {
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Login data:", data, "Keep logged in:", keepLoggedIn);
+  const onSubmit = async (data: FormData) => {
+    const toastId = toast.loading("Signing in...");
+
+    try {
+      await signIn({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      toast.success("Welcome back!", {
+        id: toastId,
+      });
+
+      router.push("/");
+    } catch (error: unknown) {
+      const fetchError = error as FetchBaseQueryError;
+      const message = getErrorMessage(error, "Login failed.");
+
+      // Email not verified
+      if (fetchError.status === 403 && message === "Email not verified") {
+        try {
+          await resendVerificationEmail({
+            email: data.email,
+          }).unwrap();
+
+          toast.success("A new verification code has been sent.", {
+            id: toastId,
+          });
+
+          router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+
+          return;
+        } catch {
+          toast.error(
+            "Your email isn't verified and we couldn't resend the verification code.",
+            {
+              id: toastId,
+            },
+          );
+
+          return;
+        }
+      }
+
+      toast.error(message, {
+        id: toastId,
+      });
+    }
   };
 
   return (

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useSignUpMutation } from "@/src/redux/api/auth/authApi";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
 
 // Form data interface
 interface FormData {
@@ -63,16 +63,9 @@ const RegisterForm = () => {
 
       router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
     } catch (error: unknown) {
-      const fetchError = error as FetchBaseQueryError;
-
-      toast.error(
-        (fetchError.data as { message?: string; error?: string })?.message ||
-          (fetchError.data as { message?: string; error?: string })?.error ||
-          "Failed to create your account.",
-        {
-          id: toastId,
-        },
-      );
+      toast.error(getErrorMessage(error, "Failed to create your account."), {
+        id: toastId,
+      });
     }
   };
 

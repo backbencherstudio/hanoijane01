@@ -14,7 +14,7 @@ import {
   useResendVerificationEmailMutation,
   useVerifyEmailMutation,
 } from "@/src/redux/api/auth/authApi";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { toast } from "sonner";
 
 interface FormData {
@@ -63,16 +63,9 @@ const VerifyEmailForm = () => {
 
       router.push("/");
     } catch (error: unknown) {
-      const fetchError = error as FetchBaseQueryError;
-
-      toast.error(
-        (fetchError.data as { message?: string; error?: string })?.message ||
-          (fetchError.data as { message?: string; error?: string })?.error ||
-          "Failed to verify email.",
-        {
-          id: toastId,
-        },
-      );
+      toast.error(getErrorMessage(error, "Failed to verify email."), {
+        id: toastId,
+      });
     }
   };
   const handleResendOTP = async () => {
@@ -90,12 +83,8 @@ const VerifyEmailForm = () => {
         id: toastId,
       });
     } catch (error: unknown) {
-      const fetchError = error as FetchBaseQueryError;
-
       toast.error(
-        (fetchError.data as { message?: string; error?: string })?.message ||
-          (fetchError.data as { message?: string; error?: string })?.error ||
-          "Failed to resend verification code.",
+        getErrorMessage(error, "Failed to resend verification code."),
         {
           id: toastId,
         },
