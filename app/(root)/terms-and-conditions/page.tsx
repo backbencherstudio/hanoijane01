@@ -53,7 +53,8 @@ const TermsAndConditionsPage = () => {
 
   // Register accepted and signature with custom validators
   register("accepted", {
-    validate: (value) => value === true || "You must accept the terms and conditions",
+    validate: (value) =>
+      value === true || "You must accept the terms and conditions",
   });
   register("signature", {
     validate: (value) => {
@@ -148,14 +149,20 @@ const TermsAndConditionsPage = () => {
               <h3 className="md:text-lg lg:text-xl xl:text-2xl font-bold text-[#1C1F23]">
                 {section.id}. {section.title}
               </h3>
-              <ul className="space-y-2 text-[#4A4C56] text-sm md:text-base lg:text-lg xl:text-xl font-medium leading-relaxed">
-                {section.content.map((item, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span>•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+
+              <div className="space-y-2 text-[#4A4C56] text-sm md:text-base lg:text-lg xl:text-xl font-medium leading-relaxed">
+                {section.content.map((item, index) =>
+                  Array.isArray(item) ? (
+                    <ul key={index} className="list-disc pl-6 space-y-2">
+                      {item.map((listItem, i) => (
+                        <li key={i}>{listItem}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <li key={index}>{item}</li>
+                  ),
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -303,7 +310,11 @@ const TermsAndConditionsPage = () => {
             <Button type="button" variant="outline" className="h-11">
               Reject
             </Button>
-            <ButtonGroup type="submit" roundButtonSize="w-11" className="h-11 px-8">
+            <ButtonGroup
+              type="submit"
+              roundButtonSize="w-11"
+              className="h-11 px-8"
+            >
               Agree
             </ButtonGroup>
           </div>
