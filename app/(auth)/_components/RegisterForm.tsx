@@ -63,7 +63,13 @@ const RegisterForm = () => {
 
       router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
     } catch (error: unknown) {
-      toast.error(getErrorMessage(error, "Failed to create your account."), {
+      let message = getErrorMessage(error, "Failed to create your account.");
+
+      if (message === "User with this email already exists") {
+        message += ". Please login and verify your email.";
+      }
+
+      toast.error(message, {
         id: toastId,
       });
     }
