@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Eye, EyeOff, PenLine, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import "react-international-phone/style.css";
+import PhoneInput from "@/components/phone-input/PhoneInput";
 
 export interface ProfileFormData {
   firstName: string;
@@ -36,9 +37,9 @@ export default function PersonalInformationForm() {
   const [editing, setEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { register, handleSubmit, reset } =
-    useForm<ProfileFormData>({ defaultValues });
-
+  const { register, handleSubmit, reset, control } = useForm<ProfileFormData>({
+    defaultValues,
+  });
 
   const onSubmit = (data: ProfileFormData) => {
     console.log(data);
@@ -58,7 +59,9 @@ export default function PersonalInformationForm() {
                   onClick={() => setEditing(true)}
                   className="cursor-pointer"
                 />
-              ):(<Save className="cursor-pointer" />)}
+              ) : (
+                <Save className="cursor-pointer" />
+              )}
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
@@ -121,22 +124,34 @@ export default function PersonalInformationForm() {
         </Field>
 
         <Field label="Contact Phone Number">
-          <Input
-            type="tel"
-            className="mt-2"
-            placeholder="Enter contact phone number"
-            disabled={!editing}
-            {...register("contactPhone")}
+          <Controller
+            control={control}
+            name="contactPhone"
+            render={({ field }) => (
+              <PhoneInput
+                value={field.value}
+                onChange={field.onChange}
+                disabled={!editing}
+                className="mt-2"
+                placeholder="Enter contact phone number"
+              />
+            )}
           />
         </Field>
 
         <Field label="Company Phone Number">
-          <Input
-            type="tel"
-            className="mt-2"
-            placeholder="Enter company phone number"
-            disabled={!editing}
-            {...register("companyPhone")}
+          <Controller
+            control={control}
+            name="companyPhone"
+            render={({ field }) => (
+              <PhoneInput
+                value={field.value}
+                onChange={field.onChange}
+                disabled={!editing}
+                className="mt-2"
+                placeholder="Enter company phone number"
+              />
+            )}
           />
         </Field>
 
