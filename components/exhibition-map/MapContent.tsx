@@ -46,8 +46,8 @@ const MapContent = () => {
   }, []);
 
   return (
-    <section className="w-full  mt-12 flex gap-6">
-      <div className="w-[320px] px-4 py-5 rounded-[20px] bg-white hidden lg:block">
+    <section className="w-full  mt-12 flex flex-col lg:flex-row gap-6">
+      <div className="w-full lg:w-[320px] px-4 py-5 rounded-[20px] bg-white ">
         <Image
           src="/logo-1.png"
           alt="Logo"
