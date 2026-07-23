@@ -33,6 +33,7 @@ const TermsAndConditionsPage = () => {
     storedTerms.signature || null,
   );
   const [isAccepted, setIsAccepted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -93,6 +94,40 @@ const TermsAndConditionsPage = () => {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSignaturePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      setValue("signature", e.dataTransfer.files as FileList);
+      clearErrors("signature");
+    }
+  }, [setValue, clearErrors]);
 
   const onSubmit = (data: TermsFormData) => {
     if (!data.accepted) {
@@ -287,7 +322,15 @@ const TermsAndConditionsPage = () => {
             ) : (
               <div
                 onClick={triggerFileInput}
-                className="w-full border-2 bg-[#F4F5F7] border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-primary transition group"
+                onDragOver={handleDragOver}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`w-full border-2 bg-[#F4F5F7] border-dashed rounded-xl p-8 text-center cursor-pointer hover:border-primary transition group ${
+                  isDragging
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-300"
+                }`}
               >
                 <div className="flex flex-col items-center gap-2">
                   <Upload className="size-10 text-gray-400 group-hover:text-primary transition" />
