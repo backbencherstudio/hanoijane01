@@ -11,12 +11,15 @@ import Sidebar from "./Sidebar";
 import { useState } from "react";
 import AuthModal from "@/app/(auth)/_components/AuthModal";
 import LogOutModal from "@/app/(auth)/_components/LogOutModal";
+import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [logOutModalOpen, setLogOutModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const {data} = useGetMeQuery(null);
+  console.log(data);
 
   const user = {
     name: "Jacob Jones",

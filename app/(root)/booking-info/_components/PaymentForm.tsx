@@ -2,8 +2,6 @@
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { RootState } from "@/redux/store";
-import { resetBookingInfo } from "@/src/redux/slice/bookingSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -11,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { FaCreditCard } from "react-icons/fa";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import CardForm, { CardFormRef } from "./CardForm";
+import { RootState } from "@/src/redux/store";
+import { resetBookingInfo } from "@/src/redux/features/bookingSlice";
 
 interface PaymentFormProps {
   prevStep: () => void;

@@ -12,8 +12,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { sections } from "@/data/termsAndConditions";
 import { Input } from "@/components/ui/input";
 import ButtonGroup from "@/components/ui/ButtonGroup";
-import { updateTermsAndConditions } from "@/src/redux/slice/bookingSlice";
-import { RootState } from "@/redux/store";
+import { RootState } from "@/src/redux/store";
+import { updateTermsAndConditions } from "@/src/redux/features/bookingSlice";
 
 interface TermsFormData {
   accepted: boolean;

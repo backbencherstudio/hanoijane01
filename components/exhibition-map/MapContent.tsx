@@ -9,8 +9,8 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapControls from "./MapControls";
 import StandLayer from "./StandLayer";
 import StandTooltip, { type TooltipHandle } from "./StandTooltip";
-import { updateStand } from "@/src/redux/slice/bookingSlice";
 import type { Stand } from "@/types/stand";
+import { updateStand } from "@/src/redux/features/bookingSlice";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

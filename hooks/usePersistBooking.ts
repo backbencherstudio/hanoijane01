@@ -1,7 +1,7 @@
+import { restoreBooking } from "@/src/redux/features/bookingSlice";
+import { RootState } from "@/src/redux/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { restoreBooking } from "@/src/redux/slice/bookingSlice";
 
 const STORAGE_KEY = "bookingState";
 
