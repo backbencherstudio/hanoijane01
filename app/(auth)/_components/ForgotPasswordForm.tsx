@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import ButtonGroup from "@/components/ui/ButtonGroup";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForgotPasswordMutation } from "@/src/redux/api/auth/authApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { toast } from "sonner";
 
 interface FormData {
   email: string;
@@ -13,20 +16,35 @@ interface FormData {
 
 const ForgotPasswordForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      email: "",
+      email: email ?? "",
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log("Forgot Password:", data);
-    // TODO: Send OTP API
-    router.push("/verify-otp");
+  const onSubmit = async (data: FormData) => {
+    const toastId = toast.loading("Sending OTP...");
+
+    try {
+      await forgotPassword({ email: data.email }).unwrap();
+
+      toast.success("OTP sent to your email!", {
+        id: toastId,
+      });
+
+      router.push(`/reset-password?email=${encodeURIComponent(data.email)}`);
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Failed to send OTP."), {
+        id: toastId,
+      });
+    }
   };
 
   return (
@@ -69,7 +87,7 @@ const ForgotPasswordForm = () => {
 
         <div className="mt-8">
           <ButtonGroup type="submit" className="w-full" fullWidth={true}>
-            Send OTP
+            {isLoading ? "Sending..." : "Send OTP"}
           </ButtonGroup>
         </div>
       </form>

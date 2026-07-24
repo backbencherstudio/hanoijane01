@@ -1,7 +1,7 @@
 "use client";
+import { RootState } from "@/src/redux/store";
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 const BookingInfoCard = () => {
   const { stand } = useSelector((state: RootState) => state.booking);

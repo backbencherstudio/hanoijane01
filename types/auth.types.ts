@@ -52,3 +52,16 @@ export interface VerifyEmailRequest {
   email: string;
   otp: string;
 }
+
+// Reset Password
+
+export interface ResetPasswordRequest {
+  email: string;
+  otp: string;
+  password: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}

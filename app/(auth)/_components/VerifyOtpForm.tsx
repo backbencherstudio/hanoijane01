@@ -9,7 +9,10 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { useVerifyEmailMutation } from "@/src/redux/api/auth/authApi";
 
 interface FormData {
   otp: string;
@@ -17,6 +20,9 @@ interface FormData {
 
 const VerifyOtpForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const [verifyEmail, { isLoading: isVerifying }] = useVerifyEmailMutation();
   const {
     handleSubmit,
     setValue,
@@ -30,11 +36,54 @@ const VerifyOtpForm = () => {
 
   const otp = watch("otp");
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    // TODO: Verify OTP API
-    router.push("/reset-password");
+  const onSubmit = async (data: FormData) => {
+    if (!email) {
+      toast.error("Email is missing. Please sign up again.");
+      return;
+    }
+
+    const toastId = toast.loading("Verifying your email...");
+
+    try {
+      await verifyEmail({
+        email,
+        otp: data.otp,
+      }).unwrap();
+
+      toast.success("Email verified successfully!", {
+        id: toastId,
+      });
+
+      router.push(`/reset-password`);
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Failed to verify email."), {
+        id: toastId,
+      });
+    }
   };
+  // const handleResendOTP = async () => {
+  //   if (!email) {
+  //     toast.error("Email is missing. Please sign up again.");
+  //     return;
+  //   }
+
+  //   const toastId = toast.loading("Sending verification code...");
+
+  //   try {
+  //     await resendVerificationEmail({ email }).unwrap();
+
+  //     toast.success("Verification code sent successfully!", {
+  //       id: toastId,
+  //     });
+  //   } catch (error: unknown) {
+  //     toast.error(
+  //       getErrorMessage(error, "Failed to resend verification code."),
+  //       {
+  //         id: toastId,
+  //       },
+  //     );
+  //   }
+  // };
 
   return (
     <div className="w-full bg-white p-6 rounded-2xl md:w-118">
@@ -75,7 +124,7 @@ const VerifyOtpForm = () => {
 
         <div className="mt-8">
           <ButtonGroup type="submit" fullWidth className="w-full">
-            Verify OTP
+            {isVerifying ? "Verifying..." : "Verify Otp"}
           </ButtonGroup>
         </div>
       </form>

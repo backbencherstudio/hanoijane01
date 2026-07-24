@@ -20,8 +20,8 @@ import StandTooltip, {
   TooltipHandle,
 } from "@/components/exhibition-map/StandTooltip";
 import { useDispatch } from "react-redux";
-import { updateStand } from "@/src/redux/slice/bookingSlice";
 import type { Stand } from "@/types/stand";
+import { updateStand } from "@/src/redux/features/bookingSlice";
 
 const stateData = [
   {

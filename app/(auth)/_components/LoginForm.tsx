@@ -30,10 +30,12 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: { email: "", password: "" },
   });
+  const email = watch("email");
 
   const onSubmit = async (data: FormData) => {
     const toastId = toast.loading("Signing in...");
@@ -178,7 +180,7 @@ const LoginForm = () => {
             </label>
           </div>
           <Link
-            href="/forgot-password"
+            href={`/forgot-password?email=${encodeURIComponent(email || "")}`}
             className="text-sm text-blue-600 font-bold hover:underline"
           >
             Forgot password?

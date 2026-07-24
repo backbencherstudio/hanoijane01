@@ -24,11 +24,11 @@ interface FormData {
 const VerifyEmailForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const email = searchParams.get("email");
   const [verifyEmail, { isLoading: isVerifying }] = useVerifyEmailMutation();
 
   const [resendVerificationEmail, { isLoading: isResending }] =
     useResendVerificationEmailMutation();
-  const email = searchParams.get("email");
 
   const {
     handleSubmit,

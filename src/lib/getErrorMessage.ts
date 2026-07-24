@@ -6,8 +6,8 @@ function extractString(value: unknown): string | undefined {
   if (typeof value === "string") return value;
   if (typeof value === "object" && value !== null) {
     const obj = value as ErrorData;
-    if (typeof obj.message === "string") return obj.message;
-    if (typeof obj.error === "string") return obj.error;
+    if (obj && typeof obj.message === "string") return obj.message;
+    if (obj && typeof obj.error === "string") return obj.error;
   }
   return undefined;
 }

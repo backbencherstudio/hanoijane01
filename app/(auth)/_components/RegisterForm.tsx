@@ -66,7 +66,7 @@ const RegisterForm = () => {
       let message = getErrorMessage(error, "Failed to create your account.");
 
       if (message === "User with this email already exists") {
-        message += ". Please login and verify your email.";
+        message += ", Please login.";
       }
 
       toast.error(message, {

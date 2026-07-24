@@ -3,8 +3,9 @@ import {
   LoginResponse,
   SignUpRequest,
   SignUpResponse,
-  ResendVerificationEmailRequest,
   VerifyEmailRequest,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from "@/types/auth.types";
 import { baseApi } from "../baseApi";
 
@@ -32,9 +33,24 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
-        resendVerificationEmail: builder.mutation<LoginResponse, ResendVerificationEmailRequest>({
+    resendVerificationEmail: builder.mutation({
       query: (data) => ({
         url: "/auth/resend-verification-email",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    forgotPassword: builder.mutation({
+      query: (data) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+      query: (data) => ({
+        url: "/auth/reset-password",
         method: "POST",
         body: data,
       }),
@@ -53,5 +69,7 @@ export const {
   useSignInMutation,
   useVerifyEmailMutation,
   useResendVerificationEmailMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
   useGetMeQuery,
 } = authApi;

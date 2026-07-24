@@ -6,33 +6,74 @@ import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import ButtonGroup from "@/components/ui/ButtonGroup";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useResetPasswordMutation } from "@/src/redux/api/auth/authApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { toast } from "sonner";
 
 interface FormData {
   password: string;
   confirmPassword: string;
+  otp: string;
 }
 
 const ResetPasswordForm = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const otpParam = searchParams.get("otp");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const {
     register,
     watch,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
       password: "",
       confirmPassword: "",
+      otp: otpParam || "",
     },
   });
 
   const password = watch("password");
+  const otp = watch("otp");
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    // TODO: Reset Password API
+  const onSubmit = async (data: FormData) => {
+    if (!email) {
+      toast.error("Email is missing. Please go back to forgot password.");
+      return;
+    }
+
+    const toastId = toast.loading("Resetting password...");
+
+    try {
+      await resetPassword({
+        email,
+        otp: data.otp,
+        password: data.password,
+      }).unwrap();
+
+      toast.success("Password reset successfully! Please sign in.", {
+        id: toastId,
+      });
+
+      router.push("/sign-in");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Failed to reset password."), {
+        id: toastId,
+      });
+    }
   };
 
   return (
@@ -46,8 +87,38 @@ const ResetPasswordForm = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
         <div className="space-y-5">
+          {/* OTP Field */}
+          <div className="flex flex-col items-center">
+            <label className="text-lg font-medium mb-4">
+              Verification Code
+            </label>
+
+            <InputOTP
+              maxLength={5}
+              value={otp}
+              onChange={(value) =>
+                setValue("otp", value, {
+                  shouldValidate: true,
+                })
+              }
+            >
+              <InputOTPGroup>
+                <InputOTPSlot className="size-10" index={0} />
+                <InputOTPSlot className="size-10" index={1} />
+                <InputOTPSlot className="size-10" index={2} />
+                <InputOTPSlot className="size-10" index={3} />
+                <InputOTPSlot className="size-10" index={4} />
+              </InputOTPGroup>
+            </InputOTP>
+
+            {otp && otp.length < 5 && (
+              <p className="text-red-500 text-sm mt-2">
+                Please enter complete 5-digit OTP
+              </p>
+            )}
+          </div>
           {/* New Password */}
           <div>
             <label className="text-lg font-medium" htmlFor="password">
@@ -135,7 +206,7 @@ const ResetPasswordForm = () => {
 
         <div className="mt-8">
           <ButtonGroup type="submit" fullWidth className="w-full">
-            Reset Password
+            {isLoading ? "Resetting..." : "Reset Password"}
           </ButtonGroup>
         </div>
       </form>
