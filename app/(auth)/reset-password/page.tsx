@@ -1,10 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ResetPasswordForm from "../_components/ResetPasswordForm";
+import ResetPasswordFormSkeleton from "../_components/ResetPasswordFormSkeleton";
 
 const ResetPasswordPage = () => {
   return (
     <div>
-      <ResetPasswordForm />
+      <Suspense fallback={<ResetPasswordFormSkeleton />}>
+        <ResetPasswordForm />
+      </Suspense>
     </div>
   );
 };

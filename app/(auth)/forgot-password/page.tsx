@@ -1,12 +1,13 @@
-import React from 'react';
-import ForgotPasswordForm from '../_components/ForgotPasswordForm';
+import React, { Suspense } from "react";
+import ForgotPasswordForm from "../_components/ForgotPasswordForm";
+import ForgotPasswordFormSkeleton from "../_components/ForgotPasswordFormSkeleton";
 
 const ForgotPasswordPage = () => {
-    return (
-        <div>
-            <ForgotPasswordForm/>
-        </div>
-    );
+  return (
+    <Suspense fallback={<ForgotPasswordFormSkeleton />}>
+      <ForgotPasswordForm />
+    </Suspense>
+  );
 };
 
 export default ForgotPasswordPage;
