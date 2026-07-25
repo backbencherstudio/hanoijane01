@@ -1,5 +1,4 @@
 import { ChevronRight, User, CalendarClock } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { BiSolidDownArrow } from "react-icons/bi";
 import {
@@ -26,11 +25,9 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
         <DropdownMenuTrigger asChild>
           <div className="flex items-center gap-2 shrink-0">
             {user?.image ? (
-              <Image
+              <img
                 src={user.image}
                 alt={user.name}
-                height={48}
-                width={48}
                 className="object-cover overflow-hidden rounded-full size-12"
               />
             ) : (
@@ -48,11 +45,9 @@ const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
           <DropdownMenuLabel>
             <div className="flex items-center gap-2 space-y-1">
               {user?.image ? (
-                <Image
+                <img
                   src={user.image}
                   alt={user.name}
-                  height={48}
-                  width={48}
                   className="object-cover overflow-hidden rounded-full size-12 shrink-0"
                 />
               ) : (

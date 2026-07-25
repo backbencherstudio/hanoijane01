@@ -1,113 +1,170 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff, PenLine, Save } from "lucide-react";
+import { CircleX, PenLine, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+import {
+  setEditing,
+  resetProfileEdit,
+} from "@/src/redux/features/profile/profileEditSlice";
+import {
+  useGetMeQuery,
+  useUpdateProfileMutation,
+} from "@/src/redux/api/auth/authApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { toast } from "sonner";
 import "react-international-phone/style.css";
 
 export interface ProfileFormData {
-  firstName: string;
-  lastName: string;
+  name: string;
   companyName: string;
-  email: string;
+  companyAddress: string;
   contactPhone: string;
   companyPhone: string;
   website: string;
-  password: string;
   bio: string;
 }
 
-const defaultValues: ProfileFormData = {
-  firstName: "Jacob",
-  lastName: "Jones",
-  companyName: "The Walt Disney Company",
-  email: "jacob@gmail.com",
-  contactPhone: "+35345888883",
-  companyPhone: "+35345888883",
-  website: "https://",
-  password: "12345678",
-  bio: "",
-};
-
 export default function PersonalInformationForm() {
-  const [editing, setEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch();
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data;
 
-  const { register, handleSubmit, reset } =
-    useForm<ProfileFormData>({ defaultValues });
+  const editing = useAppSelector((state) => state.profileEdit.editing);
+  const image = useAppSelector((state) => state.profileEdit.image);
 
+  const { register, handleSubmit, reset } = useForm<ProfileFormData>();
 
-  const onSubmit = (data: ProfileFormData) => {
-    console.log(data);
-    setEditing(false);
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name ?? "",
+        companyName: user.companyName ?? "",
+        companyAddress: user.companyAddress ?? "",
+        contactPhone: user.phoneNumber ?? "",
+        companyPhone: user.companyPhoneNumber ?? "",
+        website: user.websiteLink ?? "",
+        bio: user.companyBio ?? "",
+      });
+    }
+  }, [user, reset]);
+
+  const onSubmit = async (data: ProfileFormData) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("name", data.name);
+      formData.append("companyName", data.companyName);
+      formData.append("companyAddress", data.companyAddress);
+      formData.append("phoneNumber", data.contactPhone);
+      formData.append("companyPhoneNumber", data.companyPhone);
+      formData.append("websiteLink", data.website);
+      formData.append("companyBio", data.bio);
+
+      if (image) {
+        formData.append("avatar", image);
+      }
+
+      await updateProfile(formData).unwrap();
+
+      toast.success("Profile updated successfully");
+      dispatch(resetProfileEdit());
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to update profile"));
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-4 items-start justify-between">
         <div>
           <div className="flex items-center gap-2 text-primary">
             {" "}
-            <h2 className="text-3xl  font-semibold">Company Details</h2>
+            <h2 className="text-2xl  font-semibold">Company Details</h2>
             <div>
               {!editing ? (
                 <PenLine
-                  onClick={() => setEditing(true)}
+                  onClick={() => dispatch(setEditing(true))}
                   className="cursor-pointer"
                 />
-              ):(<Save className="cursor-pointer" />)}
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button type="submit" disabled={isLoading}>
+                    <Save className="cursor-pointer" />
+                  </button>
+                  <CircleX
+                    onClick={() => {
+                      if (user) {
+                        reset({
+                          name: user.name ?? "",
+                          companyName: user.companyName ?? "",
+                          companyAddress: user.companyAddress ?? "",
+                          contactPhone: user.phoneNumber ?? "",
+                          companyPhone: user.companyPhoneNumber ?? "",
+                          website: user.websiteLink ?? "",
+                          bio: user.companyBio ?? "",
+                        });
+                      }
+                      dispatch(resetProfileEdit());
+                    }}
+                    className="cursor-pointer text-red-500"
+                  />
+                </div>
+              )}
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
             Manage your company details.
           </p>
         </div>
-
-        {!editing ? (
-          <Button
-            className="h-10"
-            type="button"
-            onClick={() => setEditing(true)}
-          >
-            Edit
-          </Button>
-        ) : (
-          <div className="flex gap-3">
+        <div className="">
+          {!editing ? (
             <Button
               className="h-10"
               type="button"
-              variant="outline"
-              onClick={() => {
-                reset(defaultValues);
-                setEditing(false);
-              }}
+              onClick={() => dispatch(setEditing(true))}
             >
-              Cancel
+              Edit
             </Button>
-            <Button className="h-10" type="submit">
-              Save Changes
-            </Button>
-          </div>
-        )}
+          ) : (
+            <div className="flex gap-3">
+              <Button
+                className="h-10"
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (user) {
+                    reset({
+                      name: user.name ?? "",
+                      companyName: user.companyName ?? "",
+                      companyAddress: user.companyAddress ?? "",
+                      contactPhone: user.phoneNumber ?? "",
+                      companyPhone: user.companyPhoneNumber ?? "",
+                      website: user.websiteLink ?? "",
+                      bio: user.companyBio ?? "",
+                    });
+                  }
+                  dispatch(resetProfileEdit());
+                }}
+              >
+                Cancel
+              </Button>
+              <Button className="h-10" type="submit" disabled={isLoading}>
+                {isLoading ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <Field label="First Name">
-          <Input
-            disabled={!editing}
-            className="mt-2"
-            {...register("firstName")}
-          />
-        </Field>
-        <Field label="Last Name">
-          <Input
-            disabled={!editing}
-            className="mt-2"
-            {...register("lastName")}
-          />
+        <Field label="Full Name">
+          <Input disabled={!editing} className="mt-2" {...register("name")} />
         </Field>
         <Field label="Company Name">
           <Input
@@ -116,8 +173,12 @@ export default function PersonalInformationForm() {
             {...register("companyName")}
           />
         </Field>
-        <Field label="Email Address">
-          <Input disabled={!editing} className="mt-2" {...register("email")} />
+        <Field label="Company Address">
+          <Input
+            disabled={!editing}
+            className="mt-2"
+            {...register("companyAddress")}
+          />
         </Field>
 
         <Field label="Contact Phone Number">
@@ -146,24 +207,6 @@ export default function PersonalInformationForm() {
             disabled={!editing}
             {...register("website")}
           />
-        </Field>
-
-        <Field label="Password">
-          <div className="relative">
-            <Input
-              disabled={!editing}
-              className="mt-2"
-              type={showPassword ? "text" : "password"}
-              {...register("password")}
-            />
-            <button
-              type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/3"
-              onClick={() => setShowPassword((s) => !s)}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
         </Field>
       </div>
 

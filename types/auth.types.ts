@@ -7,6 +7,9 @@ export interface User {
   updatedAt: string;
   companyName: string;
   companyAddress: string | null;
+  companyPhoneNumber: string | null;
+  companyBio: string | null;
+  websiteLink: string | null;
   avatar: string | null;
   phoneNumber: string;
   billingId: string | null;
@@ -64,4 +67,15 @@ export interface ResetPasswordRequest {
 export interface ResetPasswordResponse {
   success: boolean;
   message: string;
+}
+
+export interface UpdateProfileResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface GetMeResponse {
+  success: boolean;
+  message: string;
+  data: User;
 }

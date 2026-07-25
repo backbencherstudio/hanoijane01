@@ -6,6 +6,8 @@ import {
   VerifyEmailRequest,
   ResetPasswordRequest,
   ResetPasswordResponse,
+  UpdateProfileResponse,
+  GetMeResponse,
 } from "@/types/auth.types";
 import { baseApi } from "../baseApi";
 
@@ -67,9 +69,17 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
-    getMe: builder.query({
+    getMe: builder.query<GetMeResponse, void>({
       query: () => "/auth/me",
       providesTags: ["User", "Auth"],
+    }),
+    updateProfile: builder.mutation<UpdateProfileResponse, FormData>({
+      query: (formData) => ({
+        url: "/auth/update",
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["User", "Auth"],
     }),
   }),
 
@@ -85,4 +95,5 @@ export const {
   useResetPasswordMutation,
   useLogoutMutation,
   useGetMeQuery,
+  useUpdateProfileMutation,
 } = authApi;

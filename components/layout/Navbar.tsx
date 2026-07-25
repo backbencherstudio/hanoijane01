@@ -18,7 +18,7 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [logOutModalOpen, setLogOutModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { data, isLoading } = useGetMeQuery(null);
+  const { data } = useGetMeQuery();
   const user = data?.data;
   console.log("Navbar User:", user);
 
@@ -64,7 +64,7 @@ const Navbar = () => {
         </ul>
 
         <div className="flex items-center gap-2 md:gap-4">
-          {!user && isLoading && (
+          {!user && (
             <Link href="/sign-in">
               <Button variant="outline" className="px-10 hidden md:block">
                 Sign In
@@ -79,7 +79,11 @@ const Navbar = () => {
             {user && (
               <ProfileDropdown
                 onLogout={() => setLogOutModalOpen(true)}
-                user={user}
+                user={{
+                  name: user.name,
+                  image: user.avatar ?? "",
+                  email: user.email,
+                }}
               />
             )}
           </div>
@@ -95,7 +99,11 @@ const Navbar = () => {
       </div>
 
       {/* sidebar */}
-      <Sidebar user={user} setIsOpen={setSidebarOpen} isOpen={sidebarOpen} />
+      <Sidebar
+        user={user ? { name: user.name, image: user.avatar ?? "", email: user.email } : undefined}
+        setIsOpen={setSidebarOpen}
+        isOpen={sidebarOpen}
+      />
       <AuthModal open={isOpen} setOpen={setIsOpen} />
       <LogOutModal
         isOpen={logOutModalOpen}

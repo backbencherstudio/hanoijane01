@@ -12,7 +12,7 @@ import { useState } from "react";
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  user: UserProp;
+  user?: UserProp;
 }
 const links = [
   { label: "Home", href: "/" },
@@ -54,11 +54,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
       <div className="flex-1 overflow-auto px-4">
         <div className="flex flex-col items-center gap-2  p-4 justify-center">
           {user?.image ? (
-            <Image
+            <img
               src={user.image}
               alt={user.name}
-              height={48}
-              width={48}
               className="object-cover overflow-hidden rounded-full size-24"
             />
           ) : (

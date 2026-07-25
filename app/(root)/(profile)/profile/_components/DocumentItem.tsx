@@ -46,9 +46,9 @@ const DocumentItem = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[10px] border border-[#DFE1E7] bg-white p-4">
+    <div className="flex flex-col lg:flex-row md:items-center justify-between gap-4 rounded-[10px] border border-[#DFE1E7] bg-white p-4">
       {/* Left */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 shrink-0">
         {document.status === "uploaded" ? (
           getFileIcon()
         ) : (

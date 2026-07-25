@@ -1,41 +1,41 @@
 "use client";
 import LogOutModal from "@/app/(auth)/_components/LogOutModal";
 import { Mail, Phone, User } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import AddOnContactCTA from "../pricing/_components/AddOnContactCTA";
-
-const user: {
-  name: string;
-  image: string;
-  company: string;
-  email: string;
-  phone: string;
-  company_address: string;
-  password: string;
-  document: string[];
-} = {
-  name: "Jacob Jones",
-  image: "/assets/profile-new.png",
-  company: "The Walt Disney Company",
-  email: "jacob@gmail.com",
-  phone: "1999999999",
-  company_address: "3891 Ranchview Dr. Richardson, California 62639",
-  password: "**********",
-  document: ["/assets/ita.pdf"],
-};
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+import {
+  setImage,
+  setPreview,
+} from "@/src/redux/features/profile/profileEditSlice";
+import { Button } from "@/components/ui/button";
+import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const editing = useAppSelector((state) => state.profileEdit.editing);
+  const preview = useAppSelector((state) => state.profileEdit.preview);
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data;
+
   const links = [
     { label: "Profile", href: "/profile" },
     { label: "Booking History", href: "/booking-history" },
     { label: "Transaction History", href: "/transaction-history" },
     // { label: "Notifications", href: "/notifications" },
   ];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    dispatch(setImage(file));
+    dispatch(setPreview(URL.createObjectURL(file)));
+  };
   return (
     <div className="bg-[#fbfbfd]">
       <section className="max-w-380  mx-auto relative">
@@ -48,34 +48,60 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
 
         {/* Stats box */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-85 md:w-150 lg:w-200 xl:w-300 p-4 md:p-6 lg:p-8 xl:p-10 bg-[url('/assets/texture.webp')] bg-cover bg-center bg-no-repeat rounded-[24px] flex items-center gap-6">
-          <div className=" rounded-3xl overflow-hidden">
-            {user?.image ? (
-              <Image
-                src={user?.image}
-                alt={user?.name}
-                width={280}
-                height={230}
-                className="w-20 md:w-35 lg:w-50 xl:w-70 shrink-0"
+          <div className="relative rounded-3xl overflow-hidden">
+            {preview || user?.avatar ? (
+              <img
+                src={preview || user!.avatar || ""}
+                alt={user?.name ?? "Profile"}
+                className=" w-20 md:w-35 lg:w-50 xl:w-70 h-20 md:h-28 lg:h-42 xl:h-58 object-cover shrink-0"
               />
             ) : (
-              <div className="w-20 md:w-35 lg:w-50 shrink-0 xl:w-70 h-57.5 rounded-3xl bg-gray-100 flex justify-center items-center text-gray-400">
-                <User className="size-20" />
+              <div className="w-20 md:w-35 lg:w-50 xl:w-70 h-20 md:h-28 lg:h-42 xl:h-58 rounded-3xl bg-gray-100 flex items-center justify-center text-gray-400 shrink-0">
+                <User className="size-10 md:size-14 lg:size-20" />
               </div>
+            )}
+
+            {editing && (
+              <>
+                <input
+                  id="profile-image"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+
+                <label
+                  htmlFor="profile-image"
+                  className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer transition-opacity hover:bg-black/60"
+                >
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="pointer-events-none"
+                  >
+                    Change Photo
+                  </Button>
+                </label>
+              </>
             )}
           </div>
           <div>
             <h2 className=" text-xl md:text-4xl lg:text-5xl font-bold">
-              {user?.name}
+              {" "}
+              {user?.name ? user?.name : "User"}
             </h2>
             <p className="text-accent font-semibold text-base md:text-2xl lg:text-[32px] mt-1 xl:mt-2.5">
-              {user?.company}
+              {user?.companyName ? user?.companyName : "Company Name"}
             </p>
             <div className="flex flex-col gap-2 xl:gap-4 mt-4">
               <p className="text-sm lg:text-xl text-primary flex items-center gap-2">
-                <Mail className="size-4" /> {user?.email}
+                <Mail className="size-4" />{" "}
+                {user?.email ? user?.email : "user@example.com"}
               </p>
               <p className="text-sm lg:text-xl text-primary flex items-center gap-2">
-                <Phone className="size-4" /> {user?.phone}
+                <Phone className="size-4" />{" "}
+                {user?.phoneNumber ? user?.phoneNumber : "+353 1 234 XXXX"}
               </p>
             </div>
           </div>
