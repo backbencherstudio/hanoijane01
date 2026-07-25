@@ -9,6 +9,7 @@ import {
   UpdateProfileResponse,
   GetMeResponse,
   UploadAttachmentResponse,
+  ChangePasswordResponse,
 } from "@/types/auth.types";
 import { baseApi } from "../baseApi";
 
@@ -90,6 +91,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Auth"],
     }),
+    changePassword: builder.mutation<ChangePasswordResponse, { oldPassword: string; newPassword: string }>({
+      query: (body) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
   }),
 
   overrideExisting: false,
@@ -106,4 +115,5 @@ export const {
   useGetMeQuery,
   useUpdateProfileMutation,
   useUploadAttachmentMutation,
+  useChangePasswordMutation,
 } = authApi;

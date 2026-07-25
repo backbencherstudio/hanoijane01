@@ -85,7 +85,7 @@ export default function PersonalInformationForm() {
         <div>
           <div className="flex items-center gap-2 text-primary">
             {" "}
-            <h2 className="text-2xl  font-semibold">Company Details</h2>
+            <h2 className="text-2xl lg:text-3xl  font-semibold">Company Details</h2>
             <div>
               {!editing ? (
                 <PenLine

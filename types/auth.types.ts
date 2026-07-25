@@ -95,3 +95,8 @@ export interface UploadAttachmentResponse {
   message: string;
   data: Attachment;
 }
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+}
