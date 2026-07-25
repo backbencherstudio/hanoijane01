@@ -18,14 +18,9 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [logOutModalOpen, setLogOutModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const {data} = useGetMeQuery(null);
-  console.log(data);
-
-  const user = {
-    name: "Jacob Jones",
-    email: "exhibitors@industryexpo2027.com",
-    image: "/logo.webp",
-  };
+  const { data, isLoading } = useGetMeQuery(null);
+  const user = data?.data;
+  console.log("Navbar User:", user);
 
   const links = [
     { label: "Home", href: "/" },
@@ -69,19 +64,24 @@ const Navbar = () => {
         </ul>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <Link href="/sign-in">
-            <Button variant="outline" className="px-10 hidden md:block">
-              Sign In
-            </Button>
-          </Link>
+          {!user && isLoading && (
+            <Link href="/sign-in">
+              <Button variant="outline" className="px-10 hidden md:block">
+                Sign In
+              </Button>
+            </Link>
+          )}
+
           <ButtonGroup fullWidth={false} pathName="/exhibition-map">
             Book a Stand
           </ButtonGroup>
           <div className="hidden md:block">
-            <ProfileDropdown
-              onLogout={() => setLogOutModalOpen(true)}
-              user={user}
-            />
+            {user && (
+              <ProfileDropdown
+                onLogout={() => setLogOutModalOpen(true)}
+                user={user}
+              />
+            )}
           </div>
           <Button
             onClick={() => setSidebarOpen(!sidebarOpen)}

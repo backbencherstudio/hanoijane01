@@ -16,8 +16,9 @@ import { FaCreditCard } from "react-icons/fa";
 const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
   const handleLogout = () => {
     if (onLogout) onLogout();
-    console.log("User logged out");
   };
+
+  console.log("dropdown user",user);
 
   return (
     <div className="flex items-center gap-2 cursor-pointer">

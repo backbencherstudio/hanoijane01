@@ -17,6 +17,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Auth"],
     }),
     signIn: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({
@@ -24,6 +25,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Auth"],
     }),
 
     verifyEmail: builder.mutation<LoginResponse, VerifyEmailRequest>({
@@ -48,16 +50,26 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
-    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+    resetPassword: builder.mutation<
+      ResetPasswordResponse,
+      ResetPasswordRequest
+    >({
       query: (data) => ({
         url: "/auth/reset-password",
         method: "POST",
         body: data,
       }),
     }),
+    logout: builder.mutation<{ success: boolean; message: string }, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ["Auth"],
+    }),
     getMe: builder.query({
       query: () => "/auth/me",
-      providesTags: ["User"],
+      providesTags: ["User", "Auth"],
     }),
   }),
 
@@ -71,5 +83,6 @@ export const {
   useResendVerificationEmailMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useLogoutMutation,
   useGetMeQuery,
 } = authApi;

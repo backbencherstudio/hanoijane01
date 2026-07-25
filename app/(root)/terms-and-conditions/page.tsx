@@ -185,7 +185,7 @@ const TermsAndConditionsPage = () => {
                 {section.id}. {section.title}
               </h3>
 
-              <div className="space-y-2 text-[#4A4C56] text-sm md:text-base lg:text-lg xl:text-xl font-medium leading-relaxed">
+              <div className="space-y-2 pl-4 text-[#4A4C56] text-sm md:text-base lg:text-lg xl:text-xl font-medium leading-relaxed">
                 {section.content.map((item, index) =>
                   Array.isArray(item) ? (
                     <ul key={index} className="list-disc pl-6 space-y-2">
@@ -194,7 +194,7 @@ const TermsAndConditionsPage = () => {
                       ))}
                     </ul>
                   ) : (
-                    <li key={index}>{item}</li>
+                    <li key={index} className="">{item}</li>
                   ),
                 )}
               </div>

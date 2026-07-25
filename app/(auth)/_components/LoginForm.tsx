@@ -13,6 +13,8 @@ import {
 import { toast } from "sonner";
 import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useDispatch } from "react-redux";
+import { setAccessToken } from "@/src/redux/features/auth/authSlice";
 
 interface FormData {
   email: string;
@@ -23,6 +25,7 @@ const LoginForm = () => {
   const [show, setShow] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [signIn, { isLoading }] = useSignInMutation();
   const [resendVerificationEmail] = useResendVerificationEmailMutation();
@@ -41,10 +44,12 @@ const LoginForm = () => {
     const toastId = toast.loading("Signing in...");
 
     try {
-      await signIn({
+     const res = await signIn({
         email: data.email,
         password: data.password,
       }).unwrap();
+      localStorage.setItem("accessToken", res.data.token);
+      dispatch(setAccessToken(res.data.token));
 
       toast.success("Welcome back!", {
         id: toastId,

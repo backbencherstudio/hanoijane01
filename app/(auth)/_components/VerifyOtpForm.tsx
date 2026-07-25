@@ -61,29 +61,6 @@ const VerifyOtpForm = () => {
       });
     }
   };
-  // const handleResendOTP = async () => {
-  //   if (!email) {
-  //     toast.error("Email is missing. Please sign up again.");
-  //     return;
-  //   }
-
-  //   const toastId = toast.loading("Sending verification code...");
-
-  //   try {
-  //     await resendVerificationEmail({ email }).unwrap();
-
-  //     toast.success("Verification code sent successfully!", {
-  //       id: toastId,
-  //     });
-  //   } catch (error: unknown) {
-  //     toast.error(
-  //       getErrorMessage(error, "Failed to resend verification code."),
-  //       {
-  //         id: toastId,
-  //       },
-  //     );
-  //   }
-  // };
 
   return (
     <div className="w-full bg-white p-6 rounded-2xl md:w-118">

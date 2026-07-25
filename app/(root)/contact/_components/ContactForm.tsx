@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 
 interface ContactFormData {
+  name: string;
   companyName: string;
   email: string;
   phoneNumber: string;
   message: string;
-  agree: boolean;
 }
 
 const ContactForm = () => {
@@ -19,11 +19,11 @@ const ContactForm = () => {
     reset,
   } = useForm<ContactFormData>({
     defaultValues: {
+      name: "",
       companyName: "",
       email: "",
       phoneNumber: "",
       message: "",
-      agree: false,
     },
   });
 
@@ -35,6 +35,31 @@ const ContactForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Name */}
+      <div className="flex flex-col">
+        <label
+          htmlFor="name"
+          className="lg:text-lg font-medium text-text-primary"
+        >
+          Name <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="name"
+          placeholder="Enter Your Name"
+          className={`p-3 mt-2 rounded-lg bg-[#fafafa] border focus:border-gray-300 ${
+            errors.companyName ? "border-red-500" : "border-gray-200"
+          }`}
+          {...register("name", {
+            required: "Name is required",
+          })}
+        />
+        {errors.companyName && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.companyName.message}
+          </p>
+        )}
+      </div>
       {/* Company Name */}
       <div className="flex flex-col">
         <label
@@ -55,7 +80,9 @@ const ContactForm = () => {
           })}
         />
         {errors.companyName && (
-          <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.companyName.message}
+          </p>
         )}
       </div>
 
@@ -111,7 +138,9 @@ const ContactForm = () => {
           })}
         />
         {errors.phoneNumber && (
-          <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.phoneNumber.message}
+          </p>
         )}
       </div>
 
@@ -133,7 +162,7 @@ const ContactForm = () => {
       </div>
 
       {/* Agree checkbox */}
-      <div className=" rounded-lg pl-2 py-4">
+      {/* <div className=" rounded-lg pl-2 py-4">
         <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
@@ -150,7 +179,7 @@ const ContactForm = () => {
         {errors.agree && (
           <p className="text-red-500 text-sm mt-2">{errors.agree.message}</p>
         )}
-      </div>
+      </div> */}
 
       {/* Submit Button */}
       <ButtonGroup type="submit" fullWidth={true}>
