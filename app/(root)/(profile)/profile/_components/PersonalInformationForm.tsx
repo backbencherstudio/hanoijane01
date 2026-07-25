@@ -81,7 +81,7 @@ export default function PersonalInformationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="flex flex-col gap-4 items-start justify-between">
+      <div className="flex flex-col lg:flex-row gap-4 items-start justify-between">
         <div>
           <div className="flex items-center gap-2 text-primary">
             {" "}

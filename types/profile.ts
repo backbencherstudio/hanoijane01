@@ -19,6 +19,8 @@ export interface VerificationDocument {
   fileSize?: string;
   fileType: "png" | "jpg" | "pdf";
   status: DocumentStatus;
+  filePath?: string;
+  byteSize?: number;
 }
 
 export interface NewDocumentType {

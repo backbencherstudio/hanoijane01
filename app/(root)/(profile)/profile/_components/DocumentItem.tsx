@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { VerificationDocument } from "@/types/profile";
-import { Upload } from "lucide-react";
 import { BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
 
 interface DocumentItemProps {
   document: VerificationDocument;
   isEditing?: boolean;
+  isUploading?: boolean;
   onUpload?: (id: string) => void;
   onReplace?: (id: string) => void;
 }
@@ -16,6 +16,7 @@ interface DocumentItemProps {
 const DocumentItem = ({
   document,
   isEditing = false,
+  isUploading = false,
   onUpload,
   onReplace,
 }: DocumentItemProps) => {
@@ -49,23 +50,41 @@ const DocumentItem = ({
     <div className="flex flex-col lg:flex-row md:items-center justify-between gap-4 rounded-[10px] border border-[#DFE1E7] bg-white p-4">
       {/* Left */}
       <div className="flex items-center gap-4 shrink-0">
-        {document.status === "uploaded" ? (
-          getFileIcon()
+        {document.status === "uploaded" && document.filePath ? (
+          <a
+            href={document.filePath}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer"
+          >
+            {getFileIcon()}
+          </a>
         ) : (
-          <div className="size-10 rounded-[10px] bg-[#F3F4F6] flex items-center justify-center">
-            <Upload className="size-5 text-[#94A3B8]" />
-          </div>
+          getFileIcon()
         )}
 
         <div>
-          <h4 className="font-medium text-[#1E293B]">{document.title}</h4>
+          {document.status === "uploaded" && document.filePath ? (
+            <a
+              href={document.filePath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer"
+            >
+              <h4 className="font-medium text-[#1E293B] hover:underline">
+                {document.title}
+              </h4>
+            </a>
+          ) : (
+            <h4 className="font-medium text-[#1E293B]">{document.title}</h4>
+          )}
 
           {document.status === "uploaded" ? (
             <p className="text-[#64748B] ">
               {document.fileName} • {document.fileSize}
             </p>
           ) : (
-            <p className="text-[#64748B] mt-1">PDF or PNG, up to 5 MB</p>
+            <p className="text-[#64748B] mt-1">PDF, JPG or PNG , up to 5 MB</p>
           )}
         </div>
       </div>
@@ -93,8 +112,13 @@ const DocumentItem = ({
                 ? onReplace?.(document.id)
                 : onUpload?.(document.id)
             }
+            disabled={isUploading}
           >
-            {document.status === "uploaded" ? "Replace" : "Upload"}
+            {isUploading
+              ? "Uploading..."
+              : document.status === "uploaded"
+                ? "Replace"
+                : "Upload"}
           </Button>
         )}
       </div>

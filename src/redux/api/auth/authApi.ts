@@ -8,6 +8,7 @@ import {
   ResetPasswordResponse,
   UpdateProfileResponse,
   GetMeResponse,
+  UploadAttachmentResponse,
 } from "@/types/auth.types";
 import { baseApi } from "../baseApi";
 
@@ -81,6 +82,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Auth"],
     }),
+    uploadAttachment: builder.mutation<UploadAttachmentResponse, FormData>({
+      query: (formData) => ({
+        url: "/auth/upload",
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["User", "Auth"],
+    }),
   }),
 
   overrideExisting: false,
@@ -96,4 +105,5 @@ export const {
   useLogoutMutation,
   useGetMeQuery,
   useUpdateProfileMutation,
+  useUploadAttachmentMutation,
 } = authApi;

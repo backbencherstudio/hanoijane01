@@ -14,6 +14,7 @@ export interface User {
   phoneNumber: string;
   billingId: string | null;
   type: "user" | "admin";
+  attachments: Attachment[];
 }
 
 // Sign Up
@@ -78,4 +79,19 @@ export interface GetMeResponse {
   success: boolean;
   message: string;
   data: User;
+}
+
+export interface Attachment {
+  id: string;
+  fileName: string;
+  filePath: string;
+  fileType: string;
+  byteSize: number;
+  mimeType: string;
+}
+
+export interface UploadAttachmentResponse {
+  success: boolean;
+  message: string;
+  data: Attachment;
 }

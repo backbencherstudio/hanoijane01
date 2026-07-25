@@ -1,6 +1,6 @@
 "use client";
 import LogOutModal from "@/app/(auth)/_components/LogOutModal";
-import { Mail, Phone, User } from "lucide-react";
+import { ImageUp, Mail, Phone, Upload, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -75,13 +75,13 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
                   htmlFor="profile-image"
                   className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer transition-opacity hover:bg-black/60"
                 >
-                  <Button
+                  <button
                     type="button"
-                    size="sm"
-                    className="pointer-events-none"
+               
+                    className="pointer-events-none text-muted"
                   >
-                    Change Photo
-                  </Button>
+                    <Upload />
+                  </button>
                 </label>
               </>
             )}
