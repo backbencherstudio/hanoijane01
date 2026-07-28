@@ -11,9 +11,13 @@ import StandLayer from "./StandLayer";
 import StandTooltip, { type TooltipHandle } from "./StandTooltip";
 import type { Stand } from "@/types/stand";
 import { updateStand } from "@/src/redux/features/bookingSlice";
+import { useGetExhibitionMapQuery } from "@/src/redux/api/exhibition/exhibitionApi";
 
 const MapContent = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data, isLoading } = useGetExhibitionMapQuery(null);
+  const halls = data?.data?.halls;
+  const apiStands = data?.data?.stands ?? [];
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -25,7 +29,7 @@ const MapContent = () => {
       dispatch(
         updateStand({
           id: stand.stand_no,
-          name: `Stand ${stand.stand_no}`,
+          name: stand.title,
           type: stand.standType,
           size: stand.size,
           price: stand.price,
@@ -45,6 +49,9 @@ const MapContent = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  if (isLoading)
+    return <div className="text-5xl text-center">Map data loading...</div>;
+
   return (
     <section className="w-full  mt-12 flex flex-col lg:flex-row gap-6">
       <div className="w-full lg:w-[320px] px-4 py-5 rounded-[20px] bg-white ">
@@ -59,7 +66,7 @@ const MapContent = () => {
         <h3 className="text-xl font-semibold text-[#1C1F23] mb-6">
           Stand Category
         </h3>
-        <StandCategoryAccordion />
+        <StandCategoryAccordion halls={halls} />
       </div>
       <div className="w-full h-fit bg-white overflow-hidden relative p-4 rounded-[20px] ">
         <TransformWrapper
@@ -96,7 +103,7 @@ const MapContent = () => {
             <svg viewBox="0 0 998 1274" className="w-full h-auto">
               <BaseMap />
 
-              <StandLayer tooltipRef={tooltipRef} />
+              <StandLayer tooltipRef={tooltipRef} apiStands={apiStands} />
             </svg>
           </TransformComponent>
         </TransformWrapper>

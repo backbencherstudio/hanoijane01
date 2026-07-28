@@ -81,8 +81,10 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
 
         // ── status badge ─────────────────────────────────────────────────────
         if (r.statusBadge.current) {
-          r.statusBadge.current.textContent = stand.status;
-          if (stand.status === "booked") {
+          r.statusBadge.current.textContent = stand.isAvailable
+            ? "available"
+            : "booked";
+          if (!stand.isAvailable) {
             r.statusBadge.current.className =
               "rounded-sm px-1.5 py-1 text-sm font-semibold bg-gray-200 text-gray-700";
           } else {
@@ -110,8 +112,7 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
 
         // ── book button (conditional) ─────────────────────────────────────────
         if (r.bookBtn.current) {
-          r.bookBtn.current.style.display =
-            stand.status === "booked" ? "none" : "block";
+          r.bookBtn.current.style.display = stand.isAvailable ? "block" : "none";
         }
 
         // ── make visible ──────────────────────────────────────────────────────

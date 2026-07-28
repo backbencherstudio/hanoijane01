@@ -1,10 +1,18 @@
 "use client";
 
-import { StandType } from "@/data/exhibition-map/standCategories";
-
+interface StandCardItem {
+  id: number;
+  name: string;
+  color: string;
+  standColor: string;
+  shape?: string;
+  size: string;
+  price: number;
+  stands: string;
+}
 
 interface StandCardProps {
-  stand: StandType;
+  stand: StandCardItem;
 }
 
 const StandCard = ({ stand }: StandCardProps) => {
@@ -27,7 +35,6 @@ const StandCard = ({ stand }: StandCardProps) => {
 
           <span className="text-[#4A4C56]">
             {stand.size}
-            {stand.shape && ` ${stand.shape}`}
           </span>
         </div>
 

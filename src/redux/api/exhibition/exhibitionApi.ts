@@ -2,15 +2,16 @@ import { baseApi } from "../baseApi";
 
 export const exhibitionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    submitContact: builder.query({
+    getExhibitionMap: builder.query({
       query: () => ({
         url: "/exhibition/latest-one",
         method: "GET",
       }),
+      providesTags: ["Exhibition", "Booking"],
     }),
   }),
 
   overrideExisting: false,
 });
 
-export const {} = exhibitionApi;
+export const { useGetExhibitionMapQuery } = exhibitionApi;

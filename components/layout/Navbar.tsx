@@ -20,7 +20,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data } = useGetMeQuery();
   const user = data?.data;
-  console.log("Navbar User:", user);
 
   const links = [
     { label: "Home", href: "/" },

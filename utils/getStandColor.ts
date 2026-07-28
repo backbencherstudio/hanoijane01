@@ -1,5 +1,5 @@
-export function getStandColor(category: string, status: string) {
-  if (status === "booked") return "#B8B8B8";
+export function getStandColor(category: string, isAvailable: boolean) {
+  if (!isAvailable) return "#B8B8B8";
 
   switch (category) {
     case "goff-standard":
