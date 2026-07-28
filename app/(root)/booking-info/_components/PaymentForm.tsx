@@ -11,6 +11,7 @@ import { resetBookingInfo } from "@/src/redux/features/bookingSlice";
 import StripeProvider from "@/providers/StripeProvider";
 import StripeCardForm, { StripeCardFormRef } from "./StripeCardForm";
 import { useCreatePaymentIntentMutation } from "@/src/redux/api/payment/paymentApi";
+import { useGetExhibitionMapQuery, useGetExhibitionStandQuery } from "@/src/redux/api/exhibition/exhibitionApi";
 import { toast } from "sonner";
 
 interface PaymentFormProps {
@@ -23,41 +24,56 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
   const bookingInfo = useSelector(
     (state: RootState) => state.booking.bookingInfo,
   );
-  const stand = useSelector((state: RootState) => state.booking.stand);
+  const standId = useSelector((state: RootState) => state.booking.standId);
   const termsAndConditions = useSelector(
     (state: RootState) => state.booking.termsAndConditions,
   );
+  const bookingId = useSelector((state: RootState) => state.booking.bookingId);
+
+  // Fetch stand details using standId
+  const { data: standData, isLoading: isLoadingStand } = useGetExhibitionStandQuery(standId, {
+    skip: !standId,
+  });
+  const stand = standData?.data;
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoadingSecret, setIsLoadingSecret] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const stripeCardFormRef = useRef<StripeCardFormRef | null>(null);
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
+  const { refetch: refetchExhibitionMap } = useGetExhibitionMapQuery(null);
   const hasFetchedRef = useRef(false);
   const isClient = typeof window !== "undefined";
 
-  const fetchClientSecret = async () => {
-    if (!bookingInfo.email) {
-      toast.error("Customer email is missing. Please fill in your booking information.");
-      setIsLoadingSecret(false);
-      setLoadError(true);
-      return;
+  // Redirect to booking-info if no bookingId (booking not created yet)
+  useEffect(() => {
+    if (!bookingId) {
+      router.push("/booking-info");
     }
+  }, [bookingId, router]);
 
+  // Warn user before leaving payment page
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (bookingId) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [bookingId]);
+
+  const fetchClientSecret = async () => {
     setIsLoadingSecret(true);
     setLoadError(false);
 
     try {
-      const totalAmount = stand.price + stand.price * stand.vatRate;
-
       const result = await createPaymentIntent({
-        bookingId: `booking_${Date.now()}`,
-        customerEmail: bookingInfo.email,
-        amount: Math.round(totalAmount * 100) / 100, // Send in dollars (e.g., 150.00), not cents
-        currency: "usd",
-        successUrl: `${window.location.origin}/booking-success?payment_option=now`,
-        cancelUrl: `${window.location.origin}/booking-info`,
+        bookingId: bookingId,
       }).unwrap();
 
       if (result.success && result.data?.clientSecret) {
@@ -96,15 +112,19 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
     setIsProcessing(true);
 
     try {
-      const result = await stripeCardFormRef.current.confirmPayment(clientSecret);
+      const paymentResult = await stripeCardFormRef.current.confirmPayment(clientSecret);
 
-      if (result.success) {
+      if (paymentResult.success) {
         toast.success("Payment successful!");
+        
+        // Refetch exhibition map data to update stand availability
+        refetchExhibitionMap();
+        
         dispatch(resetBookingInfo());
         sessionStorage.removeItem("bookingState");
         router.push(`/booking-success?payment_option=now`);
       } else {
-        toast.error(result.error || "Payment failed. Please try again.");
+        toast.error(paymentResult.error || "Payment failed. Please try again.");
       }
     } catch (error) {
       toast.error("Payment failed. Please try again.");
@@ -141,8 +161,10 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
           <h3 className="font-semibold text-2xl">Booking Summary</h3>
           <div className="p-5 space-y-4 bg-[#F2F6F8] rounded-xl overflow-hidden border">
             <p className="flex justify-between items-center">
-              <span className="font-medium text-lg">Company:</span>
-              <span className="text-lg font-semibold">{bookingInfo.companyName}</span>
+              <span className="font-medium text-lg">Stand:</span>
+              <span className="text-lg font-semibold">
+                {isLoadingStand ? "Loading..." : stand?.title || stand?.name || "N/A"}
+              </span>
             </p>
             <p className="flex justify-between items-center">
               <span className="font-medium text-lg">Contact:</span>
@@ -159,10 +181,6 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
             <p className="flex justify-between items-center">
               <span className="font-medium text-lg">Address:</span>
               <span className="text-lg font-semibold">{bookingInfo.companyAddress}</span>
-            </p>
-            <p className="flex justify-between items-center">
-              <span className="font-medium text-lg">Stand:</span>
-              <span className="text-lg font-semibold">{stand.name}</span>
             </p>
             <p className="flex justify-between items-center">
               <span className="font-medium text-lg">On behalf of:</span>

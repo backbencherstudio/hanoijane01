@@ -2,11 +2,6 @@ import { baseApi } from "../baseApi";
 
 interface CreatePaymentIntentRequest {
   bookingId: string;
-  customerEmail: string;
-  amount: number;
-  currency: string;
-  successUrl: string;
-  cancelUrl: string;
 }
 
 interface CreatePaymentIntentResponse {

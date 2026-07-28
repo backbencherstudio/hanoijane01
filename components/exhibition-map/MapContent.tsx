@@ -10,7 +10,7 @@ import MapControls from "./MapControls";
 import StandLayer from "./StandLayer";
 import StandTooltip, { type TooltipHandle } from "./StandTooltip";
 import type { Stand } from "@/types/stand";
-import { updateStand } from "@/src/redux/features/bookingSlice";
+import { updateStand, updateStandId } from "@/src/redux/features/bookingSlice";
 import { useGetExhibitionMapQuery } from "@/src/redux/api/exhibition/exhibitionApi";
 
 const MapContent = () => {
@@ -26,15 +26,7 @@ const MapContent = () => {
   // ── Book Now handler ────────────────────────────────────────────────────
   const handleBookNow = useCallback(
     (stand: Stand) => {
-      dispatch(
-        updateStand({
-          id: stand.stand_no,
-          name: stand.title,
-          type: stand.standType,
-          size: stand.size,
-          price: stand.price,
-        }),
-      );
+      dispatch(updateStandId(stand.id || stand.stand_no));
       router.push("/terms-and-conditions");
     },
     [dispatch, router],
@@ -102,7 +94,6 @@ const MapContent = () => {
           >
             <svg viewBox="0 0 998 1274" className="w-full h-auto">
               <BaseMap />
-
               <StandLayer tooltipRef={tooltipRef} apiStands={apiStands} />
             </svg>
           </TransformComponent>

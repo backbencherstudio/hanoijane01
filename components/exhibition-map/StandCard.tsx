@@ -32,10 +32,7 @@ const StandCard = ({ stand }: StandCardProps) => {
       <div className="mt-4 space-y-4 ">
         <div className="flex justify-between">
           <span className="text-[#4A4C56]">Size</span>
-
-          <span className="text-[#4A4C56]">
-            {stand.size}
-          </span>
+          <span className="text-[#4A4C56]">{stand.size}</span>
         </div>
 
         <div className="flex justify-between">

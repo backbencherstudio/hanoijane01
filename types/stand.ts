@@ -11,6 +11,7 @@ export interface Stand extends StandData {
   title: string;
   categorySlug: string;
   exhibitor: string | null;
+  id?: string;
 }
 
 // ── API response shape for a single stand ────────────────────────────

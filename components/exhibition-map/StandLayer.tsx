@@ -50,6 +50,7 @@ const StandLayer = memo(function StandLayer({
           return {
             ...sd,
             stand_no: sd.stand_no,
+            id: api.id,
             category,
             standType: truncateWords(api.categoryTitle, 2),
             size: api.size,

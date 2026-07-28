@@ -6,7 +6,10 @@ import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/src/redux/store";
-import { updateBookingInfo } from "@/src/redux/features/bookingSlice";
+import { updateBookingInfo, updateBookingId } from "@/src/redux/features/bookingSlice";
+import { useCreateBookingMutation } from "@/src/redux/api/booking/bookingApi";
+import { toast } from "sonner";
+import { usePersistBooking } from "@/hooks/usePersistBooking";
 
 interface BookingInfoData {
   companyName: string;
@@ -23,6 +26,7 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
     (state: RootState) => state.booking.bookingInfo,
   );
   const stand = useSelector((state: RootState) => state.booking.stand);
+  const standId = useSelector((state: RootState) => state.booking.standId);
   const termsAndConditions = useSelector(
     (state: RootState) => state.booking.termsAndConditions,
   );
@@ -53,21 +57,36 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
     });
   }, [storedInfo, reset]);
 
-  const onSubmit = (data: BookingInfoData) => {
+  const [createBooking, { isLoading: isCreatingBooking }] = useCreateBookingMutation();
+
+  const onSubmit = async (data: BookingInfoData) => {
     dispatch(updateBookingInfo(data));
-    console.log("===== BOOKING INFO SUBMIT =====");
-    console.log(
-      JSON.stringify(
-        {
-          stand,
-          termsAndConditions,
-          bookingInfo: data,
-        },
-        null,
-        2,
-      ),
-    );
-    nextStep();
+    
+    try {
+      const result = await createBooking({
+        standId: standId || stand.id,
+        userName: data.contactName,
+        companyName: data.companyName,
+        companyAddress: data.companyAddress,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        termsAndConditionsAccepted: termsAndConditions.accepted,
+        onBehalfOf: termsAndConditions.onBehalfOf,
+        title: termsAndConditions.title,
+        signature: termsAndConditions.signature,
+      }).unwrap();
+
+      if (result.success) {
+        dispatch(updateBookingId(result.data.id));
+        toast.success("Booking created successfully!");
+        nextStep();
+      } else {
+        toast.error(result.message || "Failed to create booking");
+      }
+    } catch (error) {
+      toast.error("Failed to create booking. Please try again.");
+      console.error("Booking error:", error);
+    }
   };
 
   return (

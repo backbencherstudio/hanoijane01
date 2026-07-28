@@ -9,9 +9,15 @@ export const exhibitionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Exhibition", "Booking"],
     }),
+    getExhibitionStand: builder.query({
+      query: (standId) => ({
+        url: `/exhibition/stand/${standId}`,
+        method: "GET",
+      }),
+      providesTags: ["Stand"],
+    }),
   }),
-
   overrideExisting: false,
 });
 
-export const { useGetExhibitionMapQuery } = exhibitionApi;
+export const { useGetExhibitionMapQuery, useGetExhibitionStandQuery } = exhibitionApi;

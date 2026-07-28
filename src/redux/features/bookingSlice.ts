@@ -19,6 +19,8 @@ interface BookingState {
     price: number;
     vatRate: number;
   };
+  standId: string;
+  bookingId: string;
   bookingInfo: {
     companyName: string;
     contactName: string;
@@ -41,6 +43,8 @@ const initialState: BookingState = {
     price: 0,
     vatRate: 0.2,
   },
+  standId: "",
+  bookingId: "",
   bookingInfo: {
     companyName: "",
     contactName: "",
@@ -65,6 +69,12 @@ const bookingSlice = createSlice({
       action: PayloadAction<Partial<BookingState["stand"]>>,
     ) => {
       state.stand = { ...state.stand, ...action.payload };
+    },
+    updateStandId: (state, action: PayloadAction<string>) => {
+      state.standId = action.payload;
+    },
+    updateBookingId: (state, action: PayloadAction<string>) => {
+      state.bookingId = action.payload;
     },
     updateBookingInfo: (
       state,
@@ -92,6 +102,8 @@ const bookingSlice = createSlice({
 
 export const {
   updateStand,
+  updateStandId,
+  updateBookingId,
   updateBookingInfo,
   updateTermsAndConditions,
   resetBookingInfo,

@@ -15,7 +15,7 @@ export const usePersistBooking = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.stand?.id) {
+        if (parsed.standId || parsed.stand?.id) {
           dispatch(restoreBooking(parsed));
         }
       } catch (e) {
@@ -29,10 +29,10 @@ export const usePersistBooking = () => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(bookingState));
   }, [bookingState]);
 
-  // 3) On unmount (leaving page): clear storage
-  useEffect(() => {
-    return () => {
-      sessionStorage.removeItem(STORAGE_KEY);
-    };
-  }, []);
+  // 3) Clear storage only on successful booking completion
+  const clearBookingState = () => {
+    sessionStorage.removeItem(STORAGE_KEY);
+  };
+
+  return { clearBookingState };
 };
