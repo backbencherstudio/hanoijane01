@@ -3,7 +3,7 @@ import { baseApi } from "../baseApi";
 
 export const contactApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    resetPassword: builder.mutation<ContactResponse, ContactRequest>({
+    submitContact: builder.mutation<ContactResponse, ContactRequest>({
       query: (data) => ({
         url: "/contact",
         method: "POST",
@@ -15,4 +15,4 @@ export const contactApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const {} = contactApi;
+export const { useSubmitContactMutation } = contactApi;

@@ -49,14 +49,14 @@ const ContactPage = () => {
                       key={idx}
                       className="px-4 py-5 rounded-xl bg-white border border-gray-300 flex gap-3"
                     >
-                      <div className="size-8 flex justify-center items-center bg-[#EAF0FF] rounded-full">
+                      <div className="size-8 flex justify-center items-center bg-[#EAF0FF] shrink-0 rounded-full">
                         <Icon className="size-4 text-primary" />
                       </div>
                       <div>
                         <h4 className="text-xl font-medium text-text-primary">
                           {item.title}
                         </h4>
-                        <p className="text-lg text-[#777980] mt-2">
+                        <p className="text-lg text-[#777980] mt-2 break-all">
                           {item.subtitle}
                         </p>
                       </div>

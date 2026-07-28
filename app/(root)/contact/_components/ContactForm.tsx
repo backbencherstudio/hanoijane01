@@ -1,6 +1,11 @@
 "use client";
-import React from "react";
+
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
+import { useSubmitContactMutation } from "@/src/redux/api/contact/contactApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { toast } from "sonner";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 
 interface ContactFormData {
@@ -12,11 +17,16 @@ interface ContactFormData {
 }
 
 const ContactForm = () => {
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data;
+
+  const [submitContact, { isLoading }] = useSubmitContactMutation();
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
+    formState: { errors },
   } = useForm<ContactFormData>({
     defaultValues: {
       name: "",
@@ -27,10 +37,41 @@ const ContactForm = () => {
     },
   });
 
-  const onSubmit = (data: ContactFormData) => {
-    console.log("Form data:", data);
-    // API call here
-    reset(); // clear form after submission
+  // Pre-fill form when user data changes
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name ?? "",
+        companyName: user.companyName ?? "",
+        email: user.email ?? "",
+        phoneNumber: user.phoneNumber ?? "",
+        message: "",
+      });
+    } else {
+      reset({
+        name: "",
+        companyName: "",
+        email: "",
+        phoneNumber: "",
+        message: "",
+      });
+    }
+  }, [user, reset]);
+
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      await submitContact(data).unwrap();
+      toast.success("Contact message submitted successfully");
+      reset({
+        name: user?.name ?? "",
+        companyName: user?.companyName ?? "",
+        email: user?.email ?? "",
+        phoneNumber: user?.phoneNumber ?? "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to submit contact message"));
+    }
   };
 
   return (
@@ -48,15 +89,15 @@ const ContactForm = () => {
           id="name"
           placeholder="Enter Your Name"
           className={`p-3 mt-2 rounded-lg bg-[#fafafa] border focus:border-gray-300 ${
-            errors.companyName ? "border-red-500" : "border-gray-200"
+            errors.name ? "border-red-500" : "border-gray-200"
           }`}
           {...register("name", {
             required: "Name is required",
           })}
         />
-        {errors.companyName && (
+        {errors.name && (
           <p className="text-red-500 text-sm mt-1">
-            {errors.companyName.message}
+            {errors.name.message}
           </p>
         )}
       </div>
@@ -161,29 +202,9 @@ const ContactForm = () => {
         />
       </div>
 
-      {/* Agree checkbox */}
-      {/* <div className=" rounded-lg pl-2 py-4">
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            className="size-5 cursor-pointer"
-            {...register("agree", {
-              required: "Please accept the privacy policy",
-            })}
-          />
-          <span className="text-[#777980]">
-            I agree with our{" "}
-            <span className="underline text-black">Privacy Policy</span>
-          </span>
-        </label>
-        {errors.agree && (
-          <p className="text-red-500 text-sm mt-2">{errors.agree.message}</p>
-        )}
-      </div> */}
-
       {/* Submit Button */}
       <ButtonGroup type="submit" fullWidth={true}>
-        Send Message
+        {isLoading ? "Sending..." : "Send Message"}
       </ButtonGroup>
     </form>
   );

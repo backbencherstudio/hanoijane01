@@ -69,7 +69,7 @@ export const authApi = baseApi.injectEndpoints({
         url: "/auth/logout",
         method: "POST",
       }),
-      invalidatesTags: ["Auth"],
+      invalidatesTags: ["User","Auth"],
     }),
     getMe: builder.query<GetMeResponse, void>({
       query: () => "/auth/me",
@@ -91,13 +91,16 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Auth"],
     }),
-    changePassword: builder.mutation<ChangePasswordResponse, { oldPassword: string; newPassword: string }>({
+    changePassword: builder.mutation<
+      ChangePasswordResponse,
+      { oldPassword: string; newPassword: string }
+    >({
       query: (body) => ({
         url: "/auth/change-password",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Auth"],
+      invalidatesTags: ["User", "Auth"],
     }),
   }),
 

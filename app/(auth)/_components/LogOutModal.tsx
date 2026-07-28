@@ -2,8 +2,11 @@
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/ui/Modal";
 import { useLogoutMutation } from "@/src/redux/api/auth/authApi";
+import { baseApi } from "@/src/redux/api/baseApi";
+import { logout as clearAuth } from "@/src/redux/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { AiOutlineLogout } from "react-icons/ai";
 import { toast } from "sonner";
 
@@ -15,6 +18,7 @@ const LogOutModal = ({
   onClose: () => void;
 }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const handleClose = () => {
     onClose();
@@ -25,6 +29,8 @@ const LogOutModal = ({
     try {
       await logout().unwrap();
       localStorage.removeItem("accessToken");
+      dispatch(clearAuth());
+      dispatch(baseApi.util.resetApiState());
       toast.success("Signed out successfully.", {
         id: toastId,
       });
