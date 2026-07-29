@@ -1,311 +1,109 @@
 "use client";
 import CustomTable from "@/components/ui/Table";
 import { Column } from "@/types/table";
-import { Dot } from "lucide-react";
+import { Transaction } from "@/types/transaction.types";
+import { useGetUserTransactionsQuery } from "@/src/redux/api/payment/paymentApi";
 import React, { useCallback, useState } from "react";
 import { GoDotFill } from "react-icons/go";
+import { toast } from "sonner";
+import { CheckCheck, Copy } from "lucide-react";
 
-export interface Transaction {
-  id: number;
-  paymentRef: string;
-  payCategory: string;
-  stand: string;
-  amount: number;
-  status: string;
-  paymentDate: string;
-  method: string;
-}
+const ITEMS_PER_PAGE = 8;
 
-export const transactions: Transaction[] = [
-  {
-    id: 1,
-    paymentRef: "PAY-2201",
-    payCategory: "Booking",
-    stand: "A01",
-    amount: 200,
-    status: "Paid",
-    paymentDate: "20 Jun 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 2,
-    paymentRef: "PAY-2202",
-    payCategory: "Add On",
-    stand: "A02",
-    amount: 200,
-    status: "Pending",
-    paymentDate: "18 Jun 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 3,
-    paymentRef: "PAY-2203",
-    payCategory: "Booking",
-    stand: "A03",
-    amount: 200,
-    status: "Overdue",
-    paymentDate: "15 Jun 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 4,
-    paymentRef: "PAY-2204",
-    payCategory: "Booking",
-    stand: "A04",
-    amount: 200,
-    status: "Paid",
-    paymentDate: "13 Jun 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 5,
-    paymentRef: "PAY-2205",
-    payCategory: "Booking",
-    stand: "B01",
-    amount: 350,
-    status: "Paid",
-    paymentDate: "10 Jun 2026",
-    method: "Bank Transfer",
-  },
-  {
-    id: 6,
-    paymentRef: "PAY-2206",
-    payCategory: "Add On",
-    stand: "B03",
-    amount: 120,
-    status: "Pending",
-    paymentDate: "08 Jun 2026",
-    method: "PayPal",
-  },
-  {
-    id: 7,
-    paymentRef: "PAY-2207",
-    payCategory: "Booking",
-    stand: "C05",
-    amount: 500,
-    status: "Paid",
-    paymentDate: "05 Jun 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 8,
-    paymentRef: "PAY-2208",
-    payCategory: "Booking",
-    stand: "D02",
-    amount: 450,
-    status: "Overdue",
-    paymentDate: "02 Jun 2026",
-    method: "Bank Transfer",
-  },
-  {
-    id: 9,
-    paymentRef: "PAY-2209",
-    payCategory: "Add On",
-    stand: "D07",
-    amount: 180,
-    status: "Paid",
-    paymentDate: "30 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 10,
-    paymentRef: "PAY-2210",
-    payCategory: "Booking",
-    stand: "E10",
-    amount: 600,
-    status: "Pending",
-    paymentDate: "28 May 2026",
-    method: "PayPal",
-  },
-  {
-    id: 11,
-    paymentRef: "PAY-2211",
-    payCategory: "Booking",
-    stand: "F01",
-    amount: 300,
-    status: "Paid",
-    paymentDate: "25 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 12,
-    paymentRef: "PAY-2212",
-    payCategory: "Add On",
-    stand: "F03",
-    amount: 90,
-    status: "Pending",
-    paymentDate: "24 May 2026",
-    method: "PayPal",
-  },
-  {
-    id: 13,
-    paymentRef: "PAY-2213",
-    payCategory: "Booking",
-    stand: "F05",
-    amount: 450,
-    status: "Paid",
-    paymentDate: "22 May 2026",
-    method: "Bank Transfer",
-  },
-  {
-    id: 14,
-    paymentRef: "PAY-2214",
-    payCategory: "Booking",
-    stand: "G02",
-    amount: 550,
-    status: "Overdue",
-    paymentDate: "20 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 15,
-    paymentRef: "PAY-2215",
-    payCategory: "Add On",
-    stand: "G04",
-    amount: 140,
-    status: "Paid",
-    paymentDate: "18 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 16,
-    paymentRef: "PAY-2216",
-    payCategory: "Booking",
-    stand: "G06",
-    amount: 400,
-    status: "Pending",
-    paymentDate: "16 May 2026",
-    method: "PayPal",
-  },
-  {
-    id: 17,
-    paymentRef: "PAY-2217",
-    payCategory: "Booking",
-    stand: "H01",
-    amount: 650,
-    status: "Paid",
-    paymentDate: "14 May 2026",
-    method: "Bank Transfer",
-  },
-  {
-    id: 18,
-    paymentRef: "PAY-2218",
-    payCategory: "Add On",
-    stand: "H03",
-    amount: 75,
-    status: "Pending",
-    paymentDate: "12 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 19,
-    paymentRef: "PAY-2219",
-    payCategory: "Booking",
-    stand: "H05",
-    amount: 500,
-    status: "Overdue",
-    paymentDate: "10 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 20,
-    paymentRef: "PAY-2220",
-    payCategory: "Booking",
-    stand: "I02",
-    amount: 350,
-    status: "Paid",
-    paymentDate: "08 May 2026",
-    method: "PayPal",
-  },
-  {
-    id: 21,
-    paymentRef: "PAY-2221",
-    payCategory: "Add On",
-    stand: "I04",
-    amount: 110,
-    status: "Paid",
-    paymentDate: "06 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 22,
-    paymentRef: "PAY-2222",
-    payCategory: "Booking",
-    stand: "I06",
-    amount: 700,
-    status: "Pending",
-    paymentDate: "04 May 2026",
-    method: "Bank Transfer",
-  },
-  {
-    id: 23,
-    paymentRef: "PAY-2223",
-    payCategory: "Booking",
-    stand: "J01",
-    amount: 250,
-    status: "Paid",
-    paymentDate: "02 May 2026",
-    method: "Credit Card",
-  },
-  {
-    id: 24,
-    paymentRef: "PAY-2224",
-    payCategory: "Add On",
-    stand: "J03",
-    amount: 95,
-    status: "Overdue",
-    paymentDate: "30 Apr 2026",
-    method: "PayPal",
-  },
-  {
-    id: 25,
-    paymentRef: "PAY-2225",
-    payCategory: "Booking",
-    stand: "J05",
-    amount: 800,
-    status: "Paid",
-    paymentDate: "28 Apr 2026",
-    method: "Bank Transfer",
-  },
-];
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const formatAmount = (amount: string | number) => {
+  const value = typeof amount === "string" ? parseFloat(amount) : amount;
+  return Number.isNaN(value) ? "0.00" : value.toFixed(2);
+};
 
 const TransactionHistoryPage = () => {
-  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(ITEMS_PER_PAGE);
+  const [copiedRef, setCopiedRef] = useState<string | null>(null);
 
-  const startIndex = (filters.currentPage - 1) * filters.perPageItem;
-  const endIndex = startIndex + filters.perPageItem;
-  const currentData = transactions.slice(startIndex, endIndex);
-  const totalItems = transactions.length;
-  const totalPages = Math.ceil(totalItems / filters.perPageItem);
+  const { data, isLoading, isError } = useGetUserTransactionsQuery({
+    page,
+    limit,
+  });
+  const transactions = data?.data ?? [];
+  const meta = data?.meta_data;
 
-  const pagination = {
-    currentPage: filters.currentPage,
-    totalPages,
-    totalItems,
-    itemsPerPage: filters.perPageItem,
-  };
-
-  const handlePageChange = useCallback((page: number) => {
-    setFilters((prev) => ({ ...prev, currentPage: page }));
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
   }, []);
 
-  const handleItemsPerPageChange = (newPerPage: number) => {
-    setFilters({ currentPage: 1, perPageItem: newPerPage });
+  const handleItemsPerPageChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1);
   };
+
+  const pagination = meta
+    ? {
+        currentPage: meta.currentPage,
+        totalPages: meta.totalPages,
+        totalItems: meta.totalItems,
+        itemsPerPage: meta.itemsPerPage,
+      }
+    : undefined;
 
   const columns: Column<Transaction>[] = [
     {
       header: "Payment Ref",
       headerClassName: "text-left",
-      accessor: "paymentRef",
+      accessor: "referenceNumber",
+      render: (value) => {
+        const ref = value as string;
+        const MAX_LENGTH = 28;
+        const isLong = ref.length > MAX_LENGTH;
+        const display = isLong ? `${ref.slice(0, MAX_LENGTH)}...` : ref;
+
+        const handleCopy = async () => {
+          try {
+            await navigator.clipboard.writeText(ref);
+            setCopiedRef(ref);
+            toast.success("Payment reference copied to clipboard");
+            setTimeout(() => {
+              setCopiedRef((prev) => (prev === ref ? null : prev));
+            }, 2000);
+          } catch {
+            toast.error("Failed to copy payment reference");
+          }
+        };
+
+        return (
+          <span
+            className="ct-text group inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-copy!"
+            title={isLong ? ref : "Click to copy"}
+            onClick={handleCopy}
+          >
+            <span className="ct-text">{display}</span>
+            {copiedRef === ref ? (
+              <CheckCheck className="size-3.5 text-green-500 shrink-0" />
+            ) : (
+              <Copy className="size-3.5 text-gray-400 group-hover:text-primary shrink-0" />
+            )}
+          </span>
+        );
+      },
       cellClassName: "px-4 py-3",
     },
-    { header: "Category", accessor: "payCategory", cellClassName: "px-4 py-3" },
-    { header: "Stand", accessor: "stand", cellClassName: "px-4 py-3" },
     {
-      header: "Amount ($)",
+      header: "Stand",
+      accessor: "standTitle",
+      cellClassName: "px-4 py-3",
+    },
+    {
+      header: "Amount (€)",
       accessor: "amount",
-      render: (value) => `$${value as number}`,
+      render: (value) => `€${formatAmount(value as string)}`,
       cellClassName: "px-4 py-3",
     },
     {
@@ -314,13 +112,13 @@ const TransactionHistoryPage = () => {
       render: (value) => {
         const status = value as string;
         const colorMap: Record<string, string> = {
-          Paid: "bg-[#e9faf7] border border-[#d3f4ef] text-[#22CAAD]",
-          Pending: "bg-[#fbf5eb] border border-[#edcebf] text-[#D79930]",
-          Overdue: "bg-[#fbe5eb] border border-[#f7b1b8] text-[#EB3D4D]",
+          succeeded: "bg-[#e9faf7] border border-[#d3f4ef] text-[#22CAAD]",
+          pending: "bg-[#fbf5eb] border border-[#edcebf] text-[#D79930]",
+          refunded: "bg-[#fbe5eb] border border-[#f7b1b8] text-[#EB3D4D]",
         };
         return (
           <p
-            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[status] || ""} flex justify-center items-center w-fit`}
+            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[status] || ""} flex justify-center items-center w-fit capitalize`}
           >
             <GoDotFill />
             {status}
@@ -330,11 +128,11 @@ const TransactionHistoryPage = () => {
       cellClassName: "px-4 py-3",
     },
     {
-      header: "Payment Date",
-      accessor: "paymentDate",
+      header: "Date",
+      accessor: "createdAt",
+      render: (value) => formatDate(value as string),
       cellClassName: "px-4 py-3",
     },
-    { header: "Method", accessor: "method", cellClassName: "px-4 py-3" },
   ];
 
   return (
@@ -346,17 +144,23 @@ const TransactionHistoryPage = () => {
         All payment records for your bookings
       </p>
       <div id="user-table-container" className="mt-12">
-        <CustomTable
-          data={currentData}
-          columns={columns}
-          showIndex={false}
-          indexLabel="SN"
-          isLoading={false}
-          emptyMessage="No transactions found"
-          pagination={pagination}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-        />
+        {isError ? (
+          <div className="p-5 bg-red-50 border border-red-200 rounded-lg text-red-600">
+            Failed to load transactions. Please try again.
+          </div>
+        ) : (
+          <CustomTable
+            data={transactions}
+            columns={columns}
+            showIndex={false}
+            indexLabel="SN"
+            isLoading={isLoading}
+            emptyMessage="No transactions found"
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+          />
+        )}
       </div>
     </div>
   );

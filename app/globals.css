@@ -138,7 +138,7 @@
 }
 
 .container {
-  @apply max-w-330 mx-auto px-4 xl:px-0;
+  @apply max-w-330 mx-auto px-4 ;
 }
 .padding-default {
   @apply py-15 lg:py-20 xl:py-25;
