@@ -9,6 +9,7 @@ import { UserBooking } from "@/types/booking.types";
 import Pagination from "@/components/ui/Pagination";
 import SkeletonWrapper from "@/components/ui/SkeletonWrapper";
 import BookingCardSkeleton from "./_components/BookingCardSkeleton";
+import EventStartEnd from "@/components/exhibition-map/EventStartEnd";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -55,9 +56,9 @@ const BookingHistoryPage = () => {
         id="scroll-to-top"
         className="bg-primary/5 p-2 md:p-5 rounded-xl mt-6 space-y-6 scroll-to-top"
       >
-        <p className="px-4 py-5.5 bg-primary text-white font-semibold text-lg flex justify-center items-center rounded-lg">
-          March 14–17, 2027 · Booking deadline: Jan 30, 2027{" "}
-        </p>
+        <div className="px-4 py-5.5 bg-primary text-white font-semibold text-lg flex justify-center items-center rounded-lg">
+          <EventStartEnd/>
+        </div>
       </div>
 
       {/* cards */}

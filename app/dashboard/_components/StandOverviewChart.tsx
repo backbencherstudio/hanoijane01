@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetOverviewChartQuery } from "@/src/redux/api/dashboard/dashboardApi";
 import {
   Bar,
   BarChart,
@@ -17,26 +18,26 @@ type ChartData = {
   available: number;
 };
 
-const data: ChartData[] = [
-  {
-    stand: "Expo Marquee",
-    total: 120,
-    booked: 60,
-    available: 45,
-  },
-  {
-    stand: "Main Goffs Sales Complex",
-    total: 110,
-    booked: 30,
-    available: 52,
-  },
-  {
-    stand: "Outdoor Stand",
-    total: 90,
-    booked: 60,
-    available: 15,
-  },
-];
+// const data: ChartData[] = [
+//   {
+//     stand: "Expo Marquee",
+//     total: 120,
+//     booked: 60,
+//     available: 45,
+//   },
+//   {
+//     stand: "Main Goffs Sales Complex",
+//     total: 110,
+//     booked: 30,
+//     available: 52,
+//   },
+//   {
+//     stand: "Outdoor Stand",
+//     total: 90,
+//     booked: 60,
+//     available: 15,
+//   },
+// ];
 
 const COLORS = {
   total: "#4B87B8",
@@ -110,10 +111,18 @@ function Row({
 }
 
 export default function StandOverviewChart() {
+  const { data: response, isLoading } = useGetOverviewChartQuery();
+  const chartData: ChartData[] = (response?.data ?? []).map((item) => ({
+    stand: item.hallTitle,
+    total: item.totalStands,
+    booked: item.bookedStands,
+    available: item.availableStands,
+  }));
+  if (isLoading) return null;
   return (
     <div className="rounded-2xl bg-white py-6 shadow-sm">
       <ResponsiveContainer width="95%" height={380}>
-        <BarChart data={data} barGap={8} barCategoryGap="20%">
+        <BarChart data={chartData} barGap={8} barCategoryGap="20%">
           <CartesianGrid
             strokeDasharray="4 4"
             vertical={false}
@@ -125,7 +134,8 @@ export default function StandOverviewChart() {
           <YAxis
             axisLine={false}
             tickLine={false}
-            ticks={[0, 30, 60, 90, 120]}
+            domain={[0, 100]}
+            ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90]}
           />
 
           <Tooltip cursor={false} content={<CustomTooltip />} />
@@ -157,7 +167,6 @@ export default function StandOverviewChart() {
       <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
         <LegendItem color={COLORS.total} label="Total Seats" />
         <LegendItem color={COLORS.booked} label="Booked" />
-        <LegendItem color={COLORS.reserved} label="Reserved" />
         <LegendItem color={COLORS.available} label="Available" />
       </div>
     </div>

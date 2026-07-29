@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { RootState } from "@/src/redux/store";
 import { updateBookingInfo, updateBookingId } from "@/src/redux/features/bookingSlice";
 import { useCreateBookingMutation } from "@/src/redux/api/booking/bookingApi";
+import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 import { toast } from "sonner";
 import { usePersistBooking } from "@/hooks/usePersistBooking";
 
@@ -31,6 +32,10 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
     (state: RootState) => state.booking.termsAndConditions,
   );
 
+  // ── User profile data for prefill ────────────────────────────────────────
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data;
+
   const {
     register,
     handleSubmit,
@@ -46,16 +51,16 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
     },
   });
 
-  // Update form when storedInfo changes (e.g., after going back)
+  // Prefill form: storedInfo takes priority, then user profile data
   useEffect(() => {
     reset({
-      companyName: storedInfo.companyName || "",
-      contactName: storedInfo.contactName || "",
-      email: storedInfo.email || "",
-      phoneNumber: storedInfo.phoneNumber || "",
-      companyAddress: storedInfo.companyAddress || "",
+      companyName: storedInfo.companyName || user?.companyName || "",
+      contactName: storedInfo.contactName || user?.name || "",
+      email: storedInfo.email || user?.email || "",
+      phoneNumber: storedInfo.phoneNumber || user?.phoneNumber || "",
+      companyAddress: storedInfo.companyAddress || user?.companyAddress || "",
     });
-  }, [storedInfo, reset]);
+  }, [storedInfo, user, reset]);
 
   const [createBooking, { isLoading: isCreatingBooking }] = useCreateBookingMutation();
 

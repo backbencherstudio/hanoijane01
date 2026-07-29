@@ -1,9 +1,7 @@
-import { stateData } from "@/data/dashboard/homeData";
 import React from "react";
-import StateCard from "./_components/StateCard";
 import StandOverviewChart from "./_components/StandOverviewChart";
 import RecentBookings from "./_components/RecentBookings";
-import BookingRequest from "./_components/BookingRequest";
+import DashboardStats from "./_components/DashboardStats";
 
 const DashboardHome = () => {
   return (
@@ -20,11 +18,7 @@ const DashboardHome = () => {
         </div>
       </div>
       {/* states */}
-      <div className="my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {stateData.map((state, idx) => {
-          return <StateCard state={state} key={idx} />;
-        })}
-      </div>
+      <DashboardStats />
       {/* content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* left side */}
@@ -35,9 +29,7 @@ const DashboardHome = () => {
         </div>
         {/* right side */}
         <div>
-          <div>
-            {/* <BookingRequest /> */}
-          </div>
+          <div>{/* <BookingRequest /> */}</div>
         </div>
       </div>
       <div className="my-6">

@@ -1,4 +1,4 @@
-import { StateData } from "@/data/dashboard/homeData";
+import { StateData } from "@/types/dashboard";
 import React from "react";
 
 interface StateCardProps {
@@ -16,11 +16,11 @@ const StateCard = ({ state }: StateCardProps) => {
           <p className="text-2xl lg:text-[28px] text-text-primary font-bold mt-3">
             {state.value}
           </p>
-          <p
+          {/* <p
             className={`text-xs font-medium px-1 py-0.5 rounded-[5px] mt-5 w-fit ${state.text_bg_color} ${state.text_color} ${state.border}`}
           >
             {state.info}
-          </p>
+          </p> */}
         </div>
         <div
           className={`p-2 rounded-xs w-fit h-fit ${state.text_color} ${state.text_bg_color}`}
