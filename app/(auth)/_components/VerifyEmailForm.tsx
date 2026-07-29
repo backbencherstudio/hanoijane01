@@ -25,6 +25,7 @@ const VerifyEmailForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const redirect = searchParams.get("redirect") || "/";
   const [verifyEmail, { isLoading: isVerifying }] = useVerifyEmailMutation();
 
   const [resendVerificationEmail, { isLoading: isResending }] =
@@ -61,7 +62,10 @@ const VerifyEmailForm = () => {
         id: toastId,
       });
 
-      router.push("/");
+      // Redirect to sign-in with the original redirect URL preserved
+      router.push(
+        `/sign-in?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent(redirect)}`,
+      );
     } catch (error: unknown) {
       toast.error(getErrorMessage(error, "Failed to verify email."), {
         id: toastId,
@@ -141,7 +145,7 @@ const VerifyEmailForm = () => {
 
       <div className="mt-6 text-center space-y-2">
         <p className="text-accent font-medium">
-          Didn&apos;t receive the code?
+          {"Didn't receive the code?"}
           <button
             onClick={handleResendOTP}
             disabled={isResending}
@@ -153,7 +157,10 @@ const VerifyEmailForm = () => {
 
         <p className="text-accent font-medium">
           Wrong email?
-          <Link href="/sign-up" className="ml-1 text-primary hover:underline">
+          <Link
+            href={`/sign-up?redirect=${encodeURIComponent(redirect)}`}
+            className="ml-1 text-primary hover:underline"
+          >
             Back to Sign Up
           </Link>
         </p>

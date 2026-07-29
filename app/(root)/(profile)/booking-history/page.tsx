@@ -68,11 +68,11 @@ const BookingHistoryPage = () => {
           quantity={4}
         />
       ) : isError ? (
-        <div className="mt-6 p-5 bg-red-50 border border-red-200 rounded-lg text-red-600">
+        <div className="mt-6 p-5 text-center bg-red-50 border border-red-200 rounded-lg text-red-600">
           Failed to load bookings. Please try again.
         </div>
       ) : bookings.length === 0 ? (
-        <div className="mt-6 p-5 bg-gray-50 border border-gray-200 rounded-lg text-accent">
+        <div className="mt-6 p-5 text-center bg-gray-50 border border-gray-200 rounded-lg text-accent">
           No bookings found.
         </div>
       ) : (

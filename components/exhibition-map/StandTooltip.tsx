@@ -20,6 +20,10 @@ export interface TooltipHandle {
 export interface StandTooltipProps {
   /** Fires when "Book Now" is clicked with the selected stand */
   onBookNow?: (stand: Stand) => void;
+  /** Whether the current user is authenticated */
+  isLoggedIn?: boolean;
+  /** Whether the current user is an admin */
+  isAdmin?: boolean;
 }
 
 // ─── Internal DOM refs (one per text node we need to update) ─────────────────
@@ -44,7 +48,7 @@ interface InternalRefs {
  * hovering 80+ stands never triggers a single React re-render.
  */
 const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
-  ({ onBookNow }, ref) => {
+  ({ onBookNow, isLoggedIn, isAdmin }, ref) => {
     const r: InternalRefs = {
       root: useRef<HTMLDivElement>(null),
       standNo: useRef<HTMLSpanElement>(null),
@@ -63,6 +67,13 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
 
     // Stable reference to the outside-close handler so we can remove it later
     const outsideHandler = useRef<((e: PointerEvent) => void) | null>(null);
+
+    /** Returns true if the Book Now button should be visible */
+    const shouldShowBookBtn = (stand: Stand) => {
+      if (!stand.isAvailable) return false;
+      if (isAdmin) return false;
+      return true;
+    };
 
     useImperativeHandle(ref, () => ({
       show(stand: Stand, x: number, y: number) {
@@ -112,7 +123,9 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
 
         // ── book button (conditional) ─────────────────────────────────────────
         if (r.bookBtn.current) {
-          r.bookBtn.current.style.display = stand.isAvailable ? "block" : "none";
+          r.bookBtn.current.style.display = shouldShowBookBtn(stand)
+            ? "block"
+            : "none";
         }
 
         // ── make visible ──────────────────────────────────────────────────────

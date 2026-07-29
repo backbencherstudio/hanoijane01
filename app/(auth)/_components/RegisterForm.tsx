@@ -5,7 +5,7 @@ import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSignUpMutation } from "@/src/redux/api/auth/authApi";
 import { getErrorMessage } from "@/src/lib/getErrorMessage";
 
@@ -24,6 +24,8 @@ const RegisterForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [signUp, { isLoading }] = useSignUpMutation();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   const {
     register,
@@ -61,7 +63,9 @@ const RegisterForm = () => {
         id: toastId,
       });
 
-      router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+      router.push(
+        `/verify-email?email=${encodeURIComponent(data.email)}&redirect=${encodeURIComponent(redirect)}`,
+      );
     } catch (error: unknown) {
       let message = getErrorMessage(error, "Failed to create your account.");
 
@@ -281,7 +285,7 @@ const RegisterForm = () => {
       <p className="text-accent font-medium mt-6 text-center">
         Already have an account?{" "}
         <Link
-          href="/sign-in"
+          href={`/sign-in?redirect=${encodeURIComponent(redirect)}`}
           className="text-primary font-medium hover:underline cursor-pointer"
         >
           Sign In

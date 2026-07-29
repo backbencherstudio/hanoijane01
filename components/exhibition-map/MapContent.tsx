@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import StandCategoryAccordion from "./StandCategoryAccordion";
@@ -10,26 +10,39 @@ import MapControls from "./MapControls";
 import StandLayer from "./StandLayer";
 import StandTooltip, { type TooltipHandle } from "./StandTooltip";
 import type { Stand } from "@/types/stand";
-import { updateStand, updateStandId } from "@/src/redux/features/bookingSlice";
+import { updateStandId } from "@/src/redux/features/bookingSlice";
 import { useGetExhibitionMapQuery } from "@/src/redux/api/exhibition/exhibitionApi";
+import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
+import { toast } from "sonner";
 
 const MapContent = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data, isLoading } = useGetExhibitionMapQuery(null);
   const halls = data?.data?.halls;
   const apiStands = data?.data?.stands ?? [];
   const dispatch = useDispatch();
   const router = useRouter();
 
+  // ── Auth state ───────────────────────────────────────────────────────────
+  const { data: meData } = useGetMeQuery();
+  const user = meData?.data;
+  const isLoggedIn = !!user;
+  const isAdmin = user?.type === "admin";
+
   const tooltipRef = useRef<TooltipHandle>(null);
 
   // ── Book Now handler ────────────────────────────────────────────────────
   const handleBookNow = useCallback(
     (stand: Stand) => {
+      if (!isLoggedIn) {
+        toast.error("Please sign in before booking a stand");
+        const redirectPath = "/exhibition-map";
+        router.push(`/sign-in?redirect=${encodeURIComponent(redirectPath)}`);
+        return;
+      }
       dispatch(updateStandId(stand.id || stand.stand_no));
       router.push("/terms-and-conditions");
     },
-    [dispatch, router],
+    [dispatch, router, isLoggedIn],
   );
 
   // ── Reposition tooltip on page scroll ──────────────────────────────────
@@ -99,7 +112,12 @@ const MapContent = () => {
           </TransformComponent>
         </TransformWrapper>
 
-        <StandTooltip ref={tooltipRef} onBookNow={handleBookNow} />
+        <StandTooltip
+          ref={tooltipRef}
+          onBookNow={handleBookNow}
+          isLoggedIn={isLoggedIn}
+          isAdmin={isAdmin}
+        />
       </div>
     </section>
   );

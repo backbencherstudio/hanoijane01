@@ -5,7 +5,7 @@ import ButtonGroup from "@/components/ui/ButtonGroup";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useResendVerificationEmailMutation,
   useSignInMutation,
@@ -26,6 +26,8 @@ const LoginForm = () => {
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   const [signIn, { isLoading }] = useSignInMutation();
   const [resendVerificationEmail] = useResendVerificationEmailMutation();
@@ -55,7 +57,7 @@ const LoginForm = () => {
         id: toastId,
       });
 
-      router.push("/");
+      router.push(redirect);
     } catch (error: unknown) {
       const fetchError = error as FetchBaseQueryError;
       const message = getErrorMessage(error, "Login failed.");
@@ -71,7 +73,9 @@ const LoginForm = () => {
             id: toastId,
           });
 
-          router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+          router.push(
+            `/verify-email?email=${encodeURIComponent(data.email)}&redirect=${encodeURIComponent(redirect)}`,
+          );
 
           return;
         } catch {
@@ -206,7 +210,7 @@ const LoginForm = () => {
       <p className="text-accent font-medium mt-6 text-center">
         Not a member?
         <Link
-          href="sign-up"
+          href={`/sign-up?redirect=${encodeURIComponent(redirect)}`}
           className="text-primary font-medium hover:underline cursor-pointer ml-1"
         >
           Sign Up
