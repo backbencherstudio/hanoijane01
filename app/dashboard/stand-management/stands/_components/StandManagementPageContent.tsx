@@ -21,22 +21,12 @@ import StandTooltip, {
 } from "@/components/exhibition-map/StandTooltip";
 import { useDispatch } from "react-redux";
 import type { Stand } from "@/types/stand";
+import type { StandStats } from "@/types/standStats";
 import { updateStand } from "@/src/redux/features/bookingSlice";
-
-const stateData = [
-  {
-    title: "Standard Stand",
-    value: standManagementData.filter((s) => s.standType === "Standard").length,
-  },
-  {
-    title: "Double Size Stand",
-    value: standManagementData.filter((s) => s.standType === "Double").length,
-  },
-  {
-    title: "Outdoor Stand",
-    value: standManagementData.filter((s) => s.standType === "Outdoor").length,
-  },
-];
+import {
+  useGetAdminExhibitionQuery,
+  useGetStandStatsQuery,
+} from "@/src/redux/api/exhibition/exhibitionApi";
 
 type ViewType = "map" | "list";
 
@@ -91,6 +81,11 @@ const StandManagementPageContent = () => {
   const typeFilter = searchParams.get("type") || "All types";
   const blockFilter = searchParams.get("block") || "All Block";
   const statusFilter = searchParams.get("status") || "All Status";
+
+  const { data: exhibitionData } = useGetAdminExhibitionQuery(null);
+  const { data: standStats } = useGetStandStatsQuery(null);
+  const statsData: StandStats[] = standStats?.data ?? [];
+  const apiStands = exhibitionData?.data?.stands ?? [];
 
   const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
 
@@ -273,11 +268,11 @@ const StandManagementPageContent = () => {
 
       {/* state cards */}
       <div className="my-9 grid grid-cols-1 md:grid-cols-3 gap-5">
-        {stateData.map((state) => (
+        {statsData.map((stat) => (
           <StateCard2
-            title={state.title}
-            value={state.value}
-            key={state.title}
+            title={stat.title}
+            value={stat.totalStands}
+            key={stat.id}
           />
         ))}
       </div>
@@ -358,11 +353,11 @@ const StandManagementPageContent = () => {
               >
                 <svg viewBox="0 0 998 1274" className="w-full h-auto">
                   <BaseMap />
-                  <StandLayer tooltipRef={tooltipRef} />
+                  <StandLayer tooltipRef={tooltipRef} apiStands={apiStands} />
                 </svg>
               </TransformComponent>
             </TransformWrapper>
-            <StandTooltip ref={tooltipRef} onBookNow={handleBookNow} />
+            <StandTooltip ref={tooltipRef} onBookNow={handleBookNow} isAdmin={true} />
           </div>
         </div>
       )}
