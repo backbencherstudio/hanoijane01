@@ -100,12 +100,12 @@ const BookingInfoCard = () => {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-lg">{stand.title}</p>
-            <p className="text-lg font-semibold">${stand.price.toFixed(2)}</p>
+            <p className="text-lg font-semibold">€{stand.price.toFixed(2)}</p>
           </div>
           <div className="flex items-center justify-between">
             <p className="text-lg">VAT ({Math.round(vatRate * 100)}%)</p>
             <p className="text-lg font-semibold">
-              ${(stand.price * vatRate).toFixed(2)}
+              €{(stand.price * vatRate).toFixed(2)}
             </p>
           </div>
 
@@ -115,7 +115,7 @@ const BookingInfoCard = () => {
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Total Due</p>
           <p className="text-xl text-primary font-bold">
-            ${totalPrice.toFixed(2)}
+            €{totalPrice.toFixed(2)}
           </p>
         </div>
       </div>

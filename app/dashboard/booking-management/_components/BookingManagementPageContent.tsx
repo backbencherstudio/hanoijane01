@@ -146,9 +146,9 @@ const BookingManagementPageContent = () => {
       cellClassName: "px-3 py-5 text-center",
     },
     {
-      header: "Price ($)",
+      header: "Price (€)",
       accessor: "price",
-      render: (value) => `$${value as number}`,
+      render: (value) => `€${value as number}`,
       cellClassName: "px-3 py-5 font-medium text-center",
     },
     {

@@ -24,7 +24,7 @@ export const notifications: Notification[] = [
   {
     id: 2,
     title: "Payment Received",
-    message: "Your payment of $400 has been received.",
+    message: "Your payment of €400 has been received.",
     date: "18 Jun 2026",
     readStatus: "Unread",
     type: "Payment",
@@ -72,7 +72,7 @@ export const notifications: Notification[] = [
   {
     id: 8,
     title: "Payment Successful",
-    message: "Your payment of $500 was successful.",
+    message: "Your payment of €500 was successful.",
     date: "02 Jun 2026",
     readStatus: "Read",
     type: "Payment",

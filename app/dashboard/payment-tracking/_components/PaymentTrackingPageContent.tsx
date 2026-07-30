@@ -30,10 +30,10 @@ const overdueTotal = paymentTrackingData
   .reduce((sum, item) => sum + item.amount, 0);
 
 const stateData = [
-  { title: "Total Revenue", value: `$${totalRevenue.toLocaleString()}` },
-  { title: "Paid", value: `$${paidTotal.toLocaleString()}` },
-  { title: "Pending", value: `$${pendingTotal.toLocaleString()}` },
-  { title: "Overdue", value: `$${overdueTotal.toLocaleString()}` },
+  { title: "Total Revenue", value: `€${totalRevenue.toLocaleString()}` },
+  { title: "Paid", value: `€${paidTotal.toLocaleString()}` },
+  { title: "Pending", value: `€${pendingTotal.toLocaleString()}` },
+  { title: "Overdue", value: `€${overdueTotal.toLocaleString()}` },
 ];
 
 const PaymentTrackingPageContent = () => {
@@ -133,9 +133,9 @@ const PaymentTrackingPageContent = () => {
       cellClassName: "px-3 py-5 text-center",
     },
     {
-      header: "Amount ($)",
+      header: "Amount (€)",
       accessor: "amount",
-      render: (value) => `$${value as number}`,
+      render: (value) => `€${value as number}`,
       cellClassName: "px-3 py-5 font-medium text-center",
     },
     {

@@ -83,7 +83,7 @@ const RecentBookings = () => {
     {
       header: "Amount",
       accessor: "amount",
-      render: (value) => `$${value as number}`,
+      render: (value) => `€${value as number}`,
       cellClassName: "px-4 py-3 font-semibold",
     },
     {

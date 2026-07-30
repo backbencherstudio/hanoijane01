@@ -79,7 +79,7 @@ const BookingDetailsModal = ({
           <div className="flex justify-between items-center">
             <p className="text-[#4A4C56] font-medium">Price</p>
             <p className="text-[#4A4C56] font-semibold text-lg">
-              ${standData?.price || 0}
+              €{standData?.price || 0}
             </p>
           </div>
 

@@ -1,7 +1,7 @@
 "use client";
 import StateCard2 from "@/components/dashboard/StateCard2";
 import { Button } from "@/components/ui/button";
-import { Eye, X } from "lucide-react";
+import { Eye, X, CheckCheck, Copy } from "lucide-react";
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import StandFilters from "./StandFilters";
@@ -17,6 +17,7 @@ import StandTooltip, {
   TooltipHandle,
 } from "@/components/exhibition-map/StandTooltip";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 import type { Stand } from "@/types/stand";
 import type { StandStats } from "@/types/standStats";
 import { updateStand } from "@/src/redux/features/bookingSlice";
@@ -80,6 +81,7 @@ const StandManagementPageContent = () => {
   const statusFilter = searchParams.get("status") || "All Status";
 
   const [page, setPage] = useState(1);
+  const [copiedRef, setCopiedRef] = useState<string | null>(null);
   const limit = 8;
 
   const { data: exhibitionData } = useGetAdminExhibitionQuery(null);
@@ -169,7 +171,41 @@ const StandManagementPageContent = () => {
       header: "Booking ID",
       headerClassName: "text-left",
       accessor: "bookingId",
-      render: (value) => (value ? String(value) : "-"),
+      render: (value) => {
+        const bookingId = value as string | null;
+        if (!bookingId) return <span className="ct-text">-</span>;
+        const MAX_LENGTH = 28;
+        const isLong = bookingId.length > MAX_LENGTH;
+        const display = isLong ? `${bookingId.slice(0, MAX_LENGTH)}...` : bookingId;
+
+        const handleCopy = async () => {
+          try {
+            await navigator.clipboard.writeText(bookingId);
+            setCopiedRef(bookingId);
+            toast.success("Booking ID copied to clipboard");
+            setTimeout(() => {
+              setCopiedRef((prev) => (prev === bookingId ? null : prev));
+            }, 2000);
+          } catch {
+            toast.error("Failed to copy booking ID");
+          }
+        };
+
+        return (
+          <span
+            className="ct-text group inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-copy!"
+            title={isLong ? bookingId : "Click to copy"}
+            onClick={handleCopy}
+          >
+            <span className="ct-text">{display}</span>
+            {copiedRef === bookingId ? (
+              <CheckCheck className="size-3.5 text-green-500 shrink-0" />
+            ) : (
+              <Copy className="size-3.5 text-gray-400 group-hover:text-primary shrink-0" />
+            )}
+          </span>
+        );
+      },
       cellClassName: "px-3 py-5 font-medium",
     },
     {
@@ -209,9 +245,9 @@ const StandManagementPageContent = () => {
       cellClassName: "px-3 py-5 text-center",
     },
     {
-      header: "Price ($)",
+      header: "Price (€)",
       accessor: "price",
-      render: (value) => `$${value as number}`,
+      render: (value) => `€${value as number}`,
       cellClassName: "px-3 py-5 font-semibold text-center",
     },
     {
