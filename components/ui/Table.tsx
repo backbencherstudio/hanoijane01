@@ -305,7 +305,7 @@ export default function CustomTable<T extends object>({
                   >
                     {displayColumns.map((_, j) => (
                       <td key={j} className="px-4 py-3 overflow-visible">
-                        <Skeleton className="h-5 w-full rounded" />
+                        <Skeleton className="h-12 w-full rounded" />
                       </td>
                     ))}
                   </tr>

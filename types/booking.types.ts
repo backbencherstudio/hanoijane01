@@ -69,7 +69,7 @@ export interface GetUserBookingResponse {
   success: boolean;
   message: string;
   data: UserBooking[];
-  meta_data: BookingMeta;
+  metaData: BookingMeta;
 }
 
 // ── Booking Stats ────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ export interface AdminBookingsResponse {
   success: boolean;
   message: string;
   data: AdminBooking[];
-  meta_data: BookingMeta;
+  metaData: BookingMeta;
 }
 
 // ── Admin Single Booking ─────────────────────────────────────────────

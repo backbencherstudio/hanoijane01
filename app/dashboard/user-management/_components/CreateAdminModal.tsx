@@ -1,98 +1,55 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff, Upload, X, Pencil } from "lucide-react";
-import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 import Modal from "@/components/ui/Modal";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useCreateAdminMutation } from "@/src/redux/api/user/userApi";
 
 interface CreateAdminModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 type CreateAdminFormData = {
-  username: string;
+  name: string;
   email: string;
   password: string;
-  image: FileList | null;
-  status: "Active" | "Banned";
 };
 
-const CreateAdminModal = ({ isOpen, onClose }: CreateAdminModalProps) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+const CreateAdminModal = ({ isOpen, onClose, onSuccess }: CreateAdminModalProps) => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [createAdmin, { isLoading }] = useCreateAdminMutation();
 
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    setValue,
-    clearErrors,
     formState: { errors },
-  } = useForm<CreateAdminFormData>({
-    defaultValues: {
-      status: "Active",
-      image: null,
-    },
-  });
-
-  const image = watch("image");
+  } = useForm<CreateAdminFormData>();
 
   const handleClose = () => {
-    setImagePreview(null);
     reset();
     onClose();
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setValue("image", e.target.files as FileList);
-      clearErrors("image");
-    } else {
-      // User cancelled - do nothing, keep existing image if any
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+  const onSubmit = async (data: CreateAdminFormData) => {
+    try {
+      await createAdmin({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        type: "admin",
+        status: "ACTIVE",
+      }).unwrap();
+      onSuccess?.();
+      handleClose();
+    } catch {
+      // Error handled by RTK Query
     }
-  };
-
-  const removeImage = () => {
-    setImagePreview(null);
-    setValue("image", null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
-
-  const onSubmit = (data: CreateAdminFormData) => {
-    console.log({
-      ...data,
-      image: data.image?.[0] || null,
-    });
-    // TODO: API Call
-    handleClose();
   };
 
   return (
@@ -107,91 +64,30 @@ const CreateAdminModal = ({ isOpen, onClose }: CreateAdminModalProps) => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Profile Image - moved to top */}
-          <div>
-            <label className="text-lg font-medium text-text-primary block mb-2">
-              Profile Image
-            </label>
-
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-            />
-
-            <div className="flex justify-center items-center gap-6">
-              {imagePreview ? (
-                <div>
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200 group">
-                    <Image
-                      src={imagePreview}
-                      alt="Profile preview"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  {/* Hover overlay with replace option */}
-                  <div className="  transition-opacity flex items-center justify-center gap-2">
-                    <button
-                      type="button"
-                      onClick={triggerFileInput}
-                      className="bg-primary hover:bg-primary/95 text-white p-2 rounded-full transition cursor-pointer"
-                    >
-                      <Pencil className="size-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={removeImage}
-                      className="bg-red-500/80 hover:bg-red-600 text-white p-2 rounded-full transition cursor-pointer"
-                    >
-                      <X className="size-4" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  onClick={triggerFileInput}
-                  className="w-32 h-32 rounded-full border-2 border-dashed border-gray-300 bg-[#fafafa] flex flex-col items-center justify-center cursor-pointer hover:border-primary transition group"
-                >
-                  <Upload className="size-8 text-gray-400 group-hover:text-primary transition" />
-                  <span className="text-xs text-gray-500 mt-1">Upload</span>
-                </div>
-              )}
-            </div>
-
-            {errors.image && (
-              <p className="text-sm text-red-500 mt-2">
-                {errors.image.message}
-              </p>
-            )}
-          </div>
-
-          {/* Username */}
+          {/* Name */}
           <div>
             <label
-              htmlFor="username"
+              htmlFor="name"
               className="text-lg font-medium text-text-primary"
             >
               User Name
             </label>
 
             <input
-              id="username"
+              id="name"
               type="text"
               placeholder="Enter user name"
               className={`w-full mt-2 p-3 rounded-lg bg-[#fafafa] border ${
-                errors.username ? "border-red-500" : "border-gray-200"
+                errors.name ? "border-red-500" : "border-gray-200"
               }`}
-              {...register("username", {
+              {...register("name", {
                 required: "User name is required",
               })}
             />
 
-            {errors.username && (
+            {errors.name && (
               <p className="text-sm text-red-500 mt-1">
-                {errors.username.message}
+                {errors.name.message}
               </p>
             )}
           </div>
@@ -257,7 +153,7 @@ const CreateAdminModal = ({ isOpen, onClose }: CreateAdminModalProps) => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 cursor-pointer"
               >
                 {showPassword ? (
                   <EyeOff className="size-5 text-gray-500" />
@@ -274,42 +170,6 @@ const CreateAdminModal = ({ isOpen, onClose }: CreateAdminModalProps) => {
             )}
           </div>
 
-          {/* Status - Shadcn Select */}
-          <div>
-            <label className="text-lg font-medium text-text-primary block mb-2">
-              Status
-            </label>
-
-            <Select
-              defaultValue="Active"
-              onValueChange={(value) =>
-                setValue("status", value as "Active" | "Banned")
-              }
-            >
-              <SelectTrigger className="w-full h-12.5! bg-[#fafafa] border-gray-200 cursor-pointer">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem className="h-12.5 cursor-pointer" value="Active">
-                  <span className="text-[#859E5A] bg-[#E3E8DB] border border-[#D7DECA] py-0.5 px-2 rounded-[5px] ">
-                    Active
-                  </span>{" "}
-                </SelectItem>
-                <SelectItem className="h-12.5 cursor-pointer" value="Banned">
-                  <span className="text-red-400 bg-red-50 border border-red-100 py-0.5 px-2 rounded-[5px] ">
-                    Banded
-                  </span>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-
-            {errors.status && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.status.message}
-              </p>
-            )}
-          </div>
-
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-2">
             <Button
@@ -317,12 +177,13 @@ const CreateAdminModal = ({ isOpen, onClose }: CreateAdminModalProps) => {
               variant="outline"
               className="h-11"
               onClick={handleClose}
+              disabled={isLoading}
             >
               Discard
             </Button>
 
-            <Button type="submit" className="h-11">
-              Create Admin
+            <Button type="submit" className="h-11" disabled={isLoading}>
+              {isLoading ? "Creating..." : "Create Admin"}
             </Button>
           </div>
         </form>

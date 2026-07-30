@@ -72,7 +72,7 @@ const BookingManagementPageContent = () => {
   });
 
   const bookings: AdminBooking[] = bookingsData?.data ?? [];
-  const meta = bookingsData?.meta_data;
+  const meta = bookingsData?.metaData;
 
   const pagination = meta
     ? {

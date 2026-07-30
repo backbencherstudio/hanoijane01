@@ -26,7 +26,7 @@ const BookingHistoryPage = () => {
 
   const { data, isLoading, isError } = useGetUserBookingQuery({ page, limit });
   const bookings = data?.data ?? [];
-  const meta = data?.meta_data;
+  const meta = data?.metaData;
 
   const handleCancel = (booking: UserBooking) => {
     setSelectedBooking(booking);

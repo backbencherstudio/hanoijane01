@@ -105,7 +105,7 @@ const StandManagementPageContent = () => {
   const apiStands = exhibitionData?.data?.stands ?? [];
 
   const stands: StandApiItem[] = standsData?.data ?? [];
-  const meta = standsData?.meta_data;
+  const meta = standsData?.metaData;
 
   const pagination = meta
     ? {

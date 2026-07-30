@@ -3,6 +3,8 @@ import { GetUserStatsResponse } from "@/types/userStats";
 import {
   GetUserListResponse,
   GetUserListQueryParams,
+  CreateAdminRequest,
+  CreateAdminResponse,
 } from "@/types/userList";
 
 export const userApi = baseApi.injectEndpoints({
@@ -22,8 +24,16 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
+    createAdmin: builder.mutation<CreateAdminResponse, CreateAdminRequest>({
+      query: (body) => ({
+        url: "/admin/user",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetUserStatsQuery, useGetUserListQuery } = userApi;
+export const { useGetUserStatsQuery, useGetUserListQuery, useCreateAdminMutation } = userApi;

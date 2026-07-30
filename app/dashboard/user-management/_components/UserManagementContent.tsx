@@ -25,7 +25,11 @@ const UserManagementContent = () => {
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserListItem | null>(null);
 
-  const { data: userStats, isLoading: isStatsLoading } = useGetUserStatsQuery();
+  const {
+    data: userStats,
+    isLoading: isStatsLoading,
+    refetch: refetchStats,
+  } = useGetUserStatsQuery();
 
   const stateData = userStats?.data
     ? [
@@ -58,10 +62,11 @@ const UserManagementContent = () => {
     data: userListData,
     isLoading: isUserListLoading,
     isFetching: isUserListFetching,
+    refetch: refetchUserList,
   } = useGetUserListQuery(apiParams);
 
   const currentData = userListData?.data || [];
-  const metaData = userListData?.meta_data;
+  const metaData = userListData?.metaData;
 
   const pagination = metaData
     ? {
@@ -70,7 +75,12 @@ const UserManagementContent = () => {
         totalItems: metaData.totalItems,
         itemsPerPage: metaData.itemsPerPage,
       }
-    : { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 8 };
+    : {
+        currentPage: 1,
+        totalPages: currentData.length > 0 ? 1 : 1,
+        totalItems: currentData.length,
+        itemsPerPage: 8,
+      };
 
   // Check if any filter is active
   const isAnyFilterActive =
@@ -135,18 +145,19 @@ const UserManagementContent = () => {
           <p>{row.name}</p>
         </div>
       ),
-      cellClassName: "px-3 py-5 font-medium",
+      cellClassName: "px-3 py-3 font-medium",
     },
     {
       header: "Email",
       headerClassName: "text-left",
       accessor: "email",
-      cellClassName: "px-3 py-5",
+      cellClassName: "px-3 py-3",
     },
     {
       header: "Phone",
+      headerClassName: "text-left",
       accessor: "phoneNumber",
-      cellClassName: "px-3 py-5",
+      cellClassName: "px-3 py-3",
     },
     {
       header: "Role",
@@ -165,7 +176,7 @@ const UserManagementContent = () => {
           </span>
         );
       },
-      cellClassName: "px-3 py-5 text-center",
+      cellClassName: "px-3 py-3 text-center",
     },
     {
       header: "Status",
@@ -175,7 +186,7 @@ const UserManagementContent = () => {
         const colorMap: Record<string, string> = {
           ACTIVE: "bg-[#E7ECDE] border border-[#DBE2CE] text-[#859E5A]",
           INACTIVE: "bg-[#DFDFE4] border border-[#CFCFD7] text-[#5E5F79]",
-          BANDED: "bg-[#F8D7DA] border border-[#F5C3C8] text-[#F8D7DA]",
+          BANDED: "bg-[#FDECEE] border border-[#F9C5CA] text-[#EB3D4D]",
         };
         return (
           <span
@@ -186,7 +197,7 @@ const UserManagementContent = () => {
           </span>
         );
       },
-      cellClassName: "px-3 py-5 text-center",
+      cellClassName: "px-3 py-3 text-center",
     },
     {
       header: "Joined Date",
@@ -199,7 +210,7 @@ const UserManagementContent = () => {
           day: "numeric",
         });
       },
-      cellClassName: "px-3 py-5 text-center whitespace-nowrap",
+      cellClassName: "px-3 py-3 text-center whitespace-nowrap",
     },
     {
       header: "Actions",
@@ -307,6 +318,10 @@ const UserManagementContent = () => {
       <CreateAdminModal
         isOpen={createAdminModalOpen}
         onClose={() => setCreateAdminModalOpen(false)}
+        onSuccess={() => {
+          refetchStats();
+          refetchUserList();
+        }}
       />
       <DeleteUserModal
         isOpen={deleteUserModalOpen}

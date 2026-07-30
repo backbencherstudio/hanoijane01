@@ -28,5 +28,5 @@ export interface GetUserTransactionsResponse {
   success: boolean;
   message: string;
   data: Transaction[];
-  meta_data: TransactionMeta;
+  metaData: TransactionMeta;
 }

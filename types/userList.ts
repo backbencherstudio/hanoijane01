@@ -26,7 +26,7 @@ export interface GetUserListResponse {
   success: boolean;
   message: string;
   data: UserListItem[];
-  meta_data: UserListMetaData;
+  metaData: UserListMetaData;
 }
 
 export interface GetUserListQueryParams {
@@ -35,4 +35,25 @@ export interface GetUserListQueryParams {
   status?: string;
   page?: number;
   limit?: number;
+}
+
+export interface CreateAdminRequest {
+  name: string;
+  email: string;
+  password: string;
+  type: "admin";
+  status: "ACTIVE";
+}
+
+export interface CreateAdminResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    email: string;
+    type: string;
+    status: string;
+    createdAt: string;
+  };
 }

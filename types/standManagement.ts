@@ -38,5 +38,5 @@ export interface StandsApiResponse {
   success: boolean;
   message: string;
   data: StandApiItem[];
-  meta_data: StandsApiMetaData;
+  metaData: StandsApiMetaData;
 }

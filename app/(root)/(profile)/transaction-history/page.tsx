@@ -34,7 +34,7 @@ const TransactionHistoryPage = () => {
     limit,
   });
   const transactions = data?.data ?? [];
-  const meta = data?.meta_data;
+  const meta = data?.metaData;
 
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage);
