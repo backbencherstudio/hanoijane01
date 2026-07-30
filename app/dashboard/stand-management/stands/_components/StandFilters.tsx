@@ -9,40 +9,51 @@ import {
 import { RiArrowDownSFill } from "react-icons/ri";
 
 interface StandFiltersProps {
-  type: string;
-  block: string;
+  hall: string;
+  category: string;
   status: string;
-  onTypeChange: (value: string) => void;
-  onBlockChange: (value: string) => void;
+  onHallChange: (value: string) => void;
+  onCategoryChange: (value: string) => void;
   onStatusChange: (value: string) => void;
 }
 
-const typeOptions = ["All types", "Standard", "Double", "Outdoor"];
-const blockOptions = ["All Block", "A", "B", "C", "D", "E"];
-const statusOptions = ["All Status", "Available", "Reserved", "Booked"];
+const hallOptions = ["All Halls", "Goffs Complex", "Marquee", "Outdoor"];
+const categoryOptions = [
+  "All Categories",
+  "Standard Size",
+  "Premium Size 1",
+  "Premium Size 2",
+  "Premium Size 3",
+  "Premium Size A",
+  "Premium Size B",
+  "Premium Size C",
+  "Premium Size D",
+  "Small Size",
+];
+const statusOptions = ["All Status", "Available", "Booked"];
 
 const StandFilters = ({
-  type,
-  block,
+  hall,
+  category,
   status,
-  onTypeChange,
-  onBlockChange,
+  onHallChange,
+  onCategoryChange,
   onStatusChange,
 }: StandFiltersProps) => {
   return (
     <div className="flex flex-wrap justify-center items-center gap-3">
-      {/* Type Filter */}
+      {/* Hall Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
-            {type} <RiArrowDownSFill size={16} />
+            {hall} <RiArrowDownSFill size={16} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          {typeOptions.map((option) => (
+          {hallOptions.map((option) => (
             <DropdownMenuItem
               key={option}
-              onClick={() => onTypeChange(option)}
+              onClick={() => onHallChange(option)}
               className="cursor-pointer px-3.5 py-2.25"
             >
               {option}
@@ -51,18 +62,18 @@ const StandFilters = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Block Filter */}
+      {/* Category Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-2 px-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium cursor-pointer border border-[#DCE4E8] bg-white">
-            {block} <RiArrowDownSFill size={16} />
+            {category} <RiArrowDownSFill size={16} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          {blockOptions.map((option) => (
+          {categoryOptions.map((option) => (
             <DropdownMenuItem
               key={option}
-              onClick={() => onBlockChange(option)}
+              onClick={() => onCategoryChange(option)}
               className="cursor-pointer px-3.5 py-2.25"
             >
               {option}

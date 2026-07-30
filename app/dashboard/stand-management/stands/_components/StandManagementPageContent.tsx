@@ -5,10 +5,7 @@ import { Eye, X } from "lucide-react";
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import StandFilters from "./StandFilters";
-import {
-  StandManagement,
-  standManagementData,
-} from "@/data/dashboard/standManagementData";
+import type { StandApiItem } from "@/types/standManagement";
 import CustomTable from "@/components/ui/Table";
 import { GoDotFill } from "react-icons/go";
 import { Column } from "@/types/table";
@@ -26,6 +23,7 @@ import { updateStand } from "@/src/redux/features/bookingSlice";
 import {
   useGetAdminExhibitionQuery,
   useGetStandStatsQuery,
+  useGetAdminStandsQuery,
 } from "@/src/redux/api/exhibition/exhibitionApi";
 
 type ViewType = "map" | "list";
@@ -51,7 +49,6 @@ const StandManagementPageContent = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  // for map -end
 
   // ── Book Now handler ────────────────────────────────────────────────────
   const handleBookNow = useCallback(
@@ -78,54 +75,60 @@ const StandManagementPageContent = () => {
       : "list";
 
   // Read filter values from URL
-  const typeFilter = searchParams.get("type") || "All types";
-  const blockFilter = searchParams.get("block") || "All Block";
+  const hallFilter = searchParams.get("hall") || "All Halls";
+  const categoryFilter = searchParams.get("category") || "All Categories";
   const statusFilter = searchParams.get("status") || "All Status";
+
+  const [page, setPage] = useState(1);
+  const limit = 8;
 
   const { data: exhibitionData } = useGetAdminExhibitionQuery(null);
   const { data: standStats } = useGetStandStatsQuery(null);
+  const {
+    data: standsData,
+    isLoading,
+    isFetching,
+  } = useGetAdminStandsQuery({
+    hall: hallFilter !== "All Halls" ? hallFilter : undefined,
+    category: categoryFilter !== "All Categories" ? categoryFilter : undefined,
+    status: statusFilter !== "All Status" ? statusFilter.toLowerCase() : undefined,
+    page,
+    limit,
+  });
+
   const statsData: StandStats[] = standStats?.data ?? [];
   const apiStands = exhibitionData?.data?.stands ?? [];
 
-  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
+  const stands: StandApiItem[] = standsData?.data ?? [];
+  const meta = standsData?.meta_data;
+
+  const pagination = meta
+    ? {
+        currentPage: meta.currentPage,
+        totalPages: meta.totalPages,
+        totalItems: meta.totalItems,
+        itemsPerPage: meta.itemsPerPage,
+      }
+    : {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: limit,
+      };
+
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, [setPage]);
+
+  const handleItemsPerPageChange = (_newPerPage: number) => {
+    // Keep fixed at 8 per page as per requirement
+  };
 
   // Check if any filter is active
   const isAnyFilterActive =
-    typeFilter !== "All types" ||
-    blockFilter !== "All Block" ||
+    hallFilter !== "All Halls" ||
+    categoryFilter !== "All Categories" ||
     statusFilter !== "All Status";
-
-  // Filter data based on URL params
-  const filteredData = standManagementData.filter((item) => {
-    const typeMatch =
-      typeFilter === "All types" || item.standType === typeFilter;
-    const blockMatch =
-      blockFilter === "All Block" || item.block === blockFilter;
-    const statusMatch =
-      statusFilter === "All Status" || item.status === statusFilter;
-    return typeMatch && blockMatch && statusMatch;
-  });
-
-  const startIndex = (filters.currentPage - 1) * filters.perPageItem;
-  const endIndex = startIndex + filters.perPageItem;
-  const currentData = filteredData.slice(startIndex, endIndex);
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / filters.perPageItem);
-
-  const pagination = {
-    currentPage: filters.currentPage,
-    totalPages,
-    totalItems,
-    itemsPerPage: filters.perPageItem,
-  };
-
-  const handlePageChange = useCallback((page: number) => {
-    setFilters((prev) => ({ ...prev, currentPage: page }));
-  }, []);
-
-  const handleItemsPerPageChange = (newPerPage: number) => {
-    setFilters({ currentPage: 1, perPageItem: newPerPage });
-  };
 
   // Toggle view in URL
   const toggleView = () => {
@@ -139,8 +142,8 @@ const StandManagementPageContent = () => {
   const updateFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (
-      value === "All types" ||
-      value === "All Block" ||
+      value === "All Halls" ||
+      value === "All Categories" ||
       value === "All Status"
     ) {
       params.delete(key);
@@ -149,7 +152,7 @@ const StandManagementPageContent = () => {
     }
     router.push(`?${params.toString()}`, { scroll: false });
     // Reset to page 1 when filter changes
-    setFilters((prev) => ({ ...prev, currentPage: 1 }));
+    setPage(1);
   };
 
   // Clear all filters (keep view)
@@ -158,51 +161,48 @@ const StandManagementPageContent = () => {
     const view = searchParams.get("view");
     if (view) params.set("view", view);
     router.push(`?${params.toString()}`, { scroll: false });
-    setFilters((prev) => ({ ...prev, currentPage: 1 }));
+    setPage(1);
   };
 
-  // Log filter changes (optional)
-  useEffect(() => {
-    console.log("Filters:", {
-      type: typeFilter,
-      block: blockFilter,
-      status: statusFilter,
-      view: currentView,
-    });
-  }, [typeFilter, blockFilter, statusFilter, currentView]);
-
-  const columns: Column<StandManagement>[] = [
+  const columns: Column<StandApiItem>[] = [
     {
       header: "Booking ID",
       headerClassName: "text-left",
       accessor: "bookingId",
+      render: (value) => (value ? String(value) : "-"),
       cellClassName: "px-3 py-5 font-medium",
     },
     {
       header: "Stand No",
-      accessor: "standNo",
+      accessor: "standNumber",
       cellClassName: "px-3 py-5 text-center",
     },
     {
-      header: "Block",
-      accessor: "block",
+      header: "Hall",
+      accessor: "hall",
       cellClassName: "px-3 py-5 text-center",
     },
     {
-      header: "Stand Type",
-      accessor: "standType",
+      header: "Category",
+      accessor: "category",
       render: (value) => {
-        const type = value as string;
+        const cat = value as string;
         const colorMap: Record<string, string> = {
-          Standard: "bg-[#d3e0fb] text-blue-700 border border-[#BED1F9]",
-          Double: "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          Outdoor: "bg-[#FBF5EB] text-[#D79930] border border-[#F3E1C1]",
+          "Standard Size": "bg-[#d3e0fb] text-blue-700 border border-[#BED1F9]",
+          "Premium Size 1": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size 2": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size 3": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size A": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size B": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size C": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size D": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Small Size": "bg-[#FBF5EB] text-[#D79930] border border-[#F3E1C1]",
         };
         return (
           <span
-            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[type] || ""}`}
+            className={`px-2 py-1 rounded-md text-xs font-medium ${colorMap[cat] || ""}`}
           >
-            {type}
+            {cat}
           </span>
         );
       },
@@ -216,21 +216,20 @@ const StandManagementPageContent = () => {
     },
     {
       header: "Status",
-      accessor: "status",
+      accessor: "isAvailable",
       render: (value) => {
-        const status = value as string;
+        const isAvail = value as boolean;
+        const statusText = isAvail ? "Available" : "Booked";
         const colorMap: Record<string, string> = {
           Available: "bg-[#E9E9EA] border border-[#D4DAE3] text-[#777980]",
           Booked: "bg-[#F6F1E9] border border-[#E6C58C] text-[#D79930]",
-          Reserved: "bg-[#F9EFEA] border border-[#EDCEBF] text-[#C25B29]",
-          Cancelled: "bg-[#FDECEE] border border-[#F9C5CA] text-[#EB3D4D]",
         };
         return (
           <span
-            className={`px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 w-fit ${colorMap[status] || ""}`}
+            className={`px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 w-fit ${colorMap[statusText] || ""}`}
           >
             <GoDotFill className="size-3" />
-            {status}
+            {statusText}
           </span>
         );
       },
@@ -243,7 +242,11 @@ const StandManagementPageContent = () => {
     },
     {
       header: "Exhibitor",
-      accessor: "exhibitor",
+      accessor: "bookedBy",
+      render: (value) => {
+        const bookedBy = value as { name: string; email: string } | null;
+        return bookedBy?.name || "-";
+      },
       cellClassName: "px-3 py-5 text-center whitespace-nowrap",
     },
   ];
@@ -286,11 +289,11 @@ const StandManagementPageContent = () => {
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <StandFilters
-                type={typeFilter}
-                block={blockFilter}
+                hall={hallFilter}
+                category={categoryFilter}
                 status={statusFilter}
-                onTypeChange={(value) => updateFilter("type", value)}
-                onBlockChange={(value) => updateFilter("block", value)}
+                onHallChange={(value) => updateFilter("hall", value)}
+                onCategoryChange={(value) => updateFilter("category", value)}
                 onStatusChange={(value) => updateFilter("status", value)}
               />
               {isAnyFilterActive && (
@@ -306,11 +309,11 @@ const StandManagementPageContent = () => {
           </div>
           {/* table */}
           <CustomTable
-            data={currentData}
+            data={stands}
             columns={columns}
             showIndex={false}
             indexLabel="SN"
-            isLoading={false}
+            isLoading={isLoading || isFetching}
             emptyMessage="No stands found"
             pagination={pagination}
             onPageChange={handlePageChange}
