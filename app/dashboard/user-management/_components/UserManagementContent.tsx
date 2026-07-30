@@ -4,7 +4,6 @@ import { PenLine, Plus, Trash2, User, X } from "lucide-react";
 import React, { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import UserFilters from "./UserFilters";
-import { users, UserData } from "@/data/mock/users";
 import CustomTable from "@/components/ui/Table";
 import { GoDotFill } from "react-icons/go";
 import { Column } from "@/types/table";
@@ -12,15 +11,19 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CreateAdminModal from "./CreateAdminModal";
 import DeleteUserModal from "./DeleteUserModal";
-import { useGetUserStatsQuery } from "@/src/redux/api/user/userApi";
+import {
+  useGetUserStatsQuery,
+  useGetUserListQuery,
+} from "@/src/redux/api/user/userApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserListItem } from "@/types/userList";
 
 const UserManagementContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [createAdminModalOpen, setCreateAdminModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserListItem | null>(null);
 
   const { data: userStats, isLoading: isStatsLoading } = useGetUserStatsQuery();
 
@@ -34,74 +37,92 @@ const UserManagementContent = () => {
     : [];
 
   // Read filter values from URL
-  const roleFilter = searchParams.get("role") || "All Roles";
+  const searchFilter = searchParams.get("search") || "";
+  const typeFilter = searchParams.get("type") || "All Roles";
   const statusFilter = searchParams.get("status") || "All Status";
+  const pageParam = parseInt(searchParams.get("page") || "1", 10);
+  const limitParam = parseInt(searchParams.get("limit") || "8", 10);
 
-  const [filters, setFilters] = useState({ currentPage: 1, perPageItem: 8 });
+  // Build API query params
+  const apiParams = {
+    page: pageParam,
+    limit: limitParam,
+    ...(searchFilter ? { search: searchFilter } : {}),
+    ...(typeFilter !== "All Roles" ? { type: typeFilter } : {}),
+    ...(statusFilter !== "All Status"
+      ? { status: statusFilter.toUpperCase() }
+      : {}),
+  };
+
+  const {
+    data: userListData,
+    isLoading: isUserListLoading,
+    isFetching: isUserListFetching,
+  } = useGetUserListQuery(apiParams);
+
+  const currentData = userListData?.data || [];
+  const metaData = userListData?.meta_data;
+
+  const pagination = metaData
+    ? {
+        currentPage: metaData.currentPage,
+        totalPages: metaData.totalPages,
+        totalItems: metaData.totalItems,
+        itemsPerPage: metaData.itemsPerPage,
+      }
+    : { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 8 };
 
   // Check if any filter is active
   const isAnyFilterActive =
-    roleFilter !== "All Roles" || statusFilter !== "All Status";
-
-  // Filter data based on URL params
-  const filteredData = users.filter((item) => {
-    const roleMatch = roleFilter === "All Roles" || item.role === roleFilter;
-    const statusMatch =
-      statusFilter === "All Status" || item.status === statusFilter;
-    return roleMatch && statusMatch;
-  });
-
-  const startIndex = (filters.currentPage - 1) * filters.perPageItem;
-  const endIndex = startIndex + filters.perPageItem;
-  const currentData = filteredData.slice(startIndex, endIndex);
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / filters.perPageItem);
-
-  const pagination = {
-    currentPage: filters.currentPage,
-    totalPages,
-    totalItems,
-    itemsPerPage: filters.perPageItem,
-  };
-
-  const handlePageChange = useCallback((page: number) => {
-    setFilters((prev) => ({ ...prev, currentPage: page }));
-  }, []);
-
-  const handleItemsPerPageChange = (newPerPage: number) => {
-    setFilters({ currentPage: 1, perPageItem: newPerPage });
-  };
+    searchFilter !== "" ||
+    typeFilter !== "All Roles" ||
+    statusFilter !== "All Status";
 
   // Update URL when filter changes
   const updateFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value === "All Roles" || value === "All Status") {
+    if (!value || value === "All Roles" || value === "All Status") {
       params.delete(key);
     } else {
       params.set(key, value);
     }
-    router.push(`?${params.toString()}`, { scroll: false });
     // Reset to page 1 when filter changes
-    setFilters((prev) => ({ ...prev, currentPage: 1 }));
+    params.set("page", "1");
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   // Clear all filters
   const clearFilters = () => {
     const params = new URLSearchParams();
     router.push(`?${params.toString()}`, { scroll: false });
-    setFilters((prev) => ({ ...prev, currentPage: 1 }));
   };
 
-  const columns: Column<UserData>[] = [
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      router.push(`?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams],
+  );
+
+  const handleItemsPerPageChange = (newPerPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("limit", newPerPage.toString());
+    params.set("page", "1");
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  const columns: Column<UserListItem>[] = [
     {
       header: "User Name",
       headerClassName: "text-left",
       render: (_, row) => (
         <div className="flex items-center gap-1.5">
-          {row.avatar ? (
+          {row.avatar_url ? (
             <Image
-              src={row.avatar}
-              alt={row.username}
+              src={row.avatar_url}
+              alt={row.name}
               height={10}
               width={10}
               className="shrink-0 size-10 border rounded-full"
@@ -111,8 +132,7 @@ const UserManagementContent = () => {
               <User size={18} />
             </div>
           )}
-
-          <p>{row.standNum}</p>
+          <p>{row.name}</p>
         </div>
       ),
       cellClassName: "px-3 py-5 font-medium",
@@ -124,24 +144,18 @@ const UserManagementContent = () => {
       cellClassName: "px-3 py-5",
     },
     {
-      header: "Username",
-      accessor: "username",
+      header: "Phone",
+      accessor: "phoneNumber",
       cellClassName: "px-3 py-5",
     },
     {
-      header: "Stand Type",
-      accessor: "standType",
-      cellClassName: "px-3 py-5 text-center",
-    },
-    {
       header: "Role",
-      accessor: "role",
+      accessor: "type",
       render: (value) => {
         const role = value as string;
         const colorMap: Record<string, string> = {
-          "Super Admin": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          Admin: "bg-[#d3e0fb] text-blue-700 border border-[#BED1F9]",
-          User: "bg-[#E9E9EA] border border-[#D4DAE3] text-[#777980]",
+          admin: "bg-[#d3e0fb] text-blue-700 border border-[#BED1F9]",
+          user: "bg-[#E9E9EA] border border-[#D4DAE3] text-[#777980]",
         };
         return (
           <span
@@ -159,8 +173,9 @@ const UserManagementContent = () => {
       render: (value) => {
         const status = value as string;
         const colorMap: Record<string, string> = {
-          Active: "bg-[#d1fae5] border border-[#a7f3d0] text-[#065f46]",
-          Banned: "bg-[#FDECEE] border border-[#F9C5CA] text-[#EB3D4D]",
+          ACTIVE: "bg-[#E7ECDE] border border-[#DBE2CE] text-[#859E5A]",
+          INACTIVE: "bg-[#DFDFE4] border border-[#CFCFD7] text-[#5E5F79]",
+          BANDED: "bg-[#F8D7DA] border border-[#F5C3C8] text-[#F8D7DA]",
         };
         return (
           <span
@@ -175,7 +190,15 @@ const UserManagementContent = () => {
     },
     {
       header: "Joined Date",
-      accessor: "joinedDate",
+      accessor: "createdAt",
+      render: (value) => {
+        const date = value as string;
+        return new Date(date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      },
       cellClassName: "px-3 py-5 text-center whitespace-nowrap",
     },
     {
@@ -217,7 +240,10 @@ const UserManagementContent = () => {
       <div className="my-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {isStatsLoading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 space-y-3 border">
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-5 space-y-3 border"
+              >
                 <Skeleton className="h-4 w-24" />
                 <Skeleton className="h-8 w-16" />
               </div>
@@ -239,10 +265,12 @@ const UserManagementContent = () => {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <UserFilters
-              role={roleFilter}
+              role={typeFilter}
               status={statusFilter}
-              onRoleChange={(value) => updateFilter("role", value)}
+              search={searchFilter}
+              onRoleChange={(value) => updateFilter("type", value)}
               onStatusChange={(value) => updateFilter("status", value)}
+              onSearchChange={(value) => updateFilter("search", value)}
             />
             {isAnyFilterActive && (
               <button
@@ -269,14 +297,17 @@ const UserManagementContent = () => {
           columns={columns}
           showIndex={false}
           indexLabel="SN"
-          isLoading={false}
+          isLoading={isUserListLoading || isUserListFetching}
           emptyMessage="No users found"
           pagination={pagination}
           onPageChange={handlePageChange}
           onItemsPerPageChange={handleItemsPerPageChange}
         />
       </div>
-      <CreateAdminModal isOpen={createAdminModalOpen} onClose={() => setCreateAdminModalOpen(false)} />
+      <CreateAdminModal
+        isOpen={createAdminModalOpen}
+        onClose={() => setCreateAdminModalOpen(false)}
+      />
       <DeleteUserModal
         isOpen={deleteUserModalOpen}
         onClose={() => {
@@ -284,12 +315,12 @@ const UserManagementContent = () => {
           setSelectedUser(null);
         }}
         onConfirm={() => {
-          console.log("Delete user:", selectedUser?.username);
+          console.log("Delete user:", selectedUser?.name);
           // TODO: API Call to delete user
           setDeleteUserModalOpen(false);
           setSelectedUser(null);
         }}
-        username={selectedUser?.username || ""}
+        username={selectedUser?.name || ""}
       />
     </div>
   );

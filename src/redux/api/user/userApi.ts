@@ -1,5 +1,9 @@
 import { baseApi } from "../baseApi";
 import { GetUserStatsResponse } from "@/types/userStats";
+import {
+  GetUserListResponse,
+  GetUserListQueryParams,
+} from "@/types/userList";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,8 +14,16 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
+    getUserList: builder.query<GetUserListResponse, GetUserListQueryParams>({
+      query: (params) => ({
+        url: "/admin/user",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["User"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetUserStatsQuery } = userApi;
+export const { useGetUserStatsQuery, useGetUserListQuery } = userApi;
