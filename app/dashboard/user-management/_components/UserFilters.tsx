@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { RiArrowDownSFill } from "react-icons/ri";
 import { Search } from "lucide-react";
+import { toTitleCase } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 interface UserFiltersProps {
   role: string;
@@ -29,6 +31,16 @@ const UserFilters = ({
   onStatusChange,
   onSearchChange,
 }: UserFiltersProps) => {
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchChange(localSearch);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [localSearch, onSearchChange]);
+
   return (
     <div className="flex flex-wrap justify-center items-center gap-3">
       {/* Search Input */}
@@ -37,8 +49,8 @@ const UserFilters = ({
         <input
           type="text"
           placeholder="Search by name or email..."
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
+          value={localSearch}
+          onChange={(e) => setLocalSearch(e.target.value)}
           className="pl-9 pr-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium border border-[#DCE4E8] bg-white outline-none focus:border-[#8B5CF6] transition w-56"
         />
       </div>
@@ -57,7 +69,7 @@ const UserFilters = ({
               onClick={() => onRoleChange(option)}
               className="cursor-pointer px-3.5 py-2.25"
             >
-              {option}
+              {toTitleCase(option)}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

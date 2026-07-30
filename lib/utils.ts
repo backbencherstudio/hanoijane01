@@ -13,3 +13,10 @@ export function cn(...inputs: ClassValue[]) {
 export function truncateWords(text: string, count: number = 2): string {
   return text.split(/\s+/).slice(0, count).join(" ");
 }
+
+export function toTitleCase(str: string) {
+  return str.replace(
+    /\w\S*/g,
+    word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+}
