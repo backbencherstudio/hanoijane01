@@ -12,31 +12,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CreateAdminModal from "./CreateAdminModal";
 import DeleteUserModal from "./DeleteUserModal";
-
-const stateData = [
-  {
-    title: "Total User",
-    value: users.length,
-  },
-  {
-    title: "User",
-    value: users.filter((u) => u.role !== "Admin" && u.role !== "Super Admin")
-      .length,
-  },
-  {
-    title: "Admin",
-    value: users.filter((u) => u.role === "Admin" || u.role === "Super Admin")
-      .length,
-  },
-  {
-    title: "Active User",
-    value: users.filter((u) => u.status === "Active").length,
-  },
-  {
-    title: "User Banned",
-    value: users.filter((u) => u.status === "Banned").length,
-  },
-];
+import { useGetUserStatsQuery } from "@/src/redux/api/user/userApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const UserManagementContent = () => {
   const router = useRouter();
@@ -44,6 +21,17 @@ const UserManagementContent = () => {
   const [createAdminModalOpen, setCreateAdminModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+
+  const { data: userStats, isLoading: isStatsLoading } = useGetUserStatsQuery();
+
+  const stateData = userStats?.data
+    ? [
+        { title: "Total User", value: userStats.data.totalUser },
+        { title: "Active User", value: userStats.data.activeUser },
+        { title: "Inactive User", value: userStats.data.inactiveUser },
+        { title: "User Banned", value: userStats.data.bannedUser },
+      ]
+    : [];
 
   // Read filter values from URL
   const roleFilter = searchParams.get("role") || "All Roles";
@@ -226,14 +214,21 @@ const UserManagementContent = () => {
       </div>
 
       {/* state cards */}
-      <div className="my-9 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
-        {stateData.map((state) => (
-          <StateCard2
-            title={state.title}
-            value={state.value}
-            key={state.title}
-          />
-        ))}
+      <div className="my-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {isStatsLoading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-5 space-y-3 border">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-8 w-16" />
+              </div>
+            ))
+          : stateData.map((state) => (
+              <StateCard2
+                title={state.title}
+                value={state.value}
+                key={state.title}
+              />
+            ))}
       </div>
 
       {/* content / data table */}

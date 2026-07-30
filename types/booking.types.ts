@@ -71,3 +71,71 @@ export interface GetUserBookingResponse {
   data: UserBooking[];
   meta_data: BookingMeta;
 }
+
+// ── Booking Stats ────────────────────────────────────────────────────
+
+export interface BookingStats {
+  availableStands: number;
+  bookedStands: number;
+  canceledStands: number;
+}
+
+export interface BookingStatsResponse {
+  success: boolean;
+  message: string;
+  data: BookingStats;
+}
+
+// ── Admin Bookings ───────────────────────────────────────────────────
+
+export interface AdminBooking {
+  id: string;
+  standNumber: string;
+  standCategory: string;
+  hall: string;
+  exhibitor: string;
+  pricePerDay: number;
+  status: "BOOKED" | "PENDING" | "CANCELED" | "REFUNDED" | string;
+  paymentStatus: "PAID" | "UNPAID" | "REFUNDED" | "CANCELED" | string;
+  bookingDate: string;
+}
+
+export interface AdminBookingsResponse {
+  success: boolean;
+  message: string;
+  data: AdminBooking[];
+  meta_data: BookingMeta;
+}
+
+// ── Admin Single Booking ─────────────────────────────────────────────
+
+export interface AdminBookingDetails {
+  id: string;
+  status: string;
+  bookingType: string;
+  standNumber: string;
+  hall: string;
+  category: string;
+  price: number;
+  event: string;
+  exhibitor: string;
+  contactName: string;
+  email: string;
+  bookingDate: string;
+  paymentStatus: string;
+  subTotalAmount: number;
+  discountAmount: number;
+  vatAmount: number;
+  vatPercentage: number;
+  totalAmount: number;
+  termsAndConditionsAccepted: boolean;
+  onBehalfOf: string;
+  title: string;
+  signaturePath: string | null;
+}
+
+export interface AdminBookingDetailsResponse {
+  success: boolean;
+  message: string;
+  data: AdminBookingDetails;
+}

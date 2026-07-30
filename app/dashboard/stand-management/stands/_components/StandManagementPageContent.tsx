@@ -26,6 +26,7 @@ import {
   useGetStandStatsQuery,
   useGetAdminStandsQuery,
 } from "@/src/redux/api/exhibition/exhibitionApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ViewType = "map" | "list";
 
@@ -85,7 +86,8 @@ const StandManagementPageContent = () => {
   const limit = 8;
 
   const { data: exhibitionData } = useGetAdminExhibitionQuery(null);
-  const { data: standStats } = useGetStandStatsQuery(null);
+  const { data: standStats, isLoading: isStateLoading } =
+    useGetStandStatsQuery(null);
   const {
     data: standsData,
     isLoading,
@@ -93,7 +95,8 @@ const StandManagementPageContent = () => {
   } = useGetAdminStandsQuery({
     hall: hallFilter !== "All Halls" ? hallFilter : undefined,
     category: categoryFilter !== "All Categories" ? categoryFilter : undefined,
-    status: statusFilter !== "All Status" ? statusFilter.toLowerCase() : undefined,
+    status:
+      statusFilter !== "All Status" ? statusFilter.toLowerCase() : undefined,
     page,
     limit,
   });
@@ -118,9 +121,12 @@ const StandManagementPageContent = () => {
         itemsPerPage: limit,
       };
 
-  const handlePageChange = useCallback((newPage: number) => {
-    setPage(newPage);
-  }, [setPage]);
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      setPage(newPage);
+    },
+    [setPage],
+  );
 
   const handleItemsPerPageChange = (_newPerPage: number) => {
     // Keep fixed at 8 per page as per requirement
@@ -176,7 +182,9 @@ const StandManagementPageContent = () => {
         if (!bookingId) return <span className="ct-text">-</span>;
         const MAX_LENGTH = 28;
         const isLong = bookingId.length > MAX_LENGTH;
-        const display = isLong ? `${bookingId.slice(0, MAX_LENGTH)}...` : bookingId;
+        const display = isLong
+          ? `${bookingId.slice(0, MAX_LENGTH)}...`
+          : bookingId;
 
         const handleCopy = async () => {
           try {
@@ -225,13 +233,20 @@ const StandManagementPageContent = () => {
         const cat = value as string;
         const colorMap: Record<string, string> = {
           "Standard Size": "bg-[#d3e0fb] text-blue-700 border border-[#BED1F9]",
-          "Premium Size 1": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          "Premium Size 2": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          "Premium Size 3": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          "Premium Size A": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          "Premium Size B": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          "Premium Size C": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
-          "Premium Size D": "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size 1":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size 2":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size 3":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size A":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size B":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size C":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
+          "Premium Size D":
+            "bg-[#E8DEFD] text-[#8B5CF6] border border-[#DDCFFD]",
           "Small Size": "bg-[#FBF5EB] text-[#D79930] border border-[#F3E1C1]",
         };
         return (
@@ -307,13 +322,23 @@ const StandManagementPageContent = () => {
 
       {/* state cards */}
       <div className="my-9 grid grid-cols-1 md:grid-cols-3 gap-5">
-        {statsData.map((stat) => (
-          <StateCard2
-            title={stat.title}
-            value={stat.totalStands}
-            key={stat.id}
-          />
-        ))}
+        {isStateLoading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-5 space-y-3 border"
+              >
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-8 w-16" />
+              </div>
+            ))
+          : statsData.map((stat) => (
+              <StateCard2
+                title={stat.title}
+                value={stat.totalStands}
+                key={stat.id}
+              />
+            ))}
       </div>
 
       {/* content or data table */}
@@ -396,7 +421,11 @@ const StandManagementPageContent = () => {
                 </svg>
               </TransformComponent>
             </TransformWrapper>
-            <StandTooltip ref={tooltipRef} onBookNow={handleBookNow} isAdmin={true} />
+            <StandTooltip
+              ref={tooltipRef}
+              onBookNow={handleBookNow}
+              isAdmin={true}
+            />
           </div>
         </div>
       )}

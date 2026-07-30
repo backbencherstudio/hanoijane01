@@ -1,12 +1,15 @@
-import React from 'react';
-import LoginForm from '../_components/LoginForm';
+import React, { Suspense } from "react";
+import LoginForm from "../_components/LoginForm";
+import LoginFormSkeleton from "../_components/LoginFormSkeleton";
 
 const SignInPage = () => {
-    return (
-        <div>
-            <LoginForm/>
-        </div>
-    );
+  return (
+    <div>
+      <Suspense fallback={<LoginFormSkeleton />}>
+        <LoginForm />
+      </Suspense>
+    </div>
+  );
 };
 
 export default SignInPage;

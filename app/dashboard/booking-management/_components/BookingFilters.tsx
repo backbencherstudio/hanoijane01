@@ -11,10 +11,7 @@ const statuses = [
   { label: "All", value: "all" },
   { label: "Booked", value: "booked" },
   { label: "Pending", value: "pending" },
-  // { label: "Reserved", value: "reserved" },
-  // { label: "Request", value: "request" },
-  // { label: "Overdue", value: "overdue" },
-  // { label: "Cancel", value: "cancel" },
+  { label: "Canceled", value: "canceled" },
 ];
 
 const BookingStatusFilter = ({
