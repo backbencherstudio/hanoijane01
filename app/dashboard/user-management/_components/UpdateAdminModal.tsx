@@ -6,62 +6,97 @@ import { Eye, EyeOff } from "lucide-react";
 
 import Modal from "@/components/ui/Modal";
 import { Button } from "@/components/ui/button";
-import { useCreateAdminMutation } from "@/src/redux/api/user/userApi";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useUpdateUserMutation } from "@/src/redux/api/user/userApi";
+import { UpdateUserRequest, UserListItem } from "@/types/userList";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/src/lib/getErrorMessage";
 
-interface CreateAdminModalProps {
+interface UpdateAdminModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user: UserListItem | null;
   onSuccess?: () => void;
 }
 
-type CreateAdminFormData = {
+type UpdateAdminFormData = {
   name: string;
   email: string;
-  password: string;
+  password?: string;
+  status: "ACTIVE" | "BANNED";
 };
 
-const CreateAdminModal = ({
+const UpdateAdminModal = ({
   isOpen,
   onClose,
+  user,
   onSuccess,
-}: CreateAdminModalProps) => {
+}: UpdateAdminModalProps) => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [createAdmin, { isLoading }] = useCreateAdminMutation();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<CreateAdminFormData>();
+  } = useForm<UpdateAdminFormData>();
+
+  const statusValue = watch("status");
+
+  // Pre-fill form when user data changes
+  React.useEffect(() => {
+    if (user && isOpen) {
+      setValue("name", user.name);
+      setValue("email", user.email);
+      setValue("status", user.statusText as "ACTIVE" | "BANNED");
+      setValue("password", "");
+    }
+  }, [user, isOpen, setValue]);
 
   const handleClose = () => {
     reset();
     onClose();
   };
 
-  const onSubmit = async (data: CreateAdminFormData) => {
-    const toastId = toast.loading("Creating admin...");
+  const onSubmit = async (data: UpdateAdminFormData) => {
+    if (!user) return;
+
+    const toastId = toast.loading("Updating user...");
 
     try {
-      await createAdmin({
+      const updateBody: UpdateUserRequest = {
         name: data.name,
         email: data.email,
-        password: data.password,
-        type: "admin",
-        status: "ACTIVE",
+        status: data.status,
+      };
+
+      // Only include password if it's provided
+      if (data.password?.trim()) {
+        updateBody.password = data.password;
+      }
+
+      await updateUser({
+        userId: user.id,
+        body: updateBody,
       }).unwrap();
 
-      toast.success("Admin created successfully.", {
+      toast.success("User updated successfully.", {
         id: toastId,
       });
 
       onSuccess?.();
       handleClose();
     } catch (error) {
-      toast.error(getErrorMessage(error, "Failed to create admin."), {
+      toast.error(getErrorMessage(error, "Failed to update user."), {
         id: toastId,
       });
     }
@@ -71,11 +106,11 @@ const CreateAdminModal = ({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="md:w-120 lg:w-150 xl:w-182.5">
         <h1 className="text-2xl md:text-3xl lg:text-[32px] font-semibold text-primary">
-          Create Admin Profile
+          Update User Profile
         </h1>
 
         <p className="text-lg mt-3 border-b pb-6 mb-6">
-          Fill in the details below to create a new admin.
+          Update the details for {user?.name}.
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -143,22 +178,24 @@ const CreateAdminModal = ({
               htmlFor="password"
               className="text-lg font-medium text-text-primary"
             >
-              Password
+              Password{" "}
+              <span className="text-sm text-gray-500">
+                (leave blank to keep current)
+              </span>
             </label>
 
             <div className="relative">
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder="Enter new password"
                 className={`w-full mt-2 p-3 pr-12 rounded-lg bg-[#fafafa] border ${
                   errors.password ? "border-red-500" : "border-gray-200"
                 }`}
                 {...register("password", {
-                  required: "Password is required",
                   minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
+                    value: 8,
+                    message: "Password must be at least 8 characters",
                   },
                 })}
               />
@@ -183,6 +220,36 @@ const CreateAdminModal = ({
             )}
           </div>
 
+          {/* Status */}
+          <div>
+            <label className="text-lg font-medium text-text-primary">
+              Status
+            </label>
+            <Select
+              value={statusValue || ""}
+              onValueChange={(value: "ACTIVE" | "BANNED") => {
+                setValue("status", value, { shouldValidate: true });
+              }}
+            >
+              <SelectTrigger className="w-full h-12.5! mt-2">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem className="h-12.5" value="ACTIVE">
+                  Active
+                </SelectItem>
+                <SelectItem className="h-12.5" value="BANNED">
+                  Banned
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.status && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.status.message}
+              </p>
+            )}
+          </div>
+
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-2">
             <Button
@@ -196,7 +263,7 @@ const CreateAdminModal = ({
             </Button>
 
             <Button type="submit" className="h-11" disabled={isLoading}>
-              {isLoading ? "Creating..." : "Create Admin"}
+              {isLoading ? "Updating..." : "Update User"}
             </Button>
           </div>
         </form>
@@ -205,4 +272,4 @@ const CreateAdminModal = ({
   );
 };
 
-export default CreateAdminModal;
+export default UpdateAdminModal;

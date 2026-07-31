@@ -5,6 +5,10 @@ import {
   GetUserListQueryParams,
   CreateAdminRequest,
   CreateAdminResponse,
+  GetUserByIdResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
+  DeleteUserResponse,
 } from "@/types/userList";
 
 export const userApi = baseApi.injectEndpoints({
@@ -32,8 +36,37 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getUserById: builder.query<GetUserByIdResponse, string>({
+      query: (userId) => ({
+        url: `/admin/user/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+    updateUser: builder.mutation<UpdateUserResponse, { userId: string; body: UpdateUserRequest }>({
+      query: ({ userId, body }) => ({
+        url: `/admin/user/${userId}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    deleteUser: builder.mutation<DeleteUserResponse, string>({
+      query: (userId) => ({
+        url: `/admin/user/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetUserStatsQuery, useGetUserListQuery, useCreateAdminMutation } = userApi;
+export const {
+  useGetUserStatsQuery,
+  useGetUserListQuery,
+  useCreateAdminMutation,
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} = userApi;

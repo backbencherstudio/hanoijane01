@@ -1,7 +1,7 @@
 "use client";
 import StateCard2 from "@/components/dashboard/StateCard2";
 import { PenLine, Plus, Trash2, User, X } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import UserFilters from "./UserFilters";
 import CustomTable from "@/components/ui/Table";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CreateAdminModal from "./CreateAdminModal";
 import DeleteUserModal from "./DeleteUserModal";
+import UpdateAdminModal from "./UpdateAdminModal";
 import {
   useGetUserStatsQuery,
   useGetUserListQuery,
@@ -23,6 +24,7 @@ const UserManagementContent = () => {
   const searchParams = useSearchParams();
   const [createAdminModalOpen, setCreateAdminModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserListItem | null>(null);
 
   const {
@@ -48,15 +50,18 @@ const UserManagementContent = () => {
   const limitParam = parseInt(searchParams.get("limit") || "8", 10);
 
   // Build API query params
-  const apiParams = {
-    page: pageParam,
-    limit: limitParam,
-    ...(searchFilter ? { search: searchFilter } : {}),
-    ...(typeFilter !== "All Roles" ? { type: typeFilter } : {}),
-    ...(statusFilter !== "All Status"
-      ? { status: statusFilter.toUpperCase() }
-      : {}),
-  };
+  const apiParams = useMemo(
+    () => ({
+      page: pageParam,
+      limit: limitParam,
+      ...(searchFilter ? { search: searchFilter } : {}),
+      ...(typeFilter !== "All Roles" ? { type: typeFilter } : {}),
+      ...(statusFilter !== "All Status"
+        ? { status: statusFilter.toUpperCase() }
+        : {}),
+    }),
+    [pageParam, limitParam, searchFilter, typeFilter, statusFilter],
+  );
 
   const {
     data: userListData,
@@ -89,39 +94,61 @@ const UserManagementContent = () => {
     statusFilter !== "All Status";
 
   // Update URL when filter changes
-  const updateFilter = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (!value || value === "All Roles" || value === "All Status") {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
-    // Reset to page 1 when filter changes
-    params.set("page", "1");
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+  const updateFilter = useCallback(
+    (key: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (!value || value === "All Roles" || value === "All Status") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+      // Reset to page 1 when filter changes
+      params.set("page", "1");
+      const newUrl = `?${params.toString()}`;
+      // Only push if URL actually changed
+      if (newUrl !== `?${searchParams.toString()}`) {
+        router.push(newUrl, { scroll: false });
+      }
+    },
+    [router, searchParams],
+  );
 
   // Clear all filters
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     const params = new URLSearchParams();
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+    const newUrl = `?${params.toString()}`;
+    // Only push if URL actually changed
+    if (newUrl !== `?${searchParams.toString()}`) {
+      router.push(newUrl, { scroll: false });
+    }
+  }, [router, searchParams]);
 
   const handlePageChange = useCallback(
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set("page", page.toString());
-      router.push(`?${params.toString()}`, { scroll: false });
+      const newUrl = `?${params.toString()}`;
+      // Only push if URL actually changed
+      if (newUrl !== `?${searchParams.toString()}`) {
+        router.push(newUrl, { scroll: false });
+      }
     },
     [router, searchParams],
   );
 
-  const handleItemsPerPageChange = (newPerPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("limit", newPerPage.toString());
-    params.set("page", "1");
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
+  const handleItemsPerPageChange = useCallback(
+    (newPerPage: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("limit", newPerPage.toString());
+      params.set("page", "1");
+      const newUrl = `?${params.toString()}`;
+      // Only push if URL actually changed
+      if (newUrl !== `?${searchParams.toString()}`) {
+        router.push(newUrl, { scroll: false });
+      }
+    },
+    [router, searchParams],
+  );
 
   const columns: Column<UserListItem>[] = [
     {
@@ -216,7 +243,13 @@ const UserManagementContent = () => {
       header: "Actions",
       render: (_, row) => (
         <div className="flex items-center gap-4 ">
-          <button className="cursor-pointer">
+          <button
+            onClick={() => {
+              setSelectedUser(row);
+              setUpdateUserModalOpen(true);
+            }}
+            className="cursor-pointer"
+          >
             <PenLine className="size-5" />
           </button>
           <button
@@ -279,9 +312,9 @@ const UserManagementContent = () => {
               role={typeFilter}
               status={statusFilter}
               search={searchFilter}
-              onRoleChange={(value) => updateFilter("type", value)}
-              onStatusChange={(value) => updateFilter("status", value)}
-              onSearchChange={(value) => updateFilter("search", value)}
+              onRoleChange={updateFilter.bind(null, "type")}
+              onStatusChange={updateFilter.bind(null, "status")}
+              onSearchChange={updateFilter.bind(null, "search")}
             />
             {isAnyFilterActive && (
               <button
@@ -323,6 +356,18 @@ const UserManagementContent = () => {
           refetchUserList();
         }}
       />
+      <UpdateAdminModal
+        isOpen={updateUserModalOpen}
+        onClose={() => {
+          setUpdateUserModalOpen(false);
+          setSelectedUser(null);
+        }}
+        user={selectedUser}
+        onSuccess={() => {
+          refetchUserList();
+          refetchStats();
+        }}
+      />
       <DeleteUserModal
         isOpen={deleteUserModalOpen}
         onClose={() => {
@@ -330,12 +375,15 @@ const UserManagementContent = () => {
           setSelectedUser(null);
         }}
         onConfirm={() => {
-          console.log("Delete user:", selectedUser?.name);
-          // TODO: API Call to delete user
           setDeleteUserModalOpen(false);
           setSelectedUser(null);
         }}
+        userId={selectedUser?.id || ""}
         username={selectedUser?.name || ""}
+        onSuccess={() => {
+          refetchUserList();
+          refetchStats();
+        }}
       />
     </div>
   );

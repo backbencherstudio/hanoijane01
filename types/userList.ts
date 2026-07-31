@@ -57,3 +57,28 @@ export interface CreateAdminResponse {
     createdAt: string;
   };
 }
+
+export interface GetUserByIdResponse {
+  success: boolean;
+  message: string;
+  data: UserListItem;
+}
+
+export interface UpdateUserRequest {
+  name?: string;
+  email?: string;
+  password?: string;
+  type?: "admin" | "user";
+  status?: "ACTIVE" | "INACTIVE" | "BANNED";
+}
+
+export interface UpdateUserResponse {
+  success: boolean;
+  message: string;
+  data: UserListItem;
+}
+
+export interface DeleteUserResponse {
+  success: boolean;
+  message: string;
+}

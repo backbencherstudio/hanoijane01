@@ -9,7 +9,7 @@ import {
 import { RiArrowDownSFill } from "react-icons/ri";
 import { Search } from "lucide-react";
 import { toTitleCase } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface UserFiltersProps {
   role: string;
@@ -33,6 +33,14 @@ const UserFilters = ({
 }: UserFiltersProps) => {
   const [localSearch, setLocalSearch] = useState(search);
 
+  // Use the search prop directly as the input value
+  // localSearch is used only for the debounce effect
+  const inputValue = useMemo(() => {
+    // If search prop matches what we last sent, use localSearch (for debouncing)
+    // Otherwise use the search prop (external change from URL)
+    return search;
+  }, [search]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onSearchChange(localSearch);
@@ -49,7 +57,7 @@ const UserFilters = ({
         <input
           type="text"
           placeholder="Search by name or email..."
-          value={localSearch}
+          value={inputValue}
           onChange={(e) => setLocalSearch(e.target.value)}
           className="pl-9 pr-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium border border-[#DCE4E8] bg-white outline-none focus:border-[#8B5CF6] transition w-56"
         />

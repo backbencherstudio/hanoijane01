@@ -3,22 +3,51 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/ui/Modal";
 import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDeleteUserMutation } from "@/src/redux/api/user/userApi";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
 
 interface DeleteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  userId: string;
   username: string;
+  onSuccess?: () => void;
 }
 
 const DeleteUserModal = ({
   isOpen,
   onClose,
   onConfirm,
+  userId,
   username,
+  onSuccess,
 }: DeleteUserModalProps) => {
+  const [deleteUser, { isLoading }] = useDeleteUserMutation();
+
   const handleClose = () => {
     onClose();
+  };
+
+  const handleDelete = async () => {
+    const toastId = toast.loading("Deleting user...");
+
+    try {
+      await deleteUser(userId).unwrap();
+
+      toast.success("User deleted successfully.", {
+        id: toastId,
+      });
+
+      onSuccess?.();
+      onConfirm();
+      handleClose();
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to delete user."), {
+        id: toastId,
+      });
+    }
   };
 
   return (
@@ -46,9 +75,10 @@ const DeleteUserModal = ({
           <Button
             type="button"
             className="h-10 bg-[#EB3D4D] hover:bg-[#f14a5a]"
-            onClick={onConfirm}
+            onClick={handleDelete}
+            disabled={isLoading}
           >
-            Delete
+            {isLoading ? "Deleting..." : "Delete"}
           </Button>
         </div>
       </div>
