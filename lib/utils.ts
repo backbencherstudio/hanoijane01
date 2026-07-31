@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 /**
@@ -17,6 +17,21 @@ export function truncateWords(text: string, count: number = 2): string {
 export function toTitleCase(str: string) {
   return str.replace(
     /\w\S*/g,
-    word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
   );
 }
+
+// Helper function to get currency symbol
+export const getCurrencySymbol = (currency: string | null): string | null => {
+  const symbols: Record<string, string> = {
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    BDT: "৳",
+    INR: "₹",
+    CAD: "C$",
+    AUD: "A$",
+  };
+  if (!currency) return null;
+  return symbols[currency.toUpperCase()] || currency.toUpperCase();
+};

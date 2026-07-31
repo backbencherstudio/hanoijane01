@@ -1,5 +1,9 @@
 import { baseApi } from "../baseApi";
-import { GetUserTransactionsResponse } from "@/types/transaction.types";
+import {
+  GetUserTransactionsResponse,
+  Transaction,
+  TransactionMeta,
+} from "@/types/transaction.types";
 
 interface CreatePaymentIntentRequest {
   bookingId: string;
@@ -46,6 +50,22 @@ export const paymentApi = baseApi.injectEndpoints({
         );
       },
     }),
+    getAllTransactions: builder.query<
+      {
+        success: boolean;
+        message: string;
+        data: Transaction[];
+        metaData: TransactionMeta;
+      },
+      { status?: string; page?: number; limit?: number }
+    >({
+      query: ({ status, page = 1, limit = 8 } = {}) => ({
+        url: "/admin/transaction",
+        method: "GET",
+        params: { ...(status && status !== "all" ? { status } : {}), page, limit },
+      }),
+      providesTags: ["Booking"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -53,4 +73,5 @@ export const paymentApi = baseApi.injectEndpoints({
 export const {
   useCreatePaymentIntentMutation,
   useGetUserTransactionsQuery,
+  useGetAllTransactionsQuery,
 } = paymentApi;
