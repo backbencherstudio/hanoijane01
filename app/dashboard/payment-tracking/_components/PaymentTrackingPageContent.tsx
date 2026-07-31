@@ -99,10 +99,10 @@ const PaymentTrackingPageContent = () => {
 
   const pagination = metaData
     ? {
-        currentPage: metaData.page,
-        totalPages: Math.ceil(metaData.total / metaData.limit),
-        totalItems: metaData.total,
-        itemsPerPage: metaData.limit,
+        currentPage: metaData.currentPage,
+        totalPages: metaData.totalPages,
+        totalItems: metaData.totalItems,
+        itemsPerPage: metaData.itemsPerPage,
       }
     : {
         currentPage: 1,

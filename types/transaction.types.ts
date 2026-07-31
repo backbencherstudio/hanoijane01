@@ -21,9 +21,10 @@ export interface Transaction {
 }
 
 export interface TransactionMeta {
-  total: number;
-  page: number;
-  limit: number;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
 }
 
 export interface GetUserTransactionsResponse {
