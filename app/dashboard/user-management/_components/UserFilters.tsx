@@ -59,7 +59,7 @@ const UserFilters = ({
           placeholder="Search by name or email..."
           value={inputValue}
           onChange={(e) => setLocalSearch(e.target.value)}
-          className="pl-9 pr-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium border border-[#DCE4E8] bg-white outline-none focus:border-[#8B5CF6] transition w-56"
+          className="pl-9 pr-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium border border-[#DCE4E8] bg-white outline-none focus:border-primary transition w-56"
         />
       </div>
 

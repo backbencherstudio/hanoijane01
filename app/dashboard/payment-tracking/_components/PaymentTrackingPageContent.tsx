@@ -297,6 +297,7 @@ const PaymentTrackingPageContent = () => {
           </p>
           <div className="flex flex-wrap items-center gap-2">
             {[
+              { label: "All", value: "all" },
               { label: "Succeeded", value: "succeeded" },
               { label: "Pending", value: "pending" },
               { label: "Canceled", value: "canceled" },

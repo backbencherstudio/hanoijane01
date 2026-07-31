@@ -1,27 +1,32 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PenLine } from "lucide-react";
-import React, { useState } from "react";
+import { PenLine, X, Upload, User } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { PhoneInput } from "react-international-phone";
-import "react-international-phone/style.css";
-
-// Mock user data
-const mockUser = {
-  fullName: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+353871234567",
-};
+import {
+  useGetMeQuery,
+  useUpdateProfileMutation,
+  useUploadAttachmentMutation,
+} from "@/src/redux/api/auth/authApi";
+import { toast } from "sonner";
+import Image from "next/image";
 
 interface ProfileFormData {
-  fullName: string;
+  name: string;
   email: string;
   phone: string;
 }
 
 const MyProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { data: meData, isLoading: isUserLoading } = useGetMeQuery();
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+  const [uploadAttachment, { isLoading: isUploading }] = useUploadAttachmentMutation();
+
+  const user = meData?.data;
 
   const {
     control,
@@ -30,49 +35,164 @@ const MyProfilePage = () => {
     reset,
   } = useForm<ProfileFormData>({
     defaultValues: {
-      fullName: mockUser.fullName,
-      email: mockUser.email,
-      phone: mockUser.phone,
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
-  const onSubmit = (data: ProfileFormData) => {
-    console.log("Profile Data:", data);
-    // Here you would send data to your API
-    setIsEditing(false);
+  // Prefill form when user data loads
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phoneNumber || "",
+      });
+    }
+  }, [user, reset]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size must be less than 5MB");
+        return;
+      }
+      setSelectedFile(file);
+    }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const removeImage = () => {
+    setSelectedFile(null);
+  };
+
+  const onSubmit = async (data: ProfileFormData) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("phoneNumber", data.phone);
+
+      // Upload avatar if a new file is selected
+      if (selectedFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", selectedFile);
+        
+        const uploadResult = await uploadAttachment(uploadFormData).unwrap();
+        
+        if (uploadResult.success && uploadResult.data) {
+          formData.append("avatar", uploadResult.data.filePath);
+        }
+      }
+
+      await updateProfile(formData).unwrap();
+      toast.success("Profile updated successfully");
+      setIsEditing(false);
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
   };
 
   const handleDiscard = () => {
-    reset({
-      fullName: mockUser.fullName,
-      email: mockUser.email,
-      phone: mockUser.phone,
-    });
+    if (user) {
+      reset({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phoneNumber || "",
+      });
+      setSelectedFile(null);
+    }
     setIsEditing(false);
   };
+
+  if (isUserLoading) {
+    return (
+      <div className="rounded-2xl">
+        <div className="p-4 lg:p-6 rounded-2xl bg-white space-y-5">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+            <div className="h-12 bg-gray-200 rounded"></div>
+            <div className="h-12 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="rounded-2xl">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="p-4 lg:p-6 rounded-2xl  bg-white space-y-5 ">
-            {/* full name */}
+          <div className="p-4 lg:p-6 rounded-2xl bg-white space-y-5">
+            {/* Avatar Upload */}
+            <div className="flex flex-col w-fit items-center gap-4">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-100">
+                  {selectedFile ? (
+                    <Image
+                      src={URL.createObjectURL(selectedFile)}
+                      alt="Profile"
+                      width={128}
+                      height={128}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : user?.avatar ? (
+                    <Image
+                      src={user.avatar}
+                      alt="Profile"
+                      width={128}
+                      height={128}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <User size={48} />
+                    </div>
+                  )}
+                </div>
+                {isEditing && (
+                  <div className="absolute -bottom-2 -right-2 flex gap-1">
+                    <label
+                      htmlFor="avatar-upload"
+                      className="cursor-pointer bg-primary text-white p-2 rounded-lg hover:bg-primary/90 transition-colors"
+                    >
+                      <Upload size={16} />
+                    </label>
+                    {(selectedFile || user?.avatar) && (
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors cursor-pointer"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
+                  </div>
+                )}
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  disabled={!isEditing}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            {/* Full Name */}
             <div className="xl:w-1/2">
-              <label htmlFor="fullName" className="font-medium">
+              <label htmlFor="name" className="font-medium">
                 Full Name <span className="text-red-600">*</span>
               </label>
               <Controller
-                name="fullName"
+                name="name"
                 control={control}
                 rules={{ required: "Full name is required" }}
                 render={({ field }) => (
                   <Input
                     {...field}
-                    id="fullName"
+                    id="name"
                     placeholder="Full Name"
                     disabled={!isEditing}
                     className={`mt-2 ${
@@ -81,102 +201,54 @@ const MyProfilePage = () => {
                   />
                 )}
               />
-              {errors.fullName && (
+              {errors.name && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.fullName.message}
+                  {errors.name.message}
                 </p>
               )}
             </div>
 
-            {/* email */}
+            {/* Email - Disabled */}
             <div className="xl:w-1/2">
-              <label htmlFor="email" className="font-medium">
-                Email Address <span className="text-red-600">*</span>
+              <label htmlFor="email" className="font-medium text-gray-500">
+                Email Address
               </label>
               <Controller
                 name="email"
                 control={control}
-                rules={{
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
-                  },
-                }}
                 render={({ field }) => (
                   <Input
                     {...field}
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
-                    disabled={!isEditing}
-                    className={`mt-2 ${
-                      !isEditing ? "opacity-100! cursor-text! select-text" : ""
-                    }`}
+                    disabled={true}
+                    className="mt-2 bg-gray-100 cursor-not-allowed"
                   />
                 )}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
+              <p className="text-sm text-gray-400 mt-1">Email cannot be changed</p>
             </div>
 
-            {/* phone */}
+            {/* Phone */}
             <div className="xl:w-1/2">
               <label htmlFor="phone" className="font-medium">
-                Phone number <span className="text-red-600">*</span>
+                Phone Number <span className="text-red-600">*</span>
               </label>
               <Controller
                 name="phone"
                 control={control}
                 rules={{ required: "Phone number is required" }}
                 render={({ field }) => (
-                  <div
-                    className={`relative mt-2 rounded-lg bg-[#F4F5F7] transition-colors ${
-                      !isEditing ? "opacity-100!" : ""
-                    } ${
-                      isEditing &&
-                      "focus-within:border focus-within:border-gray-400 focus-within:ring-3 focus-within:ring-ring/50"
+                  <Input
+                    {...field}
+                    id="phone"
+                    type="tel"
+                    placeholder="Enter phone number"
+                    disabled={!isEditing}
+                    className={`mt-2 ${
+                      !isEditing ? "opacity-100! cursor-text! select-text" : ""
                     }`}
-                  >
-                    <PhoneInput
-                      defaultCountry="ie"
-                      value={field.value}
-                      onChange={field.onChange}
-                      disabled={!isEditing}
-                      className="w-full! border rounded-lg"
-                      countrySelectorStyleProps={{
-                        buttonClassName: `
-                        !h-12 
-                        !bg-transparent 
-                        !border-0 
-                        !px-1.5 
-                        !rounded-l-lg
-                        !outline-none
-                        ${!isEditing ? "!cursor-text" : ""}
-                      `,
-                        dropdownStyleProps: {
-                          className: "!rounded-xl !p-4 !z-50",
-                          listItemClassName: "!py-2 hover:!bg-primary/5",
-                        },
-                      }}
-                      inputClassName={`
-                      !w-full 
-                      !h-12 
-                      !bg-transparent 
-                      !border-none 
-                      !rounded-r-lg
-                      !text-base
-                      !outline-none
-                      !shadow-none
-                      placeholder:!text-muted-foreground
-                      focus:!ring-0
-                      ${!isEditing ? "!cursor-text" : ""}
-                    `}
-                    />
-                  </div>
+                  />
                 )}
               />
               {errors.phone && (
@@ -190,7 +262,7 @@ const MyProfilePage = () => {
           {/* Action Buttons */}
           <div className="mt-6 flex items-center gap-4 lg:gap-6 justify-end lg:justify-start">
             {!isEditing ? (
-              <Button type="button" className="px-6" onClick={handleEdit}>
+              <Button type="button" className="px-6" onClick={() => setIsEditing(true)}>
                 Edit <PenLine className="ml-2 h-4 w-4" />
               </Button>
             ) : (
@@ -200,11 +272,12 @@ const MyProfilePage = () => {
                   variant="secondary"
                   className="px-6"
                   onClick={handleDiscard}
+                  disabled={isUpdating}
                 >
                   Discard
                 </Button>
-                <Button type="submit" className="px-6">
-                  Save changes
+                <Button type="submit" className="px-6" disabled={isUpdating || isUploading}>
+                  {isUpdating || isUploading ? "Saving..." : "Save changes"}
                 </Button>
               </>
             )}
