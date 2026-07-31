@@ -2,6 +2,7 @@
 
 import { Bell, PanelLeftOpen, User } from "lucide-react";
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import DashboardBreadcrumb from "./DashboardBreadcrumb";
 import NotificationDropdown from "@/components/ui/NotificationDropdown";
 
@@ -30,6 +31,29 @@ const user: {
 };
 
 const Navbar = ({ setIsOpen }: NavbarProps) => {
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setIsNotificationOpen(false);
+      }
+    };
+
+    if (isNotificationOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isNotificationOpen]);
+
   return (
     <div className="h-18 border-b border-gray-300 px-4 lg:px-6 flex items-center justify-between z-501 bg-[#F9FAFB]">
       <div className="flex items-center gap-4 text-text-primary">
@@ -38,17 +62,29 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
         </button>
 
         <div className="font-medium">
-            <DashboardBreadcrumb />
+          <DashboardBreadcrumb />
         </div>
       </div>
 
       <div>
         <div className="flex items-center gap-2">
-          
-          <div className="relative size-8 border border-[#DFE1E7] rounded-full flex justify-center items-center">
-            <Bell size={16} />
-            <NotificationDropdown/>
-            <div className="size-1.25 bg-[#DF1C41] rounded-full absolute ring-2 ring-[#F9FAFB] top-2 right-2"></div>
+          <div className="md:relative">
+            <div
+              className="relative size-8 border border-[#DFE1E7] rounded-full flex justify-center items-center"
+              ref={notificationRef}
+            >
+              <button
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                className="flex items-center justify-center w-full h-full cursor-pointer"
+              >
+                <Bell size={16} />
+              </button>
+              <div className="size-1.25 bg-[#DF1C41] rounded-full absolute ring-2 ring-[#F9FAFB] top-2 right-2"></div>
+            </div>
+            <NotificationDropdown
+              isOpen={isNotificationOpen}
+              onClose={() => setIsNotificationOpen(false)}
+            />
           </div>
           <div className="w-px bg-[#DFE1E7] h-6"></div>
           <div className="flex items-center gap-2 space-y-1 justify-center">
