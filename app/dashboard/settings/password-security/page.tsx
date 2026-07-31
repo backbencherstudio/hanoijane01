@@ -4,6 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import {
+  useChangePasswordMutation,
+} from "@/src/redux/api/auth/authApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { toast } from "sonner";
 
 interface PasswordFormData {
   currentPassword: string;
@@ -15,6 +20,8 @@ const PasswordAndSecurityPage = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
 
   const {
     register,
@@ -32,13 +39,18 @@ const PasswordAndSecurityPage = () => {
 
   const newPassword = watch("newPassword");
 
-  const onSubmit = (data: PasswordFormData) => {
-    console.log("Password Update Data:", {
-      currentPassword: data.currentPassword,
-      newPassword: data.newPassword,
-    });
-    // Here you would send data to your API
-    reset();
+  const onSubmit = async (data: PasswordFormData) => {
+    try {
+      await changePassword({
+        oldPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      }).unwrap();
+
+      toast.success("Password changed successfully");
+      reset();
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to change password"));
+    }
   };
 
   return (
@@ -69,8 +81,8 @@ const PasswordAndSecurityPage = () => {
                   {...register("currentPassword", {
                     required: "Current password is required",
                     minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
+                      value: 8,
+                      message: "Password must be at least 8 characters",
                     },
                   })}
                 />
@@ -105,8 +117,8 @@ const PasswordAndSecurityPage = () => {
                   {...register("newPassword", {
                     required: "New password is required",
                     minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
+                      value: 8,
+                      message: "Password must be at least 8 characters",
                     },
                   })}
                 />
@@ -162,8 +174,8 @@ const PasswordAndSecurityPage = () => {
 
           {/* Action Buttons */}
           <div className="mt-6 flex justify-end lg:justify-start">
-            <Button type="submit" className="px-6">
-              Update Password
+            <Button type="submit" className="px-6" disabled={isChangingPassword}>
+              {isChangingPassword ? "Updating..." : "Update Password"}
             </Button>
           </div>
         </form>

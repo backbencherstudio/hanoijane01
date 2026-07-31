@@ -15,6 +15,7 @@ import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { setAccessToken } from "@/src/redux/features/auth/authSlice";
+import { setAccessTokenInCookie } from "@/lib/cookies";
 
 interface FormData {
   email: string;
@@ -46,11 +47,12 @@ const LoginForm = () => {
     const toastId = toast.loading("Signing in...");
 
     try {
-     const res = await signIn({
+      const res = await signIn({
         email: data.email,
         password: data.password,
       }).unwrap();
-      localStorage.setItem("accessToken", res.data.token);
+      // localStorage.setItem("accessToken", res.data.token);
+      setAccessTokenInCookie(res.data.token);
       dispatch(setAccessToken(res.data.token));
 
       toast.success("Welcome back!", {
@@ -147,10 +149,6 @@ const LoginForm = () => {
                 }`}
                 {...register("password", {
                   required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
                 })}
               />
               {show ? (

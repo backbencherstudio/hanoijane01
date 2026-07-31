@@ -9,6 +9,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { AiOutlineLogout } from "react-icons/ai";
 import { toast } from "sonner";
+import { removeAccessToken } from "@/lib/cookies";
 
 const LogOutModal = ({
   isOpen,
@@ -28,7 +29,8 @@ const LogOutModal = ({
 
     try {
       await logout().unwrap();
-      localStorage.removeItem("accessToken");
+      // localStorage.removeItem("accessToken");
+      removeAccessToken();
       dispatch(clearAuth());
       dispatch(baseApi.util.resetApiState());
       toast.success("Signed out successfully.", {

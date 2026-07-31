@@ -7,10 +7,10 @@ import { useForm, Controller } from "react-hook-form";
 import {
   useGetMeQuery,
   useUpdateProfileMutation,
-  useUploadAttachmentMutation,
 } from "@/src/redux/api/auth/authApi";
 import { toast } from "sonner";
 import Image from "next/image";
+import customImageLoader from "@/lib/imageLoader";
 
 interface ProfileFormData {
   name: string;
@@ -24,7 +24,6 @@ const MyProfilePage = () => {
 
   const { data: meData, isLoading: isUserLoading } = useGetMeQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
-  const [uploadAttachment, { isLoading: isUploading }] = useUploadAttachmentMutation();
 
   const user = meData?.data;
 
@@ -75,14 +74,7 @@ const MyProfilePage = () => {
 
       // Upload avatar if a new file is selected
       if (selectedFile) {
-        const uploadFormData = new FormData();
-        uploadFormData.append("file", selectedFile);
-        
-        const uploadResult = await uploadAttachment(uploadFormData).unwrap();
-        
-        if (uploadResult.success && uploadResult.data) {
-          formData.append("avatar", uploadResult.data.filePath);
-        }
+        formData.append("avatar", selectedFile);
       }
 
       await updateProfile(formData).unwrap();
@@ -137,12 +129,20 @@ const MyProfilePage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : user?.avatar ? (
+                    // <Image
+                    //   src={user.avatar}
+                    //   alt="Profile"
+                    //   width={128}
+                    //   height={128}
+                    //   className="w-full h-full object-cover"
+                    // />
                     <Image
                       src={user.avatar}
                       alt="Profile"
                       width={128}
                       height={128}
                       className="w-full h-full object-cover"
+                      loader={customImageLoader}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -226,7 +226,9 @@ const MyProfilePage = () => {
                   />
                 )}
               />
-              <p className="text-sm text-gray-400 mt-1">Email cannot be changed</p>
+              <p className="text-sm text-gray-400 mt-1">
+                Email cannot be changed
+              </p>
             </div>
 
             {/* Phone */}
@@ -262,7 +264,11 @@ const MyProfilePage = () => {
           {/* Action Buttons */}
           <div className="mt-6 flex items-center gap-4 lg:gap-6 justify-end lg:justify-start">
             {!isEditing ? (
-              <Button type="button" className="px-6" onClick={() => setIsEditing(true)}>
+              <Button
+                type="button"
+                className="px-6"
+                onClick={() => setIsEditing(true)}
+              >
                 Edit <PenLine className="ml-2 h-4 w-4" />
               </Button>
             ) : (
@@ -276,8 +282,8 @@ const MyProfilePage = () => {
                 >
                   Discard
                 </Button>
-                <Button type="submit" className="px-6" disabled={isUpdating || isUploading}>
-                  {isUpdating || isUploading ? "Saving..." : "Save changes"}
+                <Button type="submit" className="px-6" disabled={isUpdating}>
+                  {isUpdating ? "Saving..." : "Save changes"}
                 </Button>
               </>
             )}

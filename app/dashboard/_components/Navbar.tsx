@@ -3,6 +3,7 @@
 import { Bell, PanelLeftOpen, User } from "lucide-react";
 import Image from "next/image";
 import DashboardBreadcrumb from "./DashboardBreadcrumb";
+import NotificationDropdown from "@/components/ui/NotificationDropdown";
 
 type NavbarProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,6 +47,7 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
           
           <div className="relative size-8 border border-[#DFE1E7] rounded-full flex justify-center items-center">
             <Bell size={16} />
+            <NotificationDropdown/>
             <div className="size-1.25 bg-[#DF1C41] rounded-full absolute ring-2 ring-[#F9FAFB] top-2 right-2"></div>
           </div>
           <div className="w-px bg-[#DFE1E7] h-6"></div>
