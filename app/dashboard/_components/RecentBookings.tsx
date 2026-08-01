@@ -1,73 +1,79 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import CustomTable from "@/components/ui/Table";
 import { Column } from "@/types/table";
 import { GoDotFill } from "react-icons/go";
-
-interface Booking {
-  id: string;
-  ref: string;
-  company: string;
-  stand: string;
-  amount: number;
-  status: "reserved" | "paid" | "overdue" | "pending";
-  date: string;
-}
-
-const data: Booking[] = [
-  {
-    id: "1",
-    ref: "BK-1042",
-    company: "Abstergo Ltd.",
-    stand: "A12",
-    amount: 3200,
-    status: "reserved",
-    date: "10 Jun 2026",
-  },
-  {
-    id: "2",
-    ref: "BK-1043",
-    company: "Barone LLC.",
-    stand: "A13",
-    amount: 3200,
-    status: "paid",
-    date: "10 Jun 2026",
-  },
-  {
-    id: "3",
-    ref: "BK-1044",
-    company: "Acme Co.",
-    stand: "A14",
-    amount: 3200,
-    status: "overdue",
-    date: "10 Jun 2026",
-  },
-  {
-    id: "4",
-    ref: "BK-1045",
-    company: "Wayne Enterprises",
-    stand: "B01",
-    amount: 4500,
-    status: "pending",
-    date: "09 Jun 2026",
-  },
-  {
-    id: "5",
-    ref: "BK-1046",
-    company: "Stark Industries",
-    stand: "C03",
-    amount: 2800,
-    status: "paid",
-    date: "08 Jun 2026",
-  },
-];
+import { useGetAdminBookingsQuery } from "@/src/redux/api/booking/bookingApi";
+import { AdminBooking } from "@/types/booking.types";
+import { CheckCheck, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 const RecentBookings = () => {
-  const columns: Column<Booking>[] = [
+  const [copiedRef, setCopiedRef] = useState<string | null>(null);
+  const { data, isLoading, isFetching } = useGetAdminBookingsQuery({
+    status: "all",
+    page: 1,
+    limit: 5,
+  });
+
+  const bookings = data?.data || [];
+
+  // Map AdminBooking to the table format
+  const mappedBookings = bookings.map((booking: AdminBooking) => ({
+    id: booking.id,
+    ref: booking.id,
+    company: booking.exhibitor,
+    stand: booking.standNumber,
+    amount: booking.pricePerDay,
+    status: booking.paymentStatus.toLowerCase() as "reserved" | "paid" | "overdue" | "pending",
+    date: new Date(booking.bookingDate).toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }),
+  }));
+  const columns: Column<typeof mappedBookings[0]>[] = [
     {
-      header: "Ref",
+      header: "Booking ID",
       accessor: "ref",
+      render: (value) => {
+        const bookingId = value as string;
+        const MAX_LENGTH = 28;
+        const isLong = bookingId.length > MAX_LENGTH;
+        const display = isLong
+          ? `${bookingId.slice(0, MAX_LENGTH)}...`
+          : bookingId;
+
+        const handleCopy = async () => {
+          try {
+            await navigator.clipboard.writeText(bookingId);
+            setCopiedRef(bookingId);
+            toast.success("Booking ID copied to clipboard");
+            setTimeout(() => {
+              setCopiedRef((prev: string | null) => (prev === bookingId ? null : prev));
+            }, 2000);
+          } catch {
+            toast.error("Failed to copy booking ID");
+          }
+        };
+
+        return (
+          <span
+            className="ct-text group inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer"
+            title={isLong ? bookingId : "Click to copy"}
+            onClick={handleCopy}
+          >
+            <span className="ct-text">{display}</span>
+            {copiedRef === bookingId ? (
+              <CheckCheck className="size-3.5 text-green-500 shrink-0" />
+            ) : (
+              <Copy className="size-3.5 text-gray-400 group-hover:text-primary shrink-0" />
+            )}
+          </span>
+        );
+      },
       cellClassName: "px-4 py-3 font-medium",
     },
     {
@@ -99,6 +105,9 @@ const RecentBookings = () => {
           cancel: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
           paid: "bg-[#E9FAF7] border border-[#D3F4EF] text-[#22CAAD]",
           pending: "bg-[#FBF5EB] border border-[#EDCEBF] text-[#D79930]",
+          unpaid: "bg-[#FBF5EB] border border-[#EDCEBF] text-[#D79930]",
+          refunded: "bg-gray-100 border border-gray-200 text-gray-700",
+          canceled: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
         };
         return (
           <span
@@ -132,10 +141,10 @@ const RecentBookings = () => {
         </Link>
       </div>
       <CustomTable
-        data={data}
+        data={mappedBookings}
         columns={columns}
         showIndex={false}
-        isLoading={false}
+        isLoading={isLoading || isFetching}
         emptyMessage="No recent bookings"
         pagination={undefined}
         rounded="rounded-none"
