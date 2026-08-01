@@ -16,7 +16,11 @@ import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 import { toast } from "sonner";
 
 const MapContent = () => {
-  const { data, isLoading } = useGetExhibitionMapQuery(null);
+  const { data, isLoading } = useGetExhibitionMapQuery(null, {
+    // Always refetch when visiting the map so stand availability is up to date
+    // after bookings/payments (even if RTK Query still has cached data)
+    refetchOnMountOrArgChange: true,
+  });
   const halls = data?.data?.halls;
   const apiStands = data?.data?.stands ?? [];
   const dispatch = useDispatch();

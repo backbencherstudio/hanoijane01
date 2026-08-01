@@ -19,6 +19,7 @@ export const bookingApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Exhibition", "Booking", "Stand"],
     }),
     getUserBooking: builder.query<
       GetUserBookingResponse,

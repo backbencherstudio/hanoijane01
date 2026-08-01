@@ -11,7 +11,8 @@ import { resetBookingInfo } from "@/src/redux/features/bookingSlice";
 import StripeProvider from "@/providers/StripeProvider";
 import StripeCardForm, { StripeCardFormRef } from "./StripeCardForm";
 import { useCreatePaymentIntentMutation } from "@/src/redux/api/payment/paymentApi";
-import { useGetExhibitionMapQuery, useGetExhibitionStandQuery } from "@/src/redux/api/exhibition/exhibitionApi";
+import { useGetExhibitionStandQuery } from "@/src/redux/api/exhibition/exhibitionApi";
+import { baseApi } from "@/src/redux/api/baseApi";
 import { toast } from "sonner";
 
 interface PaymentFormProps {
@@ -43,7 +44,6 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const stripeCardFormRef = useRef<StripeCardFormRef | null>(null);
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
-  const { refetch: refetchExhibitionMap } = useGetExhibitionMapQuery(null);
   const hasFetchedRef = useRef(false);
   const isClient = typeof window !== "undefined";
 
@@ -116,10 +116,19 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
 
       if (paymentResult.success) {
         toast.success("Payment successful!");
-        
-        // Refetch exhibition map data to update stand availability
-        refetchExhibitionMap();
-        
+
+        // Force a fresh /api/exhibition/latest-one request so the next map render
+        // sees the updated stand availability immediately after payment.
+        await fetch("/api/exhibition/latest-one", {
+          cache: "no-store",
+        });
+
+        // Mark exhibition/booking/stand caches as stale so /exhibition-map
+        // refetches fresh stand availability after payment (survives navigation)
+        dispatch(
+          baseApi.util.invalidateTags(["Exhibition", "Booking", "Stand"]),
+        );
+
         dispatch(resetBookingInfo());
         sessionStorage.removeItem("bookingState");
         router.push(`/booking-success?payment_option=now`);

@@ -28,6 +28,8 @@ export const paymentApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      // Do NOT invalidate here — payment intent is created before payment completes.
+      // Exhibition/Booking tags are invalidated in PaymentForm after Stripe success.
     }),
     getUserTransactions: builder.query<
       GetUserTransactionsResponse,

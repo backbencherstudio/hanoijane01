@@ -39,7 +39,9 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full flex flex-col"
       >
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          {children}
+        </ReduxProvider>
          <Toaster richColors theme="light" position="top-right" />
       </body>
     </html>

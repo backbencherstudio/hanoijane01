@@ -3,9 +3,13 @@
 import { useState } from "react";
 import Navbar from "./_components/Navbar";
 import Sidebar from "./_components/Sidebar";
+import { useSocketNotification } from "@/hooks/useSocketNotification";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Initialize socket connection for real-time notifications
+  useSocketNotification();
 
   return (
     <div className="h-screen overflow-hidden bg-[#f9fafb]">

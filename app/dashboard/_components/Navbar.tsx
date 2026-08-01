@@ -7,6 +7,8 @@ import DashboardBreadcrumb from "./DashboardBreadcrumb";
 import NotificationDropdown from "@/components/ui/NotificationDropdown";
 import customImageLoader from "@/lib/imageLoader";
 import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
+import { useGetNotificationsQuery } from "@/src/redux/api/notification/notificationApi";
+import { useAppSelector } from "@/src/redux/hooks";
 
 type NavbarProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,6 +39,28 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
   const notificationRef = useRef<HTMLDivElement>(null);
   const { data, isLoading } = useGetMeQuery();
   const user = data?.data;
+
+  // Get unread notification count from the notification slice (real-time socket updates)
+  const { socketNotifications } = useAppSelector((state) => state.notification);
+
+  // Fetch API notifications to get the unreadCount from metadata
+  // This runs always (no skip) so the badge shows the correct count
+  const { data: notificationsData } = useGetNotificationsQuery(
+    { page: 1, limit: 8 },
+    { skip: false }
+  );
+
+  const apiNotifications = notificationsData?.data || [];
+  const apiUnreadCount = notificationsData?.metaData?.unreadCount || 0;
+
+  // Calculate socket unread count, excluding notifications already in API data (avoids double-counting)
+  const apiNotificationIds = new Set(apiNotifications.map((n) => n.id));
+  const socketUnreadCount = socketNotifications.filter(
+    (n) => !n.readAt && !apiNotificationIds.has(n.id)
+  ).length;
+
+  // Total unread count = API unread count + socket unread count (excluding duplicates)
+  const unreadCount = apiUnreadCount + socketUnreadCount;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -72,10 +96,9 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
 
       <div>
         <div className="flex items-center gap-2">
-          <div className="md:relative">
+          <div className="md:relative" ref={notificationRef}>
             <div
               className="relative size-8 border border-[#DFE1E7] rounded-full flex justify-center items-center"
-              ref={notificationRef}
             >
               <button
                 onClick={() => setIsNotificationOpen(!isNotificationOpen)}
@@ -83,7 +106,11 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
               >
                 <Bell size={16} />
               </button>
-              <div className="size-1.25 bg-[#DF1C41] rounded-full absolute ring-2 ring-[#F9FAFB] top-2 right-2"></div>
+              {unreadCount > 0 && (
+                <div className="min-w-4 h-4 px-1 bg-[#DF1C41] rounded-full absolute -top-1 -right-1 flex items-center justify-center text-[10px] font-semibold text-white ring-2 ring-[#F9FAFB]">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </div>
+              )}
             </div>
             <NotificationDropdown
               isOpen={isNotificationOpen}

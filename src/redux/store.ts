@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
 import bookingReducer from "./features/bookingSlice";
 import profileEditReducer from "./features/profile/profileEditSlice";
+import notificationReducer from "./features/notification/notificationSlice";
 import { baseApi } from "./api/baseApi";
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     booking: bookingReducer,
     profileEdit: profileEditReducer,
+    notification: notificationReducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },
 

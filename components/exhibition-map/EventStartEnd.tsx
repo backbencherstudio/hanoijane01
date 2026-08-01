@@ -24,7 +24,9 @@ const formatEventRange = (startedAt: string, endedAt: string) => {
 };
 
 const EventStartEnd = () => {
-  const { data, isLoading } = useGetExhibitionMapQuery(null);
+  const { data, isLoading } = useGetExhibitionMapQuery(null, {
+    refetchOnMountOrArgChange: true,
+  });
   const exhibition = data?.data;
 
   if (isLoading || !exhibition) {
