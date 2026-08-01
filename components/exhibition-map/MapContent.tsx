@@ -58,8 +58,29 @@ const MapContent = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (isLoading)
-    return <div className="text-5xl text-center">Map data loading...</div>;
+  if (isLoading) {
+    return (
+      <section className="w-full mt-12 flex flex-col lg:flex-row gap-6 animate-pulse">
+        <div className="w-full lg:w-[320px] px-4 py-5 rounded-[20px] bg-white shadow-sm">
+          <div className="h-31 w-37.75 mx-auto rounded-lg bg-slate-200" />
+          <div className="mt-6 h-6 w-32 rounded bg-slate-200" />
+          <div className="mt-4 space-y-3">
+            <div className="h-5 w-full rounded bg-slate-100" />
+            <div className="h-5 w-5/6 rounded bg-slate-100" />
+            <div className="h-5 w-4/6 rounded bg-slate-100" />
+            <div className="h-5 w-2/3 rounded bg-slate-100" />
+          </div>
+        </div>
+
+        <div className="w-full h-fit bg-white overflow-hidden relative p-4 rounded-[20px] shadow-sm">
+          <div className="flex items-center justify-center mb-4">
+            <div className="h-8 w-36 rounded bg-slate-200" />
+          </div>
+          <div className="aspect-998/1274 w-full rounded-[16px] bg-slate-100" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full  mt-12 flex flex-col lg:flex-row gap-6">
