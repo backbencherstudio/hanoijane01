@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { getCurrentOverviewDate } from "@/lib/utils";
 import CustomTable from "@/components/ui/Table";
 import { Column } from "@/types/table";
@@ -10,7 +10,7 @@ import { UserAttachment } from "@/types/userAttachment";
 import Image from "next/image";
 import customImageLoader from "@/lib/imageLoader";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, Search } from "lucide-react";
 import JSZip from "jszip";
 
 // Simple SVG placeholder for avatars
@@ -22,11 +22,21 @@ const DocumentReview = () => {
   const [page, setPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState<UserAttachment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const limit = 8;
+
+  // Debounce search
+  const debouncedSearch = useMemo(() => {
+    const timer = setTimeout(() => {
+      // This will trigger the API call
+    }, 1000);
+    return search;
+  }, [search]);
 
   const { data, isLoading, isFetching } = useGetUserAttachmentsQuery({
     page,
     limit,
+    query: debouncedSearch || undefined,
   });
 
   const users = data?.data || [];
@@ -200,9 +210,22 @@ const DocumentReview = () => {
 
       {/* Table */}
       <div className="bg-white rounded-2xl px-5 py-4 mt-9">
-        <p className="text-text-primary text-lg font-semibold mb-4">
-          User list with document
-        </p>
+        <div className="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <p className="text-text-primary text-lg font-semibold ">
+            User list with document
+          </p>
+          {/* Search Input */}
+          <div className="relative w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[#5E5F79]" />
+            <input
+              type="text"
+              placeholder="Search by name, email, company, or file..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 pr-3.5 py-2.25 rounded-lg text-sm text-[#5E5F79] font-medium border border-[#DCE4E8] bg-white outline-none focus:border-primary transition w-full sm:w-80"
+            />
+          </div>
+        </div>
         <CustomTable
           data={users}
           columns={columns}

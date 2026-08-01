@@ -207,7 +207,7 @@ function SidebarContent({ isOpen, setIsOpen }: SidebarProps) {
           h-screen w-68
           bg-[#114263]
           text-white
-          z-50
+          z-502
           transition-transform duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
