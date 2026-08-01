@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useGetAllTransactionsQuery } from "@/src/redux/api/payment/paymentApi";
 import { Transaction } from "@/types/transaction.types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCurrencySymbol, cn } from "@/lib/utils";
+import { getCurrencySymbol, cn, getCurrentOverviewDate } from "@/lib/utils";
 
 const PaymentTrackingPageContent = () => {
   const router = useRouter();
@@ -17,6 +17,9 @@ const PaymentTrackingPageContent = () => {
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
   const limitParam = parseInt(searchParams.get("limit") || "8", 10);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  
+  // Get current date for display
+  const { year: currentYear, formattedDate } = getCurrentOverviewDate();
 
   const copyToClipboard = async (text: string, id: string) => {
     try {
@@ -263,7 +266,7 @@ const PaymentTrackingPageContent = () => {
             Payment Tracking
           </h2>
           <p className="text-sm text-[#64748B] mt-3">
-            Industry Expo 2027, Payment transactions overview
+            Industry Expo {currentYear}, Overview for {formattedDate}
           </p>
         </div>
       </div>

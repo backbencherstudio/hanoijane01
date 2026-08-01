@@ -10,6 +10,7 @@ import {
   UpdateUserResponse,
   DeleteUserResponse,
 } from "@/types/userList";
+import { UserAttachment, GetUserAttachmentsResponse } from "@/types/userAttachment";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -58,6 +59,14 @@ export const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getUserAttachments: builder.query<GetUserAttachmentsResponse, { page: number; limit: number; query?: string }>({
+      query: (params) => ({
+        url: "/admin/user/attachments",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["User"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -69,4 +78,5 @@ export const {
   useGetUserByIdQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useGetUserAttachmentsQuery,
 } = userApi;

@@ -22,6 +22,7 @@ import type { AdminBooking } from "@/types/booking.types";
 import { CheckCheck, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getCurrentOverviewDate } from "@/lib/utils";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -48,6 +49,9 @@ const BookingManagementPageContent = () => {
     isOpen: false,
     id: null,
   });
+
+  // Get current date for display
+  const { year: currentYear, formattedDate } = getCurrentOverviewDate();
 
   const { data: bookingStatsData, isLoading: isStateLoading } =
     useGetBookingStatsQuery(null);
@@ -300,7 +304,7 @@ const BookingManagementPageContent = () => {
             Booking Management
           </h2>
           <p className="text-sm text-[#64748B] mt-3">
-            Industry Expo 2027, Overview for Wednesday, 10 June 2026
+            Industry Expo {currentYear}, Overview for {formattedDate}
           </p>
         </div>
       </div>

@@ -2,8 +2,11 @@ import React from "react";
 import StandOverviewChart from "./_components/StandOverviewChart";
 import RecentBookings from "./_components/RecentBookings";
 import DashboardStats from "./_components/DashboardStats";
+import { getCurrentOverviewDate } from "@/lib/utils";
 
 const DashboardHome = () => {
+  const { year: currentYear, formattedDate } = getCurrentOverviewDate();
+  
   return (
     <div>
       {/* heading */}
@@ -13,7 +16,7 @@ const DashboardHome = () => {
             Admin Dashboard
           </h2>
           <p className="text-sm text-[#64748B] mt-3">
-            Industry Expo 2027, Overview for Wednesday, 10 June 2026
+            Industry Expo {currentYear}, Overview for {formattedDate}
           </p>
         </div>
       </div>

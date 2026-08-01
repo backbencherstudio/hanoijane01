@@ -152,12 +152,12 @@ const LoginForm = () => {
                 })}
               />
               {show ? (
-                <EyeOff
+                <Eye
                   onClick={() => setShow(false)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 cursor-pointer"
                 />
               ) : (
-                <Eye
+                <EyeOff
                   onClick={() => setShow(true)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 cursor-pointer"
                 />

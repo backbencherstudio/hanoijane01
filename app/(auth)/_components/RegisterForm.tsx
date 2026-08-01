@@ -215,12 +215,12 @@ const RegisterForm = () => {
                   })}
                 />
                 {showPassword ? (
-                  <EyeOff
+                  <Eye
                     onClick={() => setShowPassword(false)}
                     className="absolute mt-1 mr-2 right-0 top-1/2 -translate-y-1/2 cursor-pointer"
                   />
                 ) : (
-                  <Eye
+                  <EyeOff
                     onClick={() => setShowPassword(true)}
                     className="absolute mt-1 mr-2 right-0 top-1/2 -translate-y-1/2 cursor-pointer"
                   />
@@ -255,12 +255,12 @@ const RegisterForm = () => {
                   })}
                 />
                 {showConfirmPassword ? (
-                  <EyeOff
+                  <Eye
                     onClick={() => setShowConfirmPassword(false)}
                     className="absolute mt-1 mr-2 right-0 top-1/2 -translate-y-1/2 cursor-pointer"
                   />
                 ) : (
-                  <Eye
+                  <EyeOff
                     onClick={() => setShowConfirmPassword(true)}
                     className="absolute mt-1 mr-2 right-0 top-1/2 -translate-y-1/2 cursor-pointer"
                   />

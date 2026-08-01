@@ -8,11 +8,15 @@ import CreateStandPriceModal, {
   StandPriceData,
 } from "./_components/CreateStandPriceModal";
 import EditStandPriceModal from "./_components/EditStandPriceModal";
+import { getCurrentOverviewDate } from "@/lib/utils";
 
 const StandPriceManagementPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedStandId, setSelectedStandId] = useState<string | null>(null);
+  
+  // Get current date for display
+  const { year: currentYear, formattedDate } = getCurrentOverviewDate();
 
   const handleEdit = (id: string) => {
     setSelectedStandId(id);
@@ -34,7 +38,7 @@ const StandPriceManagementPage = () => {
             Price Management
           </h2>
           <p className="text-sm text-[#64748B] mt-3">
-            Industry Expo 2027, Overview for Wednesday, 10 June 2026
+            Industry Expo {currentYear}, Overview for {formattedDate}
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>

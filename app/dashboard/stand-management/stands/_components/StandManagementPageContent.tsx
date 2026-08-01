@@ -27,6 +27,7 @@ import {
   useGetAdminStandsQuery,
 } from "@/src/redux/api/exhibition/exhibitionApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getCurrentOverviewDate } from "@/lib/utils";
 
 type ViewType = "map" | "list";
 
@@ -100,6 +101,9 @@ const StandManagementPageContent = () => {
     page,
     limit,
   });
+
+  // Get current date for display
+  const { year: currentYear, formattedDate } = getCurrentOverviewDate();
 
   const statsData: StandStats[] = standStats?.data ?? [];
   const apiStands = exhibitionData?.data?.stands ?? [];
@@ -311,7 +315,7 @@ const StandManagementPageContent = () => {
             Stand Management
           </h2>
           <p className="text-sm text-[#64748B] mt-3">
-            Industry Expo 2027, Overview for Wednesday, 10 June 2026
+            Industry Expo {currentYear}, Overview for {formattedDate}
           </p>
         </div>
         <Button onClick={toggleView}>

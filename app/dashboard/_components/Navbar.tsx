@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import DashboardBreadcrumb from "./DashboardBreadcrumb";
 import NotificationDropdown from "@/components/ui/NotificationDropdown";
+import customImageLoader from "@/lib/imageLoader";
+import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 
 type NavbarProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,6 +35,8 @@ const user: {
 const Navbar = ({ setIsOpen }: NavbarProps) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const { data, isLoading } = useGetMeQuery();
+  const user = data?.data;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -88,22 +92,23 @@ const Navbar = ({ setIsOpen }: NavbarProps) => {
           </div>
           <div className="w-px bg-[#DFE1E7] h-6"></div>
           <div className="flex items-center gap-2 space-y-1 justify-center">
-            {user?.image ? (
+            {user?.avatar ? (
               <Image
-                src={user.image}
+                src={user.avatar}
                 alt={user.name}
                 height={32}
                 width={32}
-                className="object-cover overflow-hidden rounded-full size-8 shrink-0"
+                className="object-cover overflow-hidden rounded-full size-8 shrink-0 border"
+                loader={customImageLoader}
               />
             ) : (
-              <div className="size-12 rounded-full bg-gray-300 text-gray-600 flex justify-center items-center shrink-0">
-                <User size={24} />
+              <div className="size-8 rounded-full bg-gray-300 text-gray-600 flex justify-center items-center shrink-0">
+                <User size={20} />
               </div>
             )}
             <div className="hidden md:flex flex-col justify-between">
               <p className="text-sm font-semibold text-text-primary">
-                {user.name}
+                {user?.name?user?.name:"User Name"} 
               </p>
               <p className="text-sm text-muted-foreground">Admin Panel</p>
             </div>

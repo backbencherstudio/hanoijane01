@@ -129,13 +129,6 @@ const MyProfilePage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : user?.avatar ? (
-                    // <Image
-                    //   src={user.avatar}
-                    //   alt="Profile"
-                    //   width={128}
-                    //   height={128}
-                    //   className="w-full h-full object-cover"
-                    // />
                     <Image
                       src={user.avatar}
                       alt="Profile"

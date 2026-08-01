@@ -7,6 +7,7 @@ import {
   Banknote,
   CalendarRange,
   ChevronDown,
+  FileText,
   LayoutDashboard,
   Settings,
   Users,
@@ -120,6 +121,11 @@ const menuItems: MenuItem[] = [
     title: "User Management",
     href: "/dashboard/user-management",
     icon: <Users size={18} />,
+  },
+  {
+    title: "Document Review",
+    href: "/dashboard/document-review",
+    icon: <FileText  size={18} />,
   },
   // {
   //   title: "Document Review",

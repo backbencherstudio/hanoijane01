@@ -35,3 +35,30 @@ export const getCurrencySymbol = (currency: string | null): string | null => {
   if (!currency) return null;
   return symbols[currency.toUpperCase()] || currency.toUpperCase();
 };
+
+// Helper function to format date as "Day, DD Month YYYY"
+export const formatOverviewDate = (date: Date): string => {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  const dayName = days[date.getDay()];
+  const day = date.getDate();
+  const monthName = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${dayName}, ${day} ${monthName} ${year}`;
+};
+
+// Get current year
+export const getCurrentYear = (): number => {
+  return new Date().getFullYear();
+};
+
+// Get current date and formatted string for overview sections
+export const getCurrentOverviewDate = (): { year: number; formattedDate: string } => {
+  const currentDate = new Date();
+  return {
+    year: currentDate.getFullYear(),
+    formattedDate: formatOverviewDate(currentDate),
+  };
+};

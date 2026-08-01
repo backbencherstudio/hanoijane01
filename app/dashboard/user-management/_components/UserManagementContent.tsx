@@ -18,6 +18,7 @@ import {
 } from "@/src/redux/api/user/userApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserListItem } from "@/types/userList";
+import { getCurrentOverviewDate } from "@/lib/utils";
 
 const UserManagementContent = () => {
   const router = useRouter();
@@ -26,6 +27,9 @@ const UserManagementContent = () => {
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [updateUserModalOpen, setUpdateUserModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserListItem | null>(null);
+
+  // Get current date for display
+  const { year: currentYear, formattedDate } = getCurrentOverviewDate();
 
   const {
     data: userStats,
@@ -275,7 +279,7 @@ const UserManagementContent = () => {
             User Management
           </h2>
           <p className="text-sm text-[#64748B] mt-3">
-            Industry Expo 2027, Admin user management
+            Industry Expo {currentYear}, Overview for {formattedDate}
           </p>
         </div>
       </div>

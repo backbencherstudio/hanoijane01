@@ -5,20 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import AddOnContactCTA from "../pricing/_components/AddOnContactCTA";
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
-import {
-  setImage,
-  setPreview,
-} from "@/src/redux/features/profile/profileEditSlice";
+import { useAppSelector } from "@/src/redux/hooks";
+import { setEditing } from "@/src/redux/features/profile/profileEditSlice";
 import { Button } from "@/components/ui/button";
 import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const dispatch = useAppDispatch();
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const editing = useAppSelector((state) => state.profileEdit.editing);
-  const preview = useAppSelector((state) => state.profileEdit.preview);
   const { data: meData } = useGetMeQuery();
   const user = meData?.data;
 
@@ -33,8 +30,8 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
 
     if (!file) return;
 
-    dispatch(setImage(file));
-    dispatch(setPreview(URL.createObjectURL(file)));
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
   };
   return (
     <div className="bg-[#fbfbfd]">
