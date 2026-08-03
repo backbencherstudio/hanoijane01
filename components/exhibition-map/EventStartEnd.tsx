@@ -17,10 +17,11 @@ const formatEventRange = (startedAt: string, endedAt: string) => {
 
   const startMonth = start.toLocaleDateString("en-US", { month: "short" });
   const startDay = start.getDate();
+  const endMonth = end.toLocaleDateString("en-US", { month: "short" });
   const endDay = end.getDate();
   const year = start.getFullYear();
 
-  return `${startMonth} ${startDay}–${endDay}, ${year}`;
+  return `${startMonth} ${startDay} – ${endMonth} ${endDay}, ${year}`;
 };
 
 const EventStartEnd = () => {
