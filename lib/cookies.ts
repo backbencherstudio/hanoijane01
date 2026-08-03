@@ -9,6 +9,9 @@ export const setAccessTokenInCookie = (token: string) => {
     secure: process.env.NODE_ENV === "production",
   });
 };
+export const setRoleInCookie = (role: string) => {
+  Cookies.set("userRole", role);
+};
 
 export const getAccessToken = () => {
   return Cookies.get(TOKEN_KEY);
@@ -16,4 +19,5 @@ export const getAccessToken = () => {
 
 export const removeAccessToken = () => {
   Cookies.remove(TOKEN_KEY);
+  Cookies.remove("userRole");
 };

@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
             Sign In
           </Button>
         </Link>
-        <Button variant="outline" className="px-10 ring-red-500 text-red-500">
+        <Button variant="outline" className="px-10 ring-red-500 text-red-500 hover:text-red-500!">
           <span
             onClick={() => setLogOutModalOpen(true)}
             className="flex items-center gap-2 "

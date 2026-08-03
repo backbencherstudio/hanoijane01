@@ -8,6 +8,11 @@ import { useChangePasswordMutation } from "@/src/redux/api/auth/authApi";
 import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { logout as clearAuth } from "@/src/redux/features/auth/authSlice";
+import { baseApi } from "@/src/redux/api/baseApi";
+import { removeAccessToken } from "@/lib/cookies";
 
 interface FormData {
   oldPassword: string;
@@ -15,6 +20,8 @@ interface FormData {
 }
 
 export default function ChangePasswordForm() {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [changePassword, { isLoading }] = useChangePasswordMutation();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -37,8 +44,12 @@ export default function ChangePasswordForm() {
         newPassword: data.newPassword,
       }).unwrap();
 
-      toast.success("Password changed successfully");
+      toast.success("Password changed successfully. Please sign in with your new password.");
       reset();
+      removeAccessToken();
+      dispatch(clearAuth());
+      dispatch(baseApi.util.resetApiState());
+      router.push("/sign-in");
     } catch (error) {
       toast.error(getErrorMessage(error, "Failed to change password"));
     }

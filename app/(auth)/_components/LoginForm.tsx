@@ -15,7 +15,7 @@ import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { setAccessToken } from "@/src/redux/features/auth/authSlice";
-import { setAccessTokenInCookie } from "@/lib/cookies";
+import { setAccessTokenInCookie, setRoleInCookie } from "@/lib/cookies";
 
 interface FormData {
   email: string;
@@ -53,6 +53,7 @@ const LoginForm = () => {
       }).unwrap();
       // localStorage.setItem("accessToken", res.data.token);
       setAccessTokenInCookie(res.data.token);
+      setRoleInCookie(res.data.user.type);
       dispatch(setAccessToken(res.data.token));
 
       toast.success("Welcome back!", {

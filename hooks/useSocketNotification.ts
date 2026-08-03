@@ -33,10 +33,11 @@ export const useSocketNotification = () => {
 
     try {
       // Create socket connection with auth - matching backend expectations
+      // Socket.IO auth middleware typically reads the raw token (no "Bearer " prefix)
       const socket: Socket = io(SOCKET_URL, {
         path: SOCKET_PATH,
         auth: {
-          token: `Bearer ${token}`, // Backend expects "Bearer {token}" format
+          token, // Raw token - most common Socket.IO auth pattern
         },
         transports: ["websocket", "polling"], // Fallback to polling if websocket fails
         reconnection: true,
@@ -63,9 +64,16 @@ export const useSocketNotification = () => {
       });
 
       socket.on("connect_error", (error) => {
-        console.error("❌ Socket Connection Error:", error.message, {
+        // Socket.IO attach error includes details in `description` and `context`
+        const socketError = error as Error & {
+          description?: string;
+          context?: unknown;
+        };
+        console.error("❌ Socket Connection Error:", socketError.message, {
           url: SOCKET_URL,
           path: SOCKET_PATH,
+          description: socketError.description,
+          context: socketError.context,
         });
         setIsConnected(false);
       });
@@ -94,7 +102,10 @@ export const useSocketNotification = () => {
 
       // Error handlers
       socket.on("error", (err) => {
-        console.error("❌ Socket Auth Error:", err);
+        console.error("❌ Socket Auth Error:", err, {
+          stringified: JSON.stringify(err),
+          message: (err as Error)?.message,
+        });
         setIsConnected(false);
       });
 

@@ -24,7 +24,7 @@ const Navbar = () => {
   const links = [
     { label: "Home", href: "/" },
     { label: "Exhibition Map", href: "/exhibition-map" },
-    // { label: "Pricing", href: "/pricing" },
+    // { label: "Pricing", href: "pricing" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
   ];
@@ -42,6 +42,7 @@ const Navbar = () => {
             />
           </Link>
         </div>
+
 
         <ul className="hidden xl:flex gap-8 items-center font-medium text-lg">
           {links.map((link) => {

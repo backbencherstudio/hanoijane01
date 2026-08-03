@@ -9,6 +9,11 @@ import {
 } from "@/src/redux/api/auth/authApi";
 import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { logout as clearAuth } from "@/src/redux/features/auth/authSlice";
+import { baseApi } from "@/src/redux/api/baseApi";
+import { removeAccessToken } from "@/lib/cookies";
 
 interface PasswordFormData {
   currentPassword: string;
@@ -17,6 +22,8 @@ interface PasswordFormData {
 }
 
 const PasswordAndSecurityPage = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,8 +53,12 @@ const PasswordAndSecurityPage = () => {
         newPassword: data.newPassword,
       }).unwrap();
 
-      toast.success("Password changed successfully");
+      toast.success("Password changed successfully. Please sign in with your new password.");
       reset();
+      removeAccessToken();
+      dispatch(clearAuth());
+      dispatch(baseApi.util.resetApiState());
+      router.push("/sign-in");
     } catch (error) {
       toast.error(getErrorMessage(error, "Failed to change password"));
     }
