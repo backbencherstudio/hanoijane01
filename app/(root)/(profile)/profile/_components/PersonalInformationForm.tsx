@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CircleX, PenLine, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -34,9 +34,9 @@ export default function PersonalInformationForm() {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const { data: meData } = useGetMeQuery();
   const user = meData?.data;
-  const [image, setImage] = useState<File | null>(null);
 
   const editing = useAppSelector((state) => state.profileEdit.editing);
+  const image = useAppSelector((state) => state.profileEdit.image);
 
   const { register, handleSubmit, reset } = useForm<ProfileFormData>();
 

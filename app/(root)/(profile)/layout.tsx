@@ -1,23 +1,26 @@
 "use client";
 import LogOutModal from "@/app/(auth)/_components/LogOutModal";
-import { ImageUp, Mail, Phone, Upload, User } from "lucide-react";
+import { Mail, Phone, Upload, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import AddOnContactCTA from "../pricing/_components/AddOnContactCTA";
-import { useAppSelector } from "@/src/redux/hooks";
-import { setEditing } from "@/src/redux/features/profile/profileEditSlice";
-import { Button } from "@/components/ui/button";
 import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+import {
+  setEditing,
+  setImage,
+  setPreview,
+} from "@/src/redux/features/profile/profileEditSlice";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const editing = useAppSelector((state) => state.profileEdit.editing);
   const { data: meData } = useGetMeQuery();
   const user = meData?.data;
+  const dispatch = useAppDispatch();
+  const editing = useAppSelector((state) => state.profileEdit.editing);
+  const preview = useAppSelector((state) => state.profileEdit.preview);
 
   const links = [
     { label: "Profile", href: "/profile" },
@@ -25,14 +28,14 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
     { label: "Transaction History", href: "/transaction-history" },
     // { label: "Notifications", href: "/notifications" },
   ];
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) return;
-
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
+    dispatch(setImage(file));
+    dispatch(setPreview(URL.createObjectURL(file)));
   };
+
   return (
     <div className="bg-[#fbfbfd]">
       <section className="max-w-380  mx-auto relative">
@@ -74,7 +77,6 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
                 >
                   <button
                     type="button"
-               
                     className="pointer-events-none text-muted"
                   >
                     <Upload />

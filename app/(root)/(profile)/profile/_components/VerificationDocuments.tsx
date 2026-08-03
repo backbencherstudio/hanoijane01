@@ -90,9 +90,14 @@ const VerificationDocuments = () => {
     }
 
     try {
+      const existingAttachment = attachments.find(
+        (att) => att.id === pendingDocumentId
+      );
+      const fileType = existingAttachment?.fileType ?? "others";
+
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append("fileType", "others");
+      formData.append("fileType", fileType);
       formData.append("attachmentId", pendingDocumentId);
 
       await uploadAttachment(formData).unwrap();
