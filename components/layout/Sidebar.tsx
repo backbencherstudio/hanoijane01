@@ -3,6 +3,7 @@ import { User, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { IoLogInOutline } from "react-icons/io5";
 import Image from "next/image";
+import customImageLoader from "@/lib/imageLoader";
 import { UserProp } from "@/types/User";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,16 +18,26 @@ interface SidebarProps {
 const links = [
   { label: "Home", href: "/" },
   { label: "Exhibition Map", href: "/exhibition-map" },
-  { label: "Pricing", href: "/pricing" },
+  // { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
   { label: "Booking History", href: "/booking-history" },
-  // { label: "Notifications", href: "/notifications" },
+  { label: "Transaction History", href: "/transaction-history" },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
   const pathname = usePathname();
   const [logOutModalOpen, setLogOutModalOpen] = useState(false);
+
+  // Hide protected routes when the user is not logged in
+  const visibleLinks = user
+    ? links
+    : links.filter(
+        (link) =>
+          link.href !== "/booking-history" &&
+          link.href !== "/transaction-history"
+      );
+
   return (
     <aside
       className={`
@@ -52,32 +63,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
       </div>
       {/* sidebar body */}
       <div className="flex-1 overflow-auto px-4">
-        <div className="flex flex-col items-center gap-2  p-4 justify-center">
-          {user?.image ? (
-            <img
-              src={user.image}
-              alt={user.name}
-              className="object-cover overflow-hidden rounded-full size-24"
-            />
-          ) : (
-            <div className="size-24 rounded-full bg-gray-300 text-gray-600 flex justify-center items-center">
-              <User size={36} />
-            </div>
-          )}
-          <h3 className="text-2xl font-medium text-center">
-            {user?.name ? user?.name : "User"}
-          </h3>
-          <Link href="/profile">
-            <Button onClick={() => setIsOpen(false)} className="px-8">
-              <User className="size-5i" /> My Profile
-            </Button>
-          </Link>
-        </div>
+        {user && (
+          <div className="flex flex-col items-center gap-2  p-4 justify-center">
+            {user.image ? (
+              <Image
+                src={user.image}
+                alt={user.name}
+                loader={customImageLoader}
+                width={96}
+                height={96}
+                className="object-cover overflow-hidden rounded-full size-24 border"
+              />
+            ) : (
+              <div className="size-24 rounded-full bg-gray-300 text-gray-600 flex justify-center items-center">
+                <User size={36} />
+              </div>
+            )}
+            <h3 className="text-2xl font-medium text-center">
+              {user?.name ? user?.name : "User"}
+            </h3>
+            <Link href="/profile">
+              <Button onClick={() => setIsOpen(false)} className="px-8">
+                <User className="size-5" /> My Profile
+              </Button>
+            </Link>
+          </div>
+        )}
 
         {/* menu items */}
-        <div className="border-t py-8">
+        <div className={`${user ? "border-t" : ""} py-8`}>
           <ul className="flex flex-col gap-8 items-center font-medium text-lg">
-            {links.map((link) => {
+            {visibleLinks.map((link) => {
               const isActive = pathname === link.href;
 
               return (
@@ -98,20 +114,26 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
         </div>
       </div>
       <div className="h-20  flex justify-center items-center border-t">
-        <Link href="/sign-in">
-          <Button variant="outline" className="px-10 ">
-            Sign In
-          </Button>
-        </Link>
-        <Button variant="outline" className="px-10 ring-red-500 text-red-500 hover:text-red-500!">
-          <span
-            onClick={() => setLogOutModalOpen(true)}
-            className="flex items-center gap-2 "
+        {user ? (
+          <Button
+            variant="outline"
+            className="px-10 ring-red-500 text-red-500 hover:text-red-500!"
           >
-            <IoLogInOutline className="size-5" />
-            Log Out
-          </span>
-        </Button>
+            <span
+              onClick={() => setLogOutModalOpen(true)}
+              className="flex items-center gap-2 "
+            >
+              <IoLogInOutline className="size-5" />
+              Log Out
+            </span>
+          </Button>
+        ) : (
+          <Link href="/sign-in">
+            <Button variant="outline" className="px-10 ">
+              Sign In
+            </Button>
+          </Link>
+        )}
       </div>
       <LogOutModal
         isOpen={logOutModalOpen}
