@@ -86,11 +86,11 @@ const AddDocumentType = ({ onAdd, availableFileTypes }: AddDocumentTypeProps) =>
         onClick={() => setIsAdding(true)}
         className="border border-primary cursor-pointer flex justify-center items-center rounded-[10px] p-3.5"
       >
-        <button className="flex items-center gap-2 cursor-pointer text-primary font-medium  transition-all">
-          <div className="size-10 bg-primary rounded-full flex items-center justify-center text-white">
+        <button className="flex items-center gap-2 cursor-pointer text-sm md:text-base text-primary font-medium  transition-all">
+          <div className="size-10 bg-primary rounded-full flex items-center justify-center text-white shrink-0">
             <Plus className="size-4" />
           </div>
-          Add Another Document Type
+          Add Another Document
         </button>
       </div>
     );
