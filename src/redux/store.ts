@@ -19,6 +19,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: ["profileEdit/setImage", "profileEdit/setPreview"],
+        ignoredPaths: ["profileEdit.image"],
       },
     }).concat(baseApi.middleware),
 });

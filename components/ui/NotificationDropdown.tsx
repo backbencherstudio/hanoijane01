@@ -14,7 +14,13 @@ import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { Notification } from "@/types/notification.types";
 
-const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const NotificationDropdown = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
   const [page, setPage] = useState(1);
   const limit = 8;
 
@@ -30,7 +36,7 @@ const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
     { page, limit },
     {
       skip: !isOpen, // Only fetch when dropdown is open
-    }
+    },
   );
 
   const [markAsRead] = useMarkNotificationAsReadMutation();
@@ -46,16 +52,19 @@ const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
   // Socket notifications are shown first (most recent)
   const socketNotificationIds = new Set(socketNotifications.map((n) => n.id));
   const filteredApiNotifications = apiNotifications.filter(
-    (n) => !socketNotificationIds.has(n.id)
+    (n) => !socketNotificationIds.has(n.id),
   );
-  const allNotifications = [...socketNotifications, ...filteredApiNotifications];
+  const allNotifications = [
+    ...socketNotifications,
+    ...filteredApiNotifications,
+  ];
 
   // Use unreadCount from API metadata, plus any new socket notifications
   // Exclude socket notifications that are already in API data to avoid double-counting
   const apiUnreadCount = metaData?.unreadCount || 0;
   const apiNotificationIds = new Set(apiNotifications.map((n) => n.id));
   const socketUnreadCount = socketNotifications.filter(
-    (n) => !n.readAt && !apiNotificationIds.has(n.id)
+    (n) => !n.readAt && !apiNotificationIds.has(n.id),
   ).length;
   const unreadCount = apiUnreadCount + socketUnreadCount;
   const hasMore = metaData ? metaData.currentPage < metaData.totalPages : false;
@@ -102,14 +111,14 @@ const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-primary hover:text-primary/80 flex items-center gap-1 cursor-pointer"
+                className="text-[10px] md:text-xs text-primary hover:text-primary/80 flex items-center gap-1 cursor-pointer"
               >
                 Mark all read
               </button>
             )}
             <button
               onClick={handleClearAll}
-              className="text-xs text-red-500 hover:text-red-600 flex items-center gap-1 cursor-pointer"
+              className="text-[10px] md:text-xs text-red-500 hover:text-red-600 flex items-center gap-1 cursor-pointer"
             >
               <Trash size={12} /> Clear all
             </button>
@@ -119,9 +128,13 @@ const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
         {/* content */}
         <div className="max-h-100 overflow-y-auto">
           {isLoading && allNotifications.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">Loading notifications...</div>
+            <div className="p-4 text-center text-gray-500">
+              Loading notifications...
+            </div>
           ) : allNotifications.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">No notifications</div>
+            <div className="p-4 text-center text-gray-500">
+              No notifications
+            </div>
           ) : (
             allNotifications.map((notification: Notification) => (
               <div
@@ -151,7 +164,9 @@ const NotificationDropdown = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   </p>
                   <div className="flex items-center gap-1 text-[10px] md:text-xs text-accent mt-1">
                     <p className="size-1 rounded-full bg-primary shrink-0"></p>
-                    {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+                    {formatDistanceToNow(new Date(notification.createdAt), {
+                      addSuffix: true,
+                    })}
                   </div>
                 </div>
               </div>

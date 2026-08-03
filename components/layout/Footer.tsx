@@ -15,21 +15,12 @@ const Footer = () => {
       { name: "Exhibition Map", href: "/exhibition-map" },
       { name: "Browse Stands", href: "/exhibition-map" },
       { name: "Exhibitor Login", href: "/sign-in" },
-      { name: "Admin Portal", href: "/" },
     ],
     resources: [
-      { name: "FAQ", href: "/" },
-      { name: "Terms & Conditions", href: "/" },
-      { name: "Privacy Policy", href: "/" },
-      { name: "Cookie Policy", href: "/" },
+      { name: "FAQ", href: "/faq" },
+      { name: "Terms & Conditions", href: "/terms" },
     ],
-    event: [
-      { name: "About Expo 2027", href: "/" },
-      { name: "Venue & Location", href: "/" },
-      { name: "Visitor Information", href: "/" },
-      { name: "Media & Press", href: "/" },
-      { name: "Sponsorship", href: "/" },
-    ],
+    company: [{ name: "Contact", href: "/contact" }],
   };
 
   const socialLinks = [
@@ -133,10 +124,10 @@ const Footer = () => {
           {/* Event */}
           <div className="w-fit lg:justify-self-end">
             <h3 className="text-base font-medium mb-3 flex items-center gap-2">
-              Event
+              Company
             </h3>
             <ul className="space-y-2">
-              {navigation.event.map((item) => (
+              {navigation.company.map((item) => (
                 <li
                   key={item.name}
                   className="hover:translate-x-1 transition-all font-normal text-[#A5A5AB]"
