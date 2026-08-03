@@ -1,6 +1,10 @@
 import { baseApi } from "../baseApi";
 import type { StandStatsResponse } from "@/types/standStats";
 import type { StandsApiResponse } from "@/types/standManagement";
+import type {
+  ExhibitionDetailsResponse,
+  UpdateExhibitionRequest,
+} from "@/types/stand";
 
 export const exhibitionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,6 +28,24 @@ export const exhibitionApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Exhibition"],
+    }),
+    getAdminExhibitionDetails: builder.query<ExhibitionDetailsResponse, void>({
+      query: () => ({
+        url: "/admin/exhibition/latest-details",
+        method: "GET",
+      }),
+      providesTags: ["Exhibition"],
+    }),
+    updateAdminExhibition: builder.mutation<
+      ExhibitionDetailsResponse,
+      UpdateExhibitionRequest
+    >({
+      query: (body) => ({
+        url: "/admin/exhibition/latest-one",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Exhibition"],
     }),
     getStandStats: builder.query<StandStatsResponse, null>({
       query: () => ({
@@ -68,6 +90,8 @@ export const {
   useGetExhibitionMapQuery,
   useGetExhibitionStandQuery,
   useGetAdminExhibitionQuery,
+  useGetAdminExhibitionDetailsQuery,
+  useUpdateAdminExhibitionMutation,
   useGetStandStatsQuery,
   useGetAdminStandsQuery,
 } = exhibitionApi;

@@ -1,14 +1,39 @@
 "use client"
 import { Switch } from "@/components/ui/switch";
 import React, { useState } from "react";
+import {
+  useGetAdminSettingQuery,
+  useUpdateAdminSettingMutation,
+} from "@/src/redux/api/notification/notificationApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
+import { toast } from "sonner";
 
 const NotificationPage = () => {
-  const [isAllNotificationsEnabled, setIsAllNotificationsEnabled] = useState(false);
+  const { data, isLoading } = useGetAdminSettingQuery();
+  const [updateAdminSetting, { isLoading: isUpdating }] =
+    useUpdateAdminSettingMutation();
+  // Local override for optimistic updates; null means use the fetched value
+  const [localValue, setLocalValue] = useState<boolean | null>(null);
 
-  const handleSwitchChange = (checked: boolean) => {
-    setIsAllNotificationsEnabled(checked);
-    console.log("All Notifications:", checked);
-    // Here you would call your API later
+  const isAllNotificationsEnabled =
+    localValue ?? data?.data?.notification ?? false;
+
+  const handleSwitchChange = async (checked: boolean) => {
+    // Optimistically update the UI
+    setLocalValue(checked);
+
+    try {
+      await updateAdminSetting({ notification: checked }).unwrap();
+      toast.success(
+        checked
+          ? "All notifications enabled"
+          : "All notifications disabled"
+      );
+    } catch (error) {
+      // Revert on failure
+      setLocalValue(null);
+      toast.error(getErrorMessage(error, "Failed to update notification settings"));
+    }
   };
 
   return (
@@ -27,6 +52,7 @@ const NotificationPage = () => {
             <Switch
               checked={isAllNotificationsEnabled}
               onCheckedChange={handleSwitchChange}
+              disabled={isLoading || isUpdating}
             />
           </div>
         </div>

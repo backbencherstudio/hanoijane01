@@ -52,3 +52,31 @@ export interface Hall {
   standCategories: HallStandCategory[];
   totalStands: number;
 }
+
+// ── Exhibition details (used by admin event settings) ─────────────────
+export interface ExhibitionDetails {
+  id: string;
+  title: string;
+  description: string;
+  slug: string;
+  location: string;
+  startedAt: string;
+  endedAt: string;
+  bookingStatedAt: string;
+  bookingEndedAt: string;
+}
+
+export interface ExhibitionDetailsResponse {
+  success: boolean;
+  message: string;
+  data: ExhibitionDetails;
+}
+
+export interface UpdateExhibitionRequest {
+  title: string;
+  startedAt: string;
+  endedAt: string;
+  location: string;
+  bookingStatedAt: string;
+  bookingEndedAt: string;
+}

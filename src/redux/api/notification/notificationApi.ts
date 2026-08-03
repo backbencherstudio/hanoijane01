@@ -3,6 +3,8 @@ import {
   GetNotificationsResponse,
   MarkAsReadResponse,
   DeleteNotificationResponse,
+  AdminSettingResponse,
+  UpdateAdminSettingRequest,
 } from "@/types/notification.types";
 
 export const notificationApi = baseApi.injectEndpoints({
@@ -63,6 +65,24 @@ export const notificationApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Notification"],
     }),
+    getAdminSetting: builder.query<AdminSettingResponse, void>({
+      query: () => ({
+        url: "/admin/setting",
+        method: "GET",
+      }),
+      providesTags: ["Notification"],
+    }),
+    updateAdminSetting: builder.mutation<
+      AdminSettingResponse,
+      UpdateAdminSettingRequest
+    >({
+      query: (body) => ({
+        url: "/admin/setting",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Notification"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -73,4 +93,6 @@ export const {
   useMarkAllNotificationsAsReadMutation,
   useDeleteNotificationMutation,
   useClearAllNotificationsMutation,
+  useGetAdminSettingQuery,
+  useUpdateAdminSettingMutation,
 } = notificationApi;

@@ -31,3 +31,15 @@ export interface DeleteNotificationResponse {
   success: boolean;
   message: string;
 }
+
+export interface AdminSettingResponse {
+  success: boolean;
+  message: string;
+  data: {
+    notification: boolean;
+  };
+}
+
+export interface UpdateAdminSettingRequest {
+  notification: boolean;
+}
