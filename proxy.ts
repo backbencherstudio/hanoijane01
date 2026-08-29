@@ -69,9 +69,7 @@ export const config = {
     "/profile/:path*",
     "/booking-history/:path*",
     "/transaction-history/:path*",
-
     "/dashboard/:path*",
-
     "/sign-in",
     "/sign-up",
     "/forgot-password",
