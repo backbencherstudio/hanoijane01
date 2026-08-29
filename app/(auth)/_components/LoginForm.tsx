@@ -60,7 +60,12 @@ const LoginForm = () => {
         id: toastId,
       });
 
-      router.push(redirect);
+      const userRole = res.data.user?.type;
+      const targetUrl =
+        redirect === "/" && userRole === "admin" ? "/dashboard" : redirect;
+
+      router.push(targetUrl);
+      router.refresh();
     } catch (error: unknown) {
       const fetchError = error as FetchBaseQueryError;
       const message = getErrorMessage(error, "Login failed.");

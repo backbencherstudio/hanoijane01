@@ -2,15 +2,22 @@ import Cookies from "js-cookie";
 
 const TOKEN_KEY = "accessToken";
 
-export const setAccessTokenInCookie = (token: string) => {
-  Cookies.set(TOKEN_KEY, token, {
-    expires: 7,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
+const isHttps =
+  typeof window !== "undefined" && window.location.protocol === "https:";
+
+const cookieOptions: Cookies.CookieAttributes = {
+  expires: 7,
+  sameSite: "lax",
+  path: "/",
+  secure: process.env.NODE_ENV === "production" && isHttps,
 };
+
+export const setAccessTokenInCookie = (token: string) => {
+  Cookies.set(TOKEN_KEY, token, cookieOptions);
+};
+
 export const setRoleInCookie = (role: string) => {
-  Cookies.set("userRole", role);
+  Cookies.set("userRole", role, cookieOptions);
 };
 
 export const getAccessToken = () => {
@@ -18,6 +25,6 @@ export const getAccessToken = () => {
 };
 
 export const removeAccessToken = () => {
-  Cookies.remove(TOKEN_KEY);
-  Cookies.remove("userRole");
+  Cookies.remove(TOKEN_KEY, { path: "/" });
+  Cookies.remove("userRole", { path: "/" });
 };
