@@ -119,9 +119,9 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
 
         // Force a fresh /api/exhibition/latest-one request so the next map render
         // sees the updated stand availability immediately after payment.
-        await fetch("/api/exhibition/latest-one", {
-          cache: "no-store",
-        });
+        // await fetch("/api/exhibition/latest-one", {
+        //   cache: "no-store",
+        // });
 
         // Mark exhibition/booking/stand caches as stale so /exhibition-map
         // refetches fresh stand availability after payment (survives navigation)
