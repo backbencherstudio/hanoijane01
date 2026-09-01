@@ -1,11 +1,6 @@
 import { useGetOverviewStatsQuery } from "@/src/redux/api/dashboard/dashboardApi";
 import { StateData } from "@/types/dashboard";
-import {
-  CreditCard,
-  Grid2x2Check,
-  Grid2X2Plus,
-  Grid3x3,
-} from "lucide-react";
+import { CreditCard, Grid2x2Check, Grid2X2Plus, Grid3x3 } from "lucide-react";
 export const useDashboardStats = () => {
   const { data, isLoading: statsLoading } = useGetOverviewStatsQuery();
   const stats = data?.data;
@@ -33,7 +28,7 @@ export const useDashboardStats = () => {
       border: "border border-[#ECD7B2]",
     },
     {
-      title: "Total Stand",
+      title: "Available Stand",
       value: stats?.availableStands,
       info: `12 available`,
       icon: Grid2X2Plus,
@@ -44,8 +39,8 @@ export const useDashboardStats = () => {
       border: "border border-[#ACC0CE]",
     },
     {
-      title: "Total Stand",
-      value: stats?.totalRevenue,
+      title: "Total Revenue",
+      value: `€ ${stats?.totalRevenue}`,
       info: `12 available`,
       icon: CreditCard,
       bg_color: "bg-[#C25B29]",

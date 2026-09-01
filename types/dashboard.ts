@@ -27,7 +27,7 @@ export interface GetOverviewChartResponse {
 
 export interface StateData {
   title: string;
-  value: number | undefined;
+  value: number | string | undefined;
   info: string;
   icon: LucideIcon;
   bg_color: string;
