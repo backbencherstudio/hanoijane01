@@ -29,7 +29,7 @@ const HowItWorks = () => {
     },
     {
       icon: "/icons/Peoples.svg",
-      title: "Join the Exhibition",
+      title: "Join the Expo",
       subtitle:
         "Access your exhibitor dashboard to manage your stand, track setup deadlines, and coordinate with the event team.",
     },
@@ -89,7 +89,7 @@ const HowItWorks = () => {
                     />
                   </div>
                   <h2 className="text-2xl md:text-3xl lg:text-[32px] font-semibold text-text-primary mb-2 lg:mb-3">
-                    {idx + 1 + 1}.{step.title}
+                    {idx + 1}. {step.title}
                   </h2>
                   <p className="text-sm md:text-base lg:text-lg text-accent font-normal">
                     {step.subtitle}

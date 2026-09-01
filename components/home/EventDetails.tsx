@@ -1,33 +1,100 @@
+"use client";
+
 import { CalendarDays, MapPin, Users } from "lucide-react";
 import { FiGrid } from "react-icons/fi";
+import { useGetExhibitionMapQuery } from "@/src/redux/api/exhibition/exhibitionApi";
 
-const eventCards = [
-  {
-    icon: CalendarDays,
-    title: "Jan 8-9 2027",
-    subtitle: "Event Date",
-  },
-  {
-    icon: MapPin,
-    title: "Goffs, Kildare",
-    subtitle: "Venue",
-  },
-  {
-    // icon: Squares,
-    icon: FiGrid,
-    title: "200+",
-    subtitle: "Exhibition Stands",
-    description: "Across 4 halls",
-  },
-  {
-    icon: Users,
-    title: "March 14–17",
-    subtitle: "Event Date",
-    description: "2027",
-  },
-];
+const getOrdinalSuffix = (day: number) => {
+  if (day >= 11 && day <= 13) return "th";
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
+const formatEventDate = (
+  startedAt?: string,
+  endedAt?: string,
+): React.ReactNode => {
+  if (!startedAt || !endedAt) {
+    return (
+      <>
+        Jan 8<sup>th</sup>-9<sup>th</sup> 2027
+      </>
+    );
+  }
+  const start = new Date(startedAt);
+  const end = new Date(endedAt);
+
+  const startMonth = start.toLocaleDateString("en-US", { month: "short" });
+  const startDay = start.getDate();
+  const startSuffix = getOrdinalSuffix(startDay);
+
+  const endMonth = end.toLocaleDateString("en-US", { month: "short" });
+  const endDay = end.getDate();
+  const endSuffix = getOrdinalSuffix(endDay);
+
+  const year = start.getFullYear();
+
+  if (startMonth === endMonth) {
+    return (
+      <>
+        {startMonth} {startDay}
+        <sup>{startSuffix}</sup>-{endDay}
+        <sup>{endSuffix}</sup> {year}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {startMonth} {startDay}
+      <sup>{startSuffix}</sup> – {endMonth} {endDay}
+      <sup>{endSuffix}</sup> {year}
+    </>
+  );
+};
 
 export default function EventDetails() {
+  const { data } = useGetExhibitionMapQuery(null);
+  const exhibition = data?.data;
+
+  const eventDateTitle = formatEventDate(
+    exhibition?.startedAt,
+    exhibition?.endedAt,
+  );
+
+  const eventCards = [
+    {
+      icon: CalendarDays,
+      title: eventDateTitle,
+      subtitle: "Event Date",
+    },
+    {
+      icon: MapPin,
+      title: exhibition?.location || "Goffs, Kildare",
+      subtitle: "Venue",
+    },
+    {
+      // icon: Squares,
+      icon: FiGrid,
+      title: "90+",
+      subtitle: "Exhibition Stands",
+      description: "Across 4 halls",
+    },
+    {
+      icon: Users,
+      title: "The Irish Field",
+      subtitle: "Supported By",
+      description: "2027",
+    },
+  ];
   return (
     <section className="bg-background padding-default">
       <div className="container">

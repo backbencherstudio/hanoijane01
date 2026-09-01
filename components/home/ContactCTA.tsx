@@ -19,14 +19,17 @@ const ContactCTA = () => {
           </h2>
 
           <p className="mx-auto mt-2 lg:mt-4 text-sm md:text-base lg:text-lg text-[#D2D2D5] font-normal">
-            Don&apos;t miss your opportunity to exhibit at the region&apos;s
-            premier industry event. Stands are filling up fast, secure your
-            space before the booking deadline of January 30, 2027.
+            Don&apos;t miss your opportunity to exhibit  <b>at the thoroughbred
+            industry’s premier event.</b> Stands are filling up fast, secure
+            your space before the booking deadline of <b>October 30th 2026</b>
           </p>
         </div>
         {/* cta button */}
         <div className="flex justify-center items-center w-full">
-          <ButtonGroup pathName="/contact" className="bg-white text-primary mt-12 px-6 hover:bg-gray-100">
+          <ButtonGroup
+            pathName="/contact"
+            className="bg-white text-primary mt-12 px-6 hover:bg-gray-100"
+          >
             {" "}
             Contact Organizer
           </ButtonGroup>

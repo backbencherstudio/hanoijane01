@@ -53,7 +53,7 @@ export default function FAQAccordion({ faqData }: FAQAccordionProps) {
               }`}
             >
               <div className="overflow-hidden">
-                <p className="px-6 pb-6 text-lg leading-relaxed">
+                <p className="px-6 pb-6 text-lg leading-relaxed whitespace-pre-line">
                   {item.answer}
                 </p>
               </div>

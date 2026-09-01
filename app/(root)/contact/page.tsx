@@ -12,17 +12,17 @@ const contact: Contact[] = [
   {
     icon: Mail,
     title: "Email",
-    subtitle: "exhibitors@industryexpo2027.com",
+    subtitle: "office@itba.ie",
   },
   {
     icon: Phone,
     title: "Phone",
-    subtitle: "+971 4 XXX XXXX",
+    subtitle: "(00353) 45 877543",
   },
   {
     icon: MapPin,
     title: "Office",
-    subtitle: "Dubai World Trade Centre, UAE",
+    subtitle: "Greenhills , Kill , Co Kildare , Ireland.",
   },
 ];
 

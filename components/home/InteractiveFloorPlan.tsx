@@ -17,7 +17,7 @@ const InteractiveFloorPlan = () => {
         {/* Heading */}
         <div className="flex flex-col items-center mx-auto text-center justify-center max-w-145 text-white">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight  leading-8 md:leading-10 lg:leading-12">
-            Exhibition Floor Map
+            ITBA Expo Floor Map
           </h2>
 
           <p className="mx-auto mt-2 lg:mt-4 text-sm md:text-base lg:text-lg font-normal">

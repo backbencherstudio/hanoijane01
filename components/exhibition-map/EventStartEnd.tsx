@@ -2,13 +2,28 @@
 import React from "react";
 import { useGetExhibitionMapQuery } from "@/src/redux/api/exhibition/exhibitionApi";
 
+const getOrdinalSuffix = (day: number) => {
+  if (day >= 11 && day <= 13) return "th";
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
+  const month = date.toLocaleDateString("en-US", { month: "long" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  return `${weekday} ${month} ${day}${getOrdinalSuffix(day)} ${year}`;
 };
 
 const formatEventRange = (startedAt: string, endedAt: string) => {

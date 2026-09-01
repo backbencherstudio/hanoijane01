@@ -212,7 +212,7 @@ const LoginForm = () => {
       </form>
 
       <p className="text-accent font-medium mt-6 text-center">
-        Not a member?
+        Not registered yet ?
         <Link
           href={`/sign-up?redirect=${encodeURIComponent(redirect)}`}
           className="text-primary font-medium hover:underline cursor-pointer ml-1"

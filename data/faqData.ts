@@ -7,7 +7,7 @@ export const faqData = [
   },
   {
     id: 2,
-    question: "Can I pay in instalments or pay later?",
+    question: "How and when do I pay for our stand?",
     answer:
       "Yes, depending on the booking package and event policies. Flexible payment options may be available during checkout. Please contact the event team for specific payment plans.",
   },
@@ -47,4 +47,11 @@ export const faqData = [
     answer:
       "For any technical or booking-related issues, please contact our support team or refer to the Help Center for troubleshooting resources and guidance.",
   },
-];;
+  {
+    id: 9,
+    question:
+      "What Insurance and other forms will be required before the event?",
+    answer:
+      "Each exhibitor will be requested to fill out and return a Health and Safety Declaration form before the event. In addition each exhibitor is reminded that he/she is responsible for effecting insurance cover for their own and they will also be required to submit a copy of their insurance. The insurance confirmation should include:\n• Title of the insured\n• Insurance Company\n• Policy Number\n• Business Description\n• Dates of Cover\n• A specific indemnity to Goffs",
+  },
+];

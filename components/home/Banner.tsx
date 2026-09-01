@@ -4,8 +4,8 @@ import ButtonGroup from "../ui/ButtonGroup";
 const Banner = () => {
   const stats = [
     { title: "Panels", value: 8 },
-    { title: "Exhibitors", value: 300 },
-    { title: "Visitors", value: 300 },
+    { title: "Exhibitors", value: 90 },
+    { title: "Visitors", value: 5000 },
   ];
 
   return (
