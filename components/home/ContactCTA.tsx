@@ -1,7 +1,37 @@
+"use client";
+
 import React from "react";
 import ButtonGroup from "../ui/ButtonGroup";
+import { useGetExhibitionMapQuery } from "@/src/redux/api/exhibition/exhibitionApi";
+
+const getOrdinalSuffix = (day: number) => {
+  if (day >= 11 && day <= 13) return "th";
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
+const formatBookingDeadline = (dateString?: string) => {
+  if (!dateString) return "October 30th 2026";
+  const date = new Date(dateString);
+  const month = date.toLocaleDateString("en-US", { month: "long" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+  return `${month} ${day}${getOrdinalSuffix(day)} ${year}`;
+};
 
 const ContactCTA = () => {
+  const { data } = useGetExhibitionMapQuery(null);
+  const exhibition = data?.data;
+  const bookingDeadline = formatBookingDeadline(exhibition?.bookingEndedAt);
+
   return (
     <section className="bg-background padding-default">
       <div className="container bg-[url('/assets/contact_cta.webp')] bg-cover bg-center py-15 lg:py-20 rounded-3xl">
@@ -19,9 +49,10 @@ const ContactCTA = () => {
           </h2>
 
           <p className="mx-auto mt-2 lg:mt-4 text-sm md:text-base lg:text-lg text-[#D2D2D5] font-normal">
-            Don&apos;t miss your opportunity to exhibit  <b>at the thoroughbred
-            industry’s premier event.</b> Stands are filling up fast, secure
-            your space before the booking deadline of <b>October 30th 2026</b>
+            Don&apos;t miss your opportunity to exhibit{" "}
+            <b>at the thoroughbred industry’s premier event.</b> Stands are
+            filling up fast, secure your space before the booking deadline of{" "}
+            <b>{bookingDeadline}</b>
           </p>
         </div>
         {/* cta button */}
