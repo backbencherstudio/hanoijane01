@@ -76,11 +76,10 @@ const Footer = () => {
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0" />
-                +353 (0)45 877543
+                (00353) 45 877543
               </p>
               <p className="flex items-center gap-2">
-                <MapPin className="size-4 shrink-0" /> ITBA, Greenhills. Kill ,
-                Co Kildare W91 FY62 Ireland
+                Greenhills , Kill , Co Kildare , Ireland.
               </p>
             </div>
           </div>
