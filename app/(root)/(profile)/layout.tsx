@@ -4,7 +4,6 @@ import { Mail, Phone, Upload, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import AddOnContactCTA from "../pricing/_components/AddOnContactCTA";
 import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import {
@@ -12,6 +11,7 @@ import {
   setImage,
   setPreview,
 } from "@/src/redux/features/profile/profileEditSlice";
+import AddOnContactCTA from "../pricing/_components/AddOnContactCTA";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
