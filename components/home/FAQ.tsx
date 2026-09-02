@@ -25,8 +25,8 @@ const FAQ = () => {
               </h2>
 
               {/* <p className="mx-auto mt-2 lg:mt-4 text-sm md:text-base lg:text-lg text-accent font-normal">
-                Everything you need to know about exhibiting at the <b>ITBA Expo
-                2027.</b> Can’t find the answer you’re looking for?
+                Everything you need to know about exhibiting at the{" "}
+                <b>ITBA Expo 2027.</b> Can’t find the answer you’re looking for?
               </p> */}
             </div>
             {/* cta button */}
