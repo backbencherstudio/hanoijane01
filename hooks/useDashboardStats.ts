@@ -17,7 +17,7 @@ export const useDashboardStats = () => {
       border: "border border-[#98BCD7]",
     },
     {
-      title: "Booking Stand",
+      title: "Booked Stand",
       value: stats?.bookedStands,
       info: `8 this week`,
       icon: Grid2x2Check,
