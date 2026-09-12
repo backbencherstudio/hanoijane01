@@ -56,6 +56,7 @@ export const baseApi = createApi({
     "Exhibition",
     "Booking",
     "Stand",
+    "StandStats",
     "Dashboard",
     "Notification",
   ],

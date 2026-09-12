@@ -25,9 +25,11 @@ import {
   useGetAdminExhibitionQuery,
   useGetStandStatsQuery,
   useGetAdminStandsQuery,
+  useUpdateStandAvailabilityMutation,
 } from "@/src/redux/api/exhibition/exhibitionApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCurrentOverviewDate } from "@/lib/utils";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
 
 type ViewType = "map" | "list";
 
@@ -89,6 +91,7 @@ const StandManagementPageContent = () => {
   const { data: exhibitionData } = useGetAdminExhibitionQuery(null);
   const { data: standStats, isLoading: isStateLoading } =
     useGetStandStatsQuery(null);
+  const [updateStandAvailability] = useUpdateStandAvailabilityMutation();
   const {
     data: standsData,
     isLoading,
@@ -175,6 +178,29 @@ const StandManagementPageContent = () => {
     router.push(`?${params.toString()}`, { scroll: false });
     setPage(1);
   };
+
+  // ── Block / Unblock handler ─────────────────────────────────────────────
+  const handleToggleAvailability = useCallback(
+    async (stand: StandApiItem) => {
+      const nextIsAvailable = !stand.isAvailable;
+      const actionLabel = nextIsAvailable ? "unblocked" : "blocked";
+      try {
+        await updateStandAvailability({
+          id: stand.id,
+          isAvailable: nextIsAvailable,
+        }).unwrap();
+        toast.success(`Stand ${stand.standNumber} ${actionLabel} successfully`);
+      } catch (error) {
+        toast.error(
+          getErrorMessage(
+            error,
+            `Failed to ${actionLabel} stand ${stand.standNumber}`,
+          ),
+        );
+      }
+    },
+    [updateStandAvailability],
+  );
 
   const columns: Column<StandApiItem>[] = [
     {
@@ -272,12 +298,17 @@ const StandManagementPageContent = () => {
     {
       header: "Status",
       accessor: "isAvailable",
-      render: (value) => {
+      render: (value, stand) => {
         const isAvail = value as boolean;
-        const statusText = isAvail ? "Available" : "Booked";
+        const statusText = isAvail
+          ? "Available"
+          : stand.bookingId
+            ? "Booked"
+            : "Unavailable";
         const colorMap: Record<string, string> = {
           Available: "bg-[#E9E9EA] border border-[#D4DAE3] text-[#777980]",
           Booked: "bg-[#F6F1E9] border border-[#E6C58C] text-[#D79930]",
+          Unavailable: "bg-[#FDECEC] border border-[#F5C6C6] text-[#C0392B]",
         };
         return (
           <span
@@ -301,8 +332,29 @@ const StandManagementPageContent = () => {
       render: (value) => {
         const bookedBy = value as { name: string; email: string } | null;
         return bookedBy?.name || "-";
+        return bookedBy?.name || "-";
       },
       cellClassName: "px-3 py-5 text-center whitespace-nowrap",
+    },
+    {
+      header: "Action",
+      accessor: "isAvailable",
+      render: (_value, row) => {
+        const isBlocked = !row.isAvailable;
+        return (
+          <button
+            onClick={() => handleToggleAvailability(row)}
+            className={`px-3 py-1.5 rounded-md text-xs font-medium border transition whitespace-nowrap ${
+              isBlocked
+                ? "bg-[#E9F7EF] border-[#BFE5CD] text-[#2E7D53] hover:bg-[#DFF2E6]"
+                : "bg-[#FDECEC] border-[#F5C6C6] text-[#C0392B] hover:bg-[#FBDFDF]"
+            }`}
+          >
+            {isBlocked ? "Unblock" : "Block"}
+          </button>
+        );
+      },
+      cellClassName: "px-3 py-5 text-center",
     },
   ];
 

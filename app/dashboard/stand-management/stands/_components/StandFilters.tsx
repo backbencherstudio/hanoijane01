@@ -30,7 +30,7 @@ const categoryOptions = [
   "Premium Size D",
   "Small Size",
 ];
-const statusOptions = ["All Status", "Available", "Booked"];
+const statusOptions = ["All Status", "Available", "Booked", "Unavailable"];
 
 const StandFilters = ({
   hall,
