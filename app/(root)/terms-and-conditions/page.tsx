@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { RootState } from "@/src/redux/store";
 import { updateTermsAndConditions } from "@/src/redux/features/bookingSlice";
+import { compressSignatureImage } from "@/utils/compressSignatureImage";
 
 interface TermsFormData {
   accepted: boolean;
@@ -32,6 +33,9 @@ const TermsAndConditionsPage = () => {
   const [signaturePreview, setSignaturePreview] = useState<string | null>(
     storedTerms.signature || null,
   );
+  const [signatureFile, setSignatureFile] = useState<File | null>(
+    storedTerms.signatureFile ?? null,
+  );
   const [isAccepted, setIsAccepted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +45,6 @@ const TermsAndConditionsPage = () => {
     handleSubmit,
     setValue,
     clearErrors,
-    watch,
     formState: { errors },
   } = useForm<TermsFormData>({
     defaultValues: {
@@ -58,22 +61,26 @@ const TermsAndConditionsPage = () => {
       value === true || "You must accept the terms and conditions",
   });
   register("signature", {
-    validate: (value) => {
+    validate: () => {
       if (!signaturePreview) return "Signature is required";
       return true;
     },
   });
 
-  const signature = watch("signature");
-
-  const handleSignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSignatureChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Compress big images before storing/previewing so the upload payload
+      // stays small and the form works reliably with any image size.
+      const compressed = await compressSignatureImage(file);
+      setSignatureFile(compressed);
       const reader = new FileReader();
       reader.onloadend = () => {
         setSignaturePreview(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
       setValue("signature", e.target.files as FileList);
       clearErrors("signature");
     } else {
@@ -85,6 +92,7 @@ const TermsAndConditionsPage = () => {
 
   const removeSignature = () => {
     setSignaturePreview(null);
+    setSignatureFile(null);
     setValue("signature", null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -112,18 +120,21 @@ const TermsAndConditionsPage = () => {
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
 
     const file = e.dataTransfer.files?.[0];
     if (file) {
+      // Compress big images before storing/previewing (same as file picker)
+      const compressed = await compressSignatureImage(file);
+      setSignatureFile(compressed);
       const reader = new FileReader();
       reader.onloadend = () => {
         setSignaturePreview(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
       setValue("signature", e.dataTransfer.files as FileList);
       clearErrors("signature");
     }
@@ -145,6 +156,7 @@ const TermsAndConditionsPage = () => {
         onBehalfOf: data.onBehalfOf,
         title: data.title,
         signature: signaturePreview || "",
+        signatureFile: signatureFile,
         accepted: true,
       }),
     );
@@ -303,12 +315,12 @@ const TermsAndConditionsPage = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-text-primary truncate">
-                    {signature?.[0]?.name || "Signature uploaded"}
+                    {signatureFile?.name || "Signature uploaded"}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {(signature?.[0]?.size || 0) / 1024 > 1024
-                      ? `${((signature?.[0]?.size || 0) / 1024 / 1024).toFixed(2)} MB`
-                      : `${((signature?.[0]?.size || 0) / 1024).toFixed(1)} KB`}
+                    {(signatureFile?.size || 0) / 1024 > 1024
+                      ? `${((signatureFile?.size || 0) / 1024 / 1024).toFixed(2)} MB`
+                      : `${((signatureFile?.size || 0) / 1024).toFixed(1)} KB`}
                   </p>
                 </div>
                 <button

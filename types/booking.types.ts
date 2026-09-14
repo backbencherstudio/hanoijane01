@@ -8,7 +8,8 @@ export interface CreateBookingRequest {
   termsAndConditionsAccepted: boolean;
   onBehalfOf: string;
   title: string;
-  signature: string;
+  /** raw binary signature image — sent as multipart/form-data */
+  signatureFile: File;
 }
 
 export interface CreateBookingResponse {

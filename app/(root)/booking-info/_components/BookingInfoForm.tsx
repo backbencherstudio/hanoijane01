@@ -11,6 +11,7 @@ import { useCreateBookingMutation } from "@/src/redux/api/booking/bookingApi";
 import { useGetMeQuery } from "@/src/redux/api/auth/authApi";
 import { toast } from "sonner";
 import { usePersistBooking } from "@/hooks/usePersistBooking";
+import { dataUrlToFile } from "@/utils/compressSignatureImage";
 
 interface BookingInfoData {
   companyName: string;
@@ -64,9 +65,35 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
 
   const [createBooking, { isLoading: isCreatingBooking }] = useCreateBookingMutation();
 
+  /**
+   * Resolve the signature as a binary File for the multipart upload.
+   * - Normal flow: the File stored in redux (already compressed) is used.
+   * - Restored session (page refresh): the File object is gone after
+   *   serialization, so the base64 preview is converted back to a File.
+   */
+  const resolveSignatureFile = async (): Promise<File | null> => {
+    if (termsAndConditions.signatureFile instanceof File) {
+      return termsAndConditions.signatureFile;
+    }
+    if (termsAndConditions.signature) {
+      try {
+        return await dataUrlToFile(termsAndConditions.signature);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
   const onSubmit = async (data: BookingInfoData) => {
     dispatch(updateBookingInfo(data));
-    
+
+    const signatureFile = await resolveSignatureFile();
+    if (!signatureFile) {
+      toast.error("Signature is missing. Please go back and upload it again.");
+      return;
+    }
+
     try {
       const result = await createBooking({
         standId: standId || stand.id,
@@ -78,7 +105,7 @@ const BookingInfoForm = ({ nextStep }: { nextStep: () => void }) => {
         termsAndConditionsAccepted: termsAndConditions.accepted,
         onBehalfOf: termsAndConditions.onBehalfOf,
         title: termsAndConditions.title,
-        signature: termsAndConditions.signature,
+        signatureFile,
       }).unwrap();
 
       if (result.success) {

@@ -3,7 +3,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface TermsConditions {
   onBehalfOf: string;
   title: string;
+  /** base64 data URL — used for preview only */
   signature: string;
+  /** raw binary file used for the actual upload (not serializable) */
+  signatureFile: File | null;
   accepted: boolean;
 }
 
@@ -56,6 +59,7 @@ const initialState: BookingState = {
     onBehalfOf: "",
     title: "",
     signature: "",
+    signatureFile: null,
     accepted: false,
   },
 };

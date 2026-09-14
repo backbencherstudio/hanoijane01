@@ -14,11 +14,31 @@ export const bookingApi = baseApi.injectEndpoints({
       CreateBookingResponse,
       CreateBookingRequest
     >({
-      query: (body) => ({
-        url: "/booking",
-        method: "POST",
-        body,
-      }),
+      query: (body) => {
+        // The API expects multipart/form-data with the signature image as a
+        // binary file. FormData must be used as-is (no JSON.stringify) so the
+        // browser sets the correct Content-Type with the multipart boundary.
+        const formData = new FormData();
+        formData.append("standId", body.standId);
+        formData.append("userName", body.userName);
+        formData.append("companyName", body.companyName);
+        formData.append("companyAddress", body.companyAddress);
+        formData.append("email", body.email);
+        formData.append("phoneNumber", body.phoneNumber);
+        formData.append(
+          "termsAndConditionsAccepted",
+          String(body.termsAndConditionsAccepted),
+        );
+        formData.append("onBehalfOf", body.onBehalfOf);
+        formData.append("title", body.title);
+        formData.append("signature", body.signatureFile, body.signatureFile.name);
+
+        return {
+          url: "/booking",
+          method: "POST",
+          body: formData,
+        };
+      },
       invalidatesTags: ["Exhibition", "Booking", "Stand"],
     }),
     getUserBooking: builder.query<
