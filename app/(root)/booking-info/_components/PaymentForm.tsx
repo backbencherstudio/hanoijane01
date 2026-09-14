@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { FaCreditCard } from "react-icons/fa";
 import ButtonGroup from "@/components/ui/ButtonGroup";
 import { RootState } from "@/src/redux/store";
-import { resetBookingInfo } from "@/src/redux/features/bookingSlice";
 import StripeProvider from "@/providers/StripeProvider";
 import StripeCardForm, { StripeCardFormRef } from "./StripeCardForm";
 import { useCreatePaymentIntentMutation } from "@/src/redux/api/payment/paymentApi";
@@ -129,8 +128,9 @@ const PaymentForm = ({ prevStep }: PaymentFormProps) => {
           baseApi.util.invalidateTags(["Exhibition", "Booking", "Stand"]),
         );
 
-        dispatch(resetBookingInfo());
-        sessionStorage.removeItem("bookingState");
+        // Note: the local booking state (bookingId, standId, signature etc.)
+        // is fully reset on the booking-success page, so navigating here
+        // first avoids a redirect race with the `!bookingId` guard above.
         router.push(`/booking-success?payment_option=now`);
       } else {
         toast.error(paymentResult.error || "Payment failed. Please try again.");

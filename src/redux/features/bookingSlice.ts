@@ -73,9 +73,16 @@ const bookingSlice = createSlice({
       action: PayloadAction<Partial<BookingState["stand"]>>,
     ) => {
       state.stand = { ...state.stand, ...action.payload };
+      // Selecting a stand starts a NEW booking — any previous bookingId is
+      // stale and must not leak into the new flow (e.g. paying the wrong
+      // booking via /booking-info?step=2).
+      state.bookingId = "";
     },
     updateStandId: (state, action: PayloadAction<string>) => {
       state.standId = action.payload;
+      // Selecting a stand starts a NEW booking — clear the previous bookingId
+      // so stale state never carries over into the new flow.
+      state.bookingId = "";
     },
     updateBookingId: (state, action: PayloadAction<string>) => {
       state.bookingId = action.payload;
@@ -98,6 +105,9 @@ const bookingSlice = createSlice({
     resetBookingInfo: (state) => {
       state.bookingInfo = initialState.bookingInfo;
     },
+    /** Full reset — used after a booking is completed so the next booking
+     * starts from a clean state (no stale standId/bookingId/signature). */
+    resetBooking: () => initialState,
     restoreBooking: (state, action: PayloadAction<BookingState>) => {
       return action.payload;
     },
@@ -111,6 +121,7 @@ export const {
   updateBookingInfo,
   updateTermsAndConditions,
   resetBookingInfo,
+  resetBooking,
   restoreBooking,
 } = bookingSlice.actions;
 
