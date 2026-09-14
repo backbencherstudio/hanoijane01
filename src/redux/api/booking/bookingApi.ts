@@ -94,6 +94,28 @@ export const bookingApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Booking"],
     }),
+    // PATCH /admin/booking/{bookingId}/accept — approves a pending booking
+    // (status → BOOKED, payment → PAID, stand marked unavailable)
+    acceptBooking: builder.mutation<AdminBookingDetailsResponse, string>({
+      query: (bookingId) => ({
+        url: `/admin/booking/${bookingId}/accept`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Booking", "Stand", "Exhibition"],
+    }),
+    // PATCH /admin/booking/{bookingId}/reject — rejects a booking with a
+    // reason (status → REJECTED, payment → REJECTED, stand freed up)
+    rejectBooking: builder.mutation<
+      AdminBookingDetailsResponse,
+      { bookingId: string; reason: string }
+    >({
+      query: ({ bookingId, reason }) => ({
+        url: `/admin/booking/${bookingId}/reject`,
+        method: "PATCH",
+        body: { reason },
+      }),
+      invalidatesTags: ["Booking", "Stand", "Exhibition"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -104,4 +126,6 @@ export const {
   useGetBookingStatsQuery,
   useGetAdminBookingsQuery,
   useGetAdminBookingDetailsQuery,
+  useAcceptBookingMutation,
+  useRejectBookingMutation,
 } = bookingApi;

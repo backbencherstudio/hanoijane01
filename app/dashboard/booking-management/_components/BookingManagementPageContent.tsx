@@ -231,6 +231,7 @@ const BookingManagementPageContent = () => {
           BOOKED: "bg-green-100 border border-green-200 text-green-700",
           PENDING: "bg-[#FBF5EB] border border-[#EDCEBF] text-[#D79930]",
           CANCELED: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
+          REJECTED: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
           REFUNDED: "bg-[#EBF2FD] border border-[#C5D9F7] text-[#2A6BCA]",
         };
         return (

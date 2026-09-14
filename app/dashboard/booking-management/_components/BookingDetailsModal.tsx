@@ -1,8 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/ui/Modal";
-import React from "react";
-import { useGetAdminBookingDetailsQuery } from "@/src/redux/api/booking/bookingApi";
+import React, { useState } from "react";
+import { toast } from "sonner";
+import {
+  useGetAdminBookingDetailsQuery,
+  useAcceptBookingMutation,
+  useRejectBookingMutation,
+} from "@/src/redux/api/booking/bookingApi";
+import { getErrorMessage } from "@/src/lib/getErrorMessage";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface BookingDetailsModalProps {
@@ -24,6 +30,7 @@ const colorMap: Record<string, string> = {
   BOOKED: "bg-green-100 border border-green-200 text-green-700",
   PENDING: "bg-[#FBF5EB] border border-[#EDCEBF] text-[#D79930]",
   CANCELED: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
+  REJECTED: "bg-[#FEECEE] border border-[#FBD8DB] text-[#EB3D4D]",
   REFUNDED: "bg-[#EBF2FD] border border-[#C5D9F7] text-[#2A6BCA]",
 };
 
@@ -32,7 +39,15 @@ const BookingDetailsModal = ({
   onClose,
   bookingId,
 }: BookingDetailsModalProps) => {
+  const [acceptBooking, { isLoading: isAccepting }] = useAcceptBookingMutation();
+  const [rejectBooking, { isLoading: isRejecting }] = useRejectBookingMutation();
+  const [rejectReason, setRejectReason] = useState("");
+  const [isRejectingFlow, setIsRejectingFlow] = useState(false);
+
   const handleClose = () => {
+    // Reset any in-progress reject flow so reopening the modal starts clean
+    setIsRejectingFlow(false);
+    setRejectReason("");
     onClose();
   };
 
@@ -44,6 +59,48 @@ const BookingDetailsModal = ({
   );
 
   const booking = data?.data;
+
+  const handleAccept = async () => {
+    if (!booking) return;
+    try {
+      await acceptBooking(booking.id).unwrap();
+      toast.success(
+        `Booking for stand ${booking.standNumber || ""} accepted successfully`,
+      );
+      handleClose();
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to accept the booking"));
+    }
+  };
+
+  const startRejectFlow = () => {
+    setRejectReason("");
+    setIsRejectingFlow(true);
+  };
+
+  const cancelRejectFlow = () => {
+    setIsRejectingFlow(false);
+    setRejectReason("");
+  };
+
+  const handleReject = async () => {
+    if (!booking) return;
+    const reason = rejectReason.trim();
+    if (!reason) {
+      toast.error("Please write a reason for rejecting this booking");
+      return;
+    }
+    try {
+      await rejectBooking({ bookingId: booking.id, reason }).unwrap();
+      toast.success(
+        `Booking for stand ${booking.standNumber || ""} rejected successfully`,
+      );
+      setIsRejectingFlow(false);
+      handleClose();
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to reject the booking"));
+    }
+  };
 
   const status = booking?.status || "";
   const formattedStatus =
@@ -180,11 +237,62 @@ const BookingDetailsModal = ({
         )}
 
         {booking?.status === "PENDING" && (
-          <div className="mt-6 flex items-center gap-4 justify-center md:justify-end w-full">
-            <Button variant="outline" className="h-11 font-medium">
-              Reject
-            </Button>
-            <Button className="h-11 font-medium">Approve</Button>
+          <div className="mt-6 w-full">
+            {isRejectingFlow ? (
+              /* Reject reason input — the reject API requires a reason */
+              <div className="space-y-3">
+                <label
+                  htmlFor="reject-reason"
+                  className="block text-sm font-medium text-text-primary"
+                >
+                  Rejection Reason <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="reject-reason"
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                  placeholder="Write the reason for rejecting this booking..."
+                  rows={3}
+                  maxLength={500}
+                  className="w-full rounded-lg border border-gray-200 bg-white p-3 text-sm text-[#1C1F23] placeholder:text-[#777980] focus:border-gray-300 focus:outline-none resize-none"
+                />
+                <div className="flex items-center gap-4 justify-center md:justify-end">
+                  <Button
+                    variant="outline"
+                    className="h-11 font-medium"
+                    onClick={cancelRejectFlow}
+                    disabled={isAccepting || isRejecting}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="h-11 font-medium bg-[#EB3D4D] hover:bg-[#d63241] text-white"
+                    onClick={handleReject}
+                    disabled={isAccepting || isRejecting}
+                  >
+                    {isRejecting ? "Rejecting..." : "Confirm Reject"}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 justify-center md:justify-end w-full">
+                <Button
+                  variant="outline"
+                  className="h-11 font-medium text-[#EB3D4D] border-[#FBD8DB] hover:bg-[#FEECEE] hover:text-[#EB3D4D]"
+                  onClick={startRejectFlow}
+                  disabled={isAccepting || isRejecting}
+                >
+                  Reject
+                </Button>
+                <Button
+                  className="h-11 font-medium"
+                  onClick={handleAccept}
+                  disabled={isAccepting || isRejecting}
+                >
+                  {isAccepting ? "Approving..." : "Approve"}
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
