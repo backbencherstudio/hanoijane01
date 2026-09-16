@@ -218,8 +218,17 @@ const StandShape = memo(function StandShape({
           return (
             <>
               <path
-                d="M0 0H24.74V74.26L21.47 76.88L0 55.70Z"
+                d="M0 0H24.74V74.26L21.48 76.88L0 55.70Z"
                 fill={fill}
+              />
+              <line
+                x1={0}
+                y1={55.70}
+                x2={21.48}
+                y2={76.88}
+                stroke="black"
+                strokeWidth={0.86}
+                strokeLinecap="round"
               />
               <text
                 x={12.4}
@@ -286,12 +295,21 @@ const StandShape = memo(function StandShape({
                 d="M0 0H24.77L46.24 21.18L49.51 18.70L43.30 24.68H0Z"
                 fill={fill}
               />
+              <line
+                x1={24.77}
+                y1={0}
+                x2={46.24}
+                y2={21.18}
+                stroke="black"
+                strokeWidth={0.86}
+                strokeLinecap="round"
+              />
               <text
                 x={12.5}
                 y={12.5}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill="white"
+                fill={fill === "#B8B8B8" ? "black" : "white"}
                 fontSize={8}
                 fontWeight="500"
                 pointerEvents="none"
