@@ -9,7 +9,7 @@ export function getStandColor(category: string, isAvailable: boolean) {
     case "goff-premium-2":
       return "#CF2133";
     case "goff-premium-3":
-      return "#7F3F98";
+      return "#8A9A5B";
     case "goff-small":
       return "#27AAE1";
     case "marquee-standard":

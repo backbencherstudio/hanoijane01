@@ -309,7 +309,7 @@ const StandShape = memo(function StandShape({
                 y={12.5}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill={fill === "#B8B8B8" ? "black" : "white"}
+                fill="black"
                 fontSize={8}
                 fontWeight="500"
                 pointerEvents="none"
