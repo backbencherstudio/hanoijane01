@@ -17,7 +17,8 @@ export type StandShape =
   | "corner-left"
   | "corner-right"
   | "square"
-  | "large";
+  | "large"
+  | "stand-18";
 
 export interface StandData {
   stand_no: string;
@@ -55,11 +56,11 @@ export const standData: StandData[] = [
   { stand_no: "15", category: "goff-standard",     categorySlug: "goffs-complex-standard-size",     type: "horizontal", x: 306,   y: 368 },
   { stand_no: "16", category: "goff-standard",     categorySlug: "goffs-complex-standard-size",     type: "horizontal", x: 343,   y: 368 },
 
-  // Premium Size (4m x 3.5m, corner)  — goffs-complex-premium-4x3.5
-  { stand_no: "17", category: "goff-premium-3",    categorySlug: "goffs-complex-premium-4x3.5",     x: 380.5, y: 349.5 },
+  // Corner Size (2.5m x 2m, corner)  — goffs-complex-premium-4x3.5
+  { stand_no: "17", category: "goff-premium-3",    categorySlug: "goffs-complex-premium-4x3.5",     x: 379.24, y: 367.34 },
 
-  // Standard Size (vertical)
-  { stand_no: "18", category: "goff-standard",     categorySlug: "goffs-complex-standard-size",     type: "vertical",   x: 405,   y: 312.5 },
+  // Extended Size (vertical with diagonal corner cut)
+  { stand_no: "18", category: "goff-standard",     categorySlug: "goffs-complex-standard-size",     type: "stand-18",   x: 404.01, y: 311.64 },
   { stand_no: "19", category: "goff-standard",     categorySlug: "goffs-complex-standard-size",     type: "vertical",   x: 405,   y: 254 },
 
   // ── Marquee ──────────────────────────────────────────────────────────

@@ -4,12 +4,14 @@ import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import type { Stand } from "@/types/stand";
 import { BadgeCheck } from "lucide-react";
 
+export type TooltipPlacement = "bottom" | "right" | "left";
+
 // ─── Imperative handle exposed to parent ────────────────────────────────────
 export interface TooltipHandle {
-  show: (stand: Stand, x: number, y: number) => void;
+  show: (stand: Stand, x: number, y: number, placement?: TooltipPlacement) => void;
   hide: () => void;
   /** Toggle open/close — same stand tap closes, different stand tap switches. */
-  toggle: (stand: Stand, x: number, y: number) => void;
+  toggle: (stand: Stand, x: number, y: number, placement?: TooltipPlacement) => void;
   /**
    * Re-read the currently-shown stand's bounding rect and reposition the
    * tooltip. Call this during pan/zoom so the tooltip follows the stand.
@@ -29,6 +31,7 @@ export interface StandTooltipProps {
 // ─── Internal DOM refs (one per text node we need to update) ─────────────────
 interface InternalRefs {
   root: React.RefObject<HTMLDivElement | null>;
+  arrow: React.RefObject<HTMLDivElement | null>;
   standNo: React.RefObject<HTMLSpanElement | null>;
   statusBadge: React.RefObject<HTMLSpanElement | null>;
   standType: React.RefObject<HTMLSpanElement | null>;
@@ -51,6 +54,7 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
   ({ onBookNow, isLoggedIn, isAdmin }, ref) => {
     const r: InternalRefs = {
       root: useRef<HTMLDivElement>(null),
+      arrow: useRef<HTMLDivElement>(null),
       standNo: useRef<HTMLSpanElement>(null),
       statusBadge: useRef<HTMLSpanElement>(null),
       standType: useRef<HTMLSpanElement>(null),
@@ -68,6 +72,28 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
     // Stable reference to the outside-close handler so we can remove it later
     const outsideHandler = useRef<((e: PointerEvent) => void) | null>(null);
 
+    /** Helper to configure tooltip transform and arrow direction */
+    const applyPlacement = (placement: TooltipPlacement) => {
+      const el = r.root.current;
+      const arrow = r.arrow.current;
+      if (!el || !arrow) return;
+
+      if (placement === "right") {
+        el.style.transform = "translate(0, -24px)";
+        arrow.className =
+          "absolute -left-2 top-8 h-4 w-4 -translate-y-1/2 rotate-45 border-l border-b border-[#E4E7EC] bg-white";
+      } else if (placement === "left") {
+        el.style.transform = "translate(-100%, -24px)";
+        arrow.className =
+          "absolute -right-2 top-8 h-4 w-4 -translate-y-1/2 rotate-45 border-r border-t border-[#E4E7EC] bg-white";
+      } else {
+        // default "bottom"
+        el.style.transform = "translate(-50%, 0)";
+        arrow.className =
+          "absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-[#E4E7EC] bg-white";
+      }
+    };
+
     /** Returns true if the Book Now button should be visible */
     const shouldShowBookBtn = (stand: Stand) => {
       if (!stand.isAvailable) return false;
@@ -76,9 +102,11 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
     };
 
     useImperativeHandle(ref, () => ({
-      show(stand: Stand, x: number, y: number) {
+      show(stand: Stand, x: number, y: number, placement: TooltipPlacement = "bottom") {
         const el = r.root.current;
         if (!el) return;
+
+        applyPlacement(placement);
 
         // ── store stand ref for Book Now ──────────────────────────────────
         currentStand.current = stand;
@@ -175,11 +203,21 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
         );
         if (!standEl) return;
         const rect = standEl.getBoundingClientRect();
-        el.style.left = `${rect.left + rect.width / 2}px`;
-        el.style.top = `${rect.bottom + 12}px`;
+
+        if (standNo === "18") {
+          const fitsRight = rect.right + 12 + 220 <= window.innerWidth;
+          const placement: TooltipPlacement = fitsRight ? "right" : "left";
+          applyPlacement(placement);
+          el.style.left = `${placement === "right" ? rect.right + 12 : rect.left - 12}px`;
+          el.style.top = `${rect.top + 20}px`;
+        } else {
+          applyPlacement("bottom");
+          el.style.left = `${rect.left + rect.width / 2}px`;
+          el.style.top = `${rect.bottom + 12}px`;
+        }
       },
 
-      toggle(stand: Stand, x: number, y: number) {
+      toggle(stand: Stand, x: number, y: number, placement: TooltipPlacement = "bottom") {
         const el = r.root.current;
         if (!el) return;
         const isVisible = el.style.opacity === "1";
@@ -188,7 +226,7 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
         if (isVisible && isSameStand) {
           this.hide();
         } else {
-          this.show(stand, x, y);
+          this.show(stand, x, y, placement);
         }
       },
     }));
@@ -206,8 +244,11 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
           top: 0,
         }}
       >
-        {/* Arrow */}
-        <div className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-[#E4E7EC] bg-white" />
+        {/* Dynamic Arrow */}
+        <div
+          ref={r.arrow}
+          className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-[#E4E7EC] bg-white"
+        />
 
         <h3 className="text-sm font-semibold text-primary flex items-center justify-between">
           <span className="space-x-1">

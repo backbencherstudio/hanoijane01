@@ -4852,55 +4852,6 @@ const BaseMap = () => {
         strokeLinejoin="round"
       />
       <path
-        d="M428.754 348.726H427.184"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M425.225 348.726H423.266"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M421.305 348.726H419.328"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M417.369 348.726H415.41"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M413.436 348.726H411.477"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M409.516 348.726H407.539"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M405.579 348.726H404.008"
-        stroke="black"
-        strokeWidth="0.86"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
         d="M404.008 348.726V349.202"
         stroke="black"
         strokeWidth="0.86"
@@ -5316,7 +5267,7 @@ const BaseMap = () => {
         strokeLinejoin="round"
       />
       <path
-        d="M404.008 348.726H428.754"
+        d="M404.01 367.34L425.48 388.52"
         stroke="black"
         strokeWidth="0.86"
         strokeLinecap="round"

@@ -15,7 +15,8 @@ interface StandShapeProps {
     | "corner-left"
     | "corner-right"
     | "square"
-    | "large";
+    | "large"
+    | "stand-18";
 
   category:
     | "goff-standard"
@@ -212,6 +213,28 @@ const StandShape = memo(function StandShape({
                 </svg>
               );
           }
+        // STAND 18 (Vertical with diagonal corner cut)
+        case "stand-18":
+          return (
+            <>
+              <path
+                d="M0 0H24.74V74.26L21.47 76.88L0 55.70Z"
+                fill={fill}
+              />
+              <text
+                x={12.4}
+                y={28}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="black"
+                fontSize={8}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+            </>
+          );
       }
     } else {
       switch (category) {
@@ -255,33 +278,27 @@ const StandShape = memo(function StandShape({
               </text>
             </>
           );
-        // GOFF PREMIUM 3
+        // GOFF PREMIUM 3 (Stand 17 - Horizontal with matching diagonal corner cut)
         case "goff-premium-3":
           return (
-            <svg
-              width="48"
-              height="43"
-              viewBox="0 0 50 44"
-              fill={fill}
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <>
               <path
-                d="M0 43.2973H43.2973L49.4927 37.1725V0H24.7464V18.6216H0V43.2973Z"
+                d="M0 0H24.77L46.24 21.18L49.51 18.70L43.30 24.68H0Z"
                 fill={fill}
               />
               <text
-                x={36}
-                y={30}
+                x={12.5}
+                y={12.5}
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="white"
-                fontSize={10}
+                fontSize={8}
                 fontWeight="500"
                 pointerEvents="none"
               >
                 {stand_no}
               </text>
-            </svg>
+            </>
           );
         // GOFF SMALL
         case "goff-small":

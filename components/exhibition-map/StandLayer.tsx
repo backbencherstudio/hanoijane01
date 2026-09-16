@@ -98,11 +98,22 @@ const StandLayer = memo(function StandLayer({
           stand.stand_no,
           (e: React.MouseEvent<SVGGElement>) => {
             const rect = e.currentTarget.getBoundingClientRect();
-            tooltipRef.current?.show(
-              stand,
-              rect.left + rect.width / 2,
-              rect.bottom + 12,
-            );
+            if (stand.stand_no === "18") {
+              const fitsRight =
+                rect.right + 12 + 220 <=
+                (typeof window !== "undefined" ? window.innerWidth : 1200);
+              const placement = fitsRight ? "right" : "left";
+              const x = placement === "right" ? rect.right + 12 : rect.left - 12;
+              const y = rect.top + 20;
+              tooltipRef.current?.show(stand, x, y, placement);
+            } else {
+              tooltipRef.current?.show(
+                stand,
+                rect.left + rect.width / 2,
+                rect.bottom + 12,
+                "bottom",
+              );
+            }
           },
         ]),
       ),
@@ -116,11 +127,22 @@ const StandLayer = memo(function StandLayer({
         stands.map((stand) => [
           stand.stand_no,
           (rect: DOMRect) => {
-            tooltipRef.current?.show(
-              stand,
-              rect.left + rect.width / 2,
-              rect.bottom + 12,
-            );
+            if (stand.stand_no === "18") {
+              const fitsRight =
+                rect.right + 12 + 220 <=
+                (typeof window !== "undefined" ? window.innerWidth : 1200);
+              const placement = fitsRight ? "right" : "left";
+              const x = placement === "right" ? rect.right + 12 : rect.left - 12;
+              const y = rect.top + 20;
+              tooltipRef.current?.show(stand, x, y, placement);
+            } else {
+              tooltipRef.current?.show(
+                stand,
+                rect.left + rect.width / 2,
+                rect.bottom + 12,
+                "bottom",
+              );
+            }
           },
         ]),
       ),
