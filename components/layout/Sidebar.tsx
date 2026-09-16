@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
   return (
     <aside
       className={`
-        fixed top-0 right-0 w-full md:w-[320px] h-screen bg-background flex flex-col 
+        fixed top-0 right-0 w-full md:w-[320px] h-screen h-dvh bg-background flex flex-col 
         transition-transform duration-300 ease-in-out z-999
         ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
@@ -82,11 +82,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
             <h3 className="text-2xl font-medium text-center">
               {user?.name ? user?.name : "User"}
             </h3>
-            <Link href="/profile">
-              <Button onClick={() => setIsOpen(false)} className="px-8">
+            <Button asChild className="px-8">
+              <Link href="/profile" onClick={() => setIsOpen(false)}>
                 <User className="size-5" /> My Profile
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         )}
 
@@ -118,21 +118,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, user }) => {
           <Button
             variant="outline"
             className="px-10 ring-red-500 text-red-500 hover:text-red-500!"
+            onClick={() => setLogOutModalOpen(true)}
           >
-            <span
-              onClick={() => setLogOutModalOpen(true)}
-              className="flex items-center gap-2 "
-            >
+            <span className="flex items-center gap-2 ">
               <IoLogInOutline className="size-5" />
               Log Out
             </span>
           </Button>
         ) : (
-          <Link href="/sign-in">
-            <Button variant="outline" className="px-10 ">
+          <Button asChild variant="outline" className="px-10 ">
+            <Link href="/sign-in" onClick={() => setIsOpen(false)}>
               Sign In
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         )}
       </div>
       <LogOutModal

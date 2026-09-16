@@ -65,11 +65,11 @@ const Navbar = () => {
 
         <div className="flex items-center gap-2 md:gap-4">
           {!user && (
-            <Link href="/sign-in">
-              <Button variant="outline" className="px-10 hidden md:block">
+            <Button asChild variant="outline" className="px-10 hidden md:inline-flex">
+              <Link href="/sign-in">
                 Sign In
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
 
           <ButtonGroup fullWidth={false} pathName="/exhibition-map">
