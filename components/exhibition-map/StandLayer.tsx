@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { memo, useMemo, type RefObject } from "react";
+import React, { memo, useMemo, type RefObject } from 'react';
 
-import { standData } from "@/data/exhibition-map/standData";
-import { standManagementData } from "@/data/dashboard/standManagementData";
-import { getStandColor } from "@/utils/getStandColor";
-import { truncateWords } from "@/lib/utils";
-import type { Stand, ApiStand } from "@/types/stand";
-import type { TooltipHandle } from "./StandTooltip";
+import { standData } from '@/data/exhibition-map/standData';
+import { standManagementData } from '@/data/dashboard/standManagementData';
+import { getStandColor } from '@/utils/getStandColor';
+import { truncateWords } from '@/lib/utils';
+import type { Stand, ApiStand } from '@/types/stand';
+import type { TooltipHandle } from './StandTooltip';
 
-import StandShape from "./StandShape";
+import StandShape from './StandShape';
 
 interface StandLayerProps {
   /** Ref to the always-mounted StandTooltip — updated imperatively, no setState. */
@@ -36,11 +36,11 @@ const StandLayer = memo(function StandLayer({
     if (apiStands) {
       // ── API mode: merge with standData positions ────────────────────────
       const apiLookup = Object.fromEntries(
-        apiStands.map((s) => [s.standNumber, s]),
+        apiStands.map(s => [s.standNumber, s]),
       );
 
       return standData
-        .map((sd) => {
+        .map(sd => {
           const api = apiLookup[sd.stand_no];
           if (!api) return null;
 
@@ -56,6 +56,9 @@ const StandLayer = memo(function StandLayer({
             size: api.size,
             price: api.totalPrice,
             isAvailable: api.isAvailable,
+            isPending: api.isPending ?? false,
+            isBooked: api.isBooked ?? false,
+            state: api.state ?? (api.isAvailable ? 'available' : 'booked'),
             title: api.title,
             categorySlug: api.categorySlug,
             exhibitor: null as string | null,
@@ -66,11 +69,11 @@ const StandLayer = memo(function StandLayer({
 
     // ── Fallback: hardcoded mode (dashboard page) ───────────────────────────
     const hardcodedLookup = Object.fromEntries(
-      standManagementData.map((s) => [s.standNo, s]),
+      standManagementData.map(s => [s.standNo, s]),
     );
 
     return standData
-      .map((sd) => {
+      .map(sd => {
         const hc = hardcodedLookup[sd.stand_no];
         if (!hc) return null;
 
@@ -81,9 +84,12 @@ const StandLayer = memo(function StandLayer({
           standType: hc.standType,
           size: hc.size,
           price: hc.price,
-          isAvailable: hc.status === "Available",
+          isAvailable: hc.status === 'Available',
+          isPending: false,
+          isBooked: hc.status === 'Booked',
+          state: hc.status === 'Available' ? 'available' : 'booked',
           title: `Stand ${sd.stand_no}`,
-          categorySlug: hc.standType.toLowerCase().replace(/\s+/g, "-"),
+          categorySlug: hc.standType.toLowerCase().replace(/\s+/g, '-'),
           exhibitor: hc.exhibitor,
         } as Stand;
       })
@@ -94,16 +100,17 @@ const StandLayer = memo(function StandLayer({
   const enterHandlers = useMemo(
     () =>
       new Map(
-        stands.map((stand) => [
+        stands.map(stand => [
           stand.stand_no,
           (e: React.MouseEvent<SVGGElement>) => {
             const rect = e.currentTarget.getBoundingClientRect();
-            if (stand.stand_no === "18") {
+            if (stand.stand_no === '18') {
               const fitsRight =
                 rect.right + 12 + 220 <=
-                (typeof window !== "undefined" ? window.innerWidth : 1200);
-              const placement = fitsRight ? "right" : "left";
-              const x = placement === "right" ? rect.right + 12 : rect.left - 12;
+                (typeof window !== 'undefined' ? window.innerWidth : 1200);
+              const placement = fitsRight ? 'right' : 'left';
+              const x =
+                placement === 'right' ? rect.right + 12 : rect.left - 12;
               const y = rect.top + 20;
               tooltipRef.current?.show(stand, x, y, placement);
             } else {
@@ -111,7 +118,7 @@ const StandLayer = memo(function StandLayer({
                 stand,
                 rect.left + rect.width / 2,
                 rect.bottom + 12,
-                "bottom",
+                'bottom',
               );
             }
           },
@@ -124,15 +131,16 @@ const StandLayer = memo(function StandLayer({
   const tapHandlers = useMemo(
     () =>
       new Map(
-        stands.map((stand) => [
+        stands.map(stand => [
           stand.stand_no,
           (rect: DOMRect) => {
-            if (stand.stand_no === "18") {
+            if (stand.stand_no === '18') {
               const fitsRight =
                 rect.right + 12 + 220 <=
-                (typeof window !== "undefined" ? window.innerWidth : 1200);
-              const placement = fitsRight ? "right" : "left";
-              const x = placement === "right" ? rect.right + 12 : rect.left - 12;
+                (typeof window !== 'undefined' ? window.innerWidth : 1200);
+              const placement = fitsRight ? 'right' : 'left';
+              const x =
+                placement === 'right' ? rect.right + 12 : rect.left - 12;
               const y = rect.top + 20;
               tooltipRef.current?.show(stand, x, y, placement);
             } else {
@@ -140,7 +148,7 @@ const StandLayer = memo(function StandLayer({
                 stand,
                 rect.left + rect.width / 2,
                 rect.bottom + 12,
-                "bottom",
+                'bottom',
               );
             }
           },
@@ -151,11 +159,15 @@ const StandLayer = memo(function StandLayer({
 
   return (
     <>
-      {stands.map((stand) => (
+      {stands.map(stand => (
         <StandShape
           key={stand.stand_no}
           {...stand}
-          fill={getStandColor(stand.category, stand.isAvailable)}
+          fill={getStandColor(
+            stand.category,
+            stand.isAvailable,
+            stand.isPending,
+          )}
           onMouseEnter={enterHandlers.get(stand.stand_no)}
           onTap={tapHandlers.get(stand.stand_no)}
         />
