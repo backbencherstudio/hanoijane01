@@ -1,17 +1,27 @@
-"use client";
+'use client';
 
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
-import type { Stand } from "@/types/stand";
-import { BadgeCheck } from "lucide-react";
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import type { Stand } from '@/types/stand';
+import { BadgeCheck } from 'lucide-react';
 
-export type TooltipPlacement = "bottom" | "right" | "left";
+export type TooltipPlacement = 'bottom' | 'right' | 'left';
 
 // ─── Imperative handle exposed to parent ────────────────────────────────────
 export interface TooltipHandle {
-  show: (stand: Stand, x: number, y: number, placement?: TooltipPlacement) => void;
+  show: (
+    stand: Stand,
+    x: number,
+    y: number,
+    placement?: TooltipPlacement,
+  ) => void;
   hide: () => void;
   /** Toggle open/close — same stand tap closes, different stand tap switches. */
-  toggle: (stand: Stand, x: number, y: number, placement?: TooltipPlacement) => void;
+  toggle: (
+    stand: Stand,
+    x: number,
+    y: number,
+    placement?: TooltipPlacement,
+  ) => void;
   /**
    * Re-read the currently-shown stand's bounding rect and reposition the
    * tooltip. Call this during pan/zoom so the tooltip follows the stand.
@@ -78,31 +88,37 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
       const arrow = r.arrow.current;
       if (!el || !arrow) return;
 
-      if (placement === "right") {
-        el.style.transform = "translate(0, -24px)";
+      if (placement === 'right') {
+        el.style.transform = 'translate(0, -24px)';
         arrow.className =
-          "absolute -left-2 top-8 h-4 w-4 -translate-y-1/2 rotate-45 border-l border-b border-[#E4E7EC] bg-white";
-      } else if (placement === "left") {
-        el.style.transform = "translate(-100%, -24px)";
+          'absolute -left-2 top-8 h-4 w-4 -translate-y-1/2 rotate-45 border-l border-b border-[#E4E7EC] bg-white';
+      } else if (placement === 'left') {
+        el.style.transform = 'translate(-100%, -24px)';
         arrow.className =
-          "absolute -right-2 top-8 h-4 w-4 -translate-y-1/2 rotate-45 border-r border-t border-[#E4E7EC] bg-white";
+          'absolute -right-2 top-8 h-4 w-4 -translate-y-1/2 rotate-45 border-r border-t border-[#E4E7EC] bg-white';
       } else {
         // default "bottom"
-        el.style.transform = "translate(-50%, 0)";
+        el.style.transform = 'translate(-50%, 0)';
         arrow.className =
-          "absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-[#E4E7EC] bg-white";
+          'absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-l border-t border-[#E4E7EC] bg-white';
       }
     };
 
     /** Returns true if the Book Now button should be visible */
     const shouldShowBookBtn = (stand: Stand) => {
       if (!stand.isAvailable) return false;
+      if (stand.isPending) return false;
       if (isAdmin) return false;
       return true;
     };
 
     useImperativeHandle(ref, () => ({
-      show(stand: Stand, x: number, y: number, placement: TooltipPlacement = "bottom") {
+      show(
+        stand: Stand,
+        x: number,
+        y: number,
+        placement: TooltipPlacement = 'bottom',
+      ) {
         const el = r.root.current;
         if (!el) return;
 
@@ -120,15 +136,22 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
 
         // ── status badge ─────────────────────────────────────────────────────
         if (r.statusBadge.current) {
-          r.statusBadge.current.textContent = stand.isAvailable
-            ? "available"
-            : "booked";
-          if (!stand.isAvailable) {
+          const statusText = stand.isPending
+            ? 'pending'
+            : stand.isAvailable
+              ? 'available'
+              : 'booked';
+          r.statusBadge.current.textContent = statusText;
+
+          if (stand.isPending) {
             r.statusBadge.current.className =
-              "rounded-sm px-1.5 py-1 text-sm font-semibold bg-gray-200 text-gray-700";
+              'rounded-sm px-1.5 py-1 text-sm font-semibold bg-amber-100 text-amber-700';
+          } else if (!stand.isAvailable) {
+            r.statusBadge.current.className =
+              'rounded-sm px-1.5 py-1 text-sm font-semibold bg-gray-200 text-gray-700';
           } else {
             r.statusBadge.current.className =
-              "rounded-sm px-1.5 py-1 text-sm font-semibold bg-green-100 text-green-700";
+              'rounded-sm px-1.5 py-1 text-sm font-semibold bg-green-100 text-green-700';
           }
         }
 
@@ -141,54 +164,54 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
         // ── exhibitor row (conditional) ───────────────────────────────────────
         if (r.exhibitorRow.current) {
           if (stand.exhibitor) {
-            r.exhibitorRow.current.style.display = "flex";
+            r.exhibitorRow.current.style.display = 'flex';
             if (r.exhibitorName.current)
               r.exhibitorName.current.textContent = stand.exhibitor;
           } else {
-            r.exhibitorRow.current.style.display = "none";
+            r.exhibitorRow.current.style.display = 'none';
           }
         }
 
         // ── book button (conditional) ─────────────────────────────────────────
         if (r.bookBtn.current) {
           r.bookBtn.current.style.display = shouldShowBookBtn(stand)
-            ? "block"
-            : "none";
+            ? 'block'
+            : 'none';
         }
 
         // ── make visible ──────────────────────────────────────────────────────
         currentStandNo.current = stand.stand_no;
-        el.style.opacity = "1";
-        el.style.pointerEvents = "auto";
+        el.style.opacity = '1';
+        el.style.pointerEvents = 'auto';
 
         // ── outside-tap to dismiss ────────────────────────────────────────────
         if (outsideHandler.current) {
-          document.removeEventListener("pointerdown", outsideHandler.current);
+          document.removeEventListener('pointerdown', outsideHandler.current);
         }
         const handler = (evt: PointerEvent) => {
           const target = evt.target as Element;
           if (target.closest?.('[data-stand="true"]')) return;
           if (el && el.contains(target as Node)) return;
-          el.style.opacity = "0";
-          el.style.pointerEvents = "none";
+          el.style.opacity = '0';
+          el.style.pointerEvents = 'none';
           currentStandNo.current = null;
           currentStand.current = null;
-          document.removeEventListener("pointerdown", handler);
+          document.removeEventListener('pointerdown', handler);
           outsideHandler.current = null;
         };
         outsideHandler.current = handler;
-        document.addEventListener("pointerdown", handler);
+        document.addEventListener('pointerdown', handler);
       },
 
       hide() {
         const el = r.root.current;
         if (!el) return;
-        el.style.opacity = "0";
-        el.style.pointerEvents = "none";
+        el.style.opacity = '0';
+        el.style.pointerEvents = 'none';
         currentStandNo.current = null;
         currentStand.current = null;
         if (outsideHandler.current) {
-          document.removeEventListener("pointerdown", outsideHandler.current);
+          document.removeEventListener('pointerdown', outsideHandler.current);
           outsideHandler.current = null;
         }
       },
@@ -204,23 +227,28 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
         if (!standEl) return;
         const rect = standEl.getBoundingClientRect();
 
-        if (standNo === "18") {
+        if (standNo === '18') {
           const fitsRight = rect.right + 12 + 220 <= window.innerWidth;
-          const placement: TooltipPlacement = fitsRight ? "right" : "left";
+          const placement: TooltipPlacement = fitsRight ? 'right' : 'left';
           applyPlacement(placement);
-          el.style.left = `${placement === "right" ? rect.right + 12 : rect.left - 12}px`;
+          el.style.left = `${placement === 'right' ? rect.right + 12 : rect.left - 12}px`;
           el.style.top = `${rect.top + 20}px`;
         } else {
-          applyPlacement("bottom");
+          applyPlacement('bottom');
           el.style.left = `${rect.left + rect.width / 2}px`;
           el.style.top = `${rect.bottom + 12}px`;
         }
       },
 
-      toggle(stand: Stand, x: number, y: number, placement: TooltipPlacement = "bottom") {
+      toggle(
+        stand: Stand,
+        x: number,
+        y: number,
+        placement: TooltipPlacement = 'bottom',
+      ) {
         const el = r.root.current;
         if (!el) return;
-        const isVisible = el.style.opacity === "1";
+        const isVisible = el.style.opacity === '1';
         const isSameStand = currentStandNo.current === stand.stand_no;
 
         if (isVisible && isSameStand) {
@@ -238,8 +266,8 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
                  transition-opacity duration-150"
         style={{
           opacity: 0,
-          pointerEvents: "none",
-          transform: "translate(-50%, 0)",
+          pointerEvents: 'none',
+          transform: 'translate(-50%, 0)',
           left: 0,
           top: 0,
         }}
@@ -252,9 +280,9 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
 
         <h3 className="text-sm font-semibold text-primary flex items-center justify-between">
           <span className="space-x-1">
-            {" "}
+            {' '}
             Stand <span ref={r.standNo} />
-          </span>{" "}
+          </span>{' '}
           <span ref={r.statusBadge} />
         </h3>
 
@@ -282,8 +310,8 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
             ref={r.bookBtn}
             type="button"
             className="mt-2 w-full rounded-full bg-primary h-8.5 text-sm font-medium text-white hover:opacity-90 transition-opacity cursor-pointer active:scale-99"
-            style={{ display: "none" }}
-            onClick={(e) => {
+            style={{ display: 'none' }}
+            onClick={e => {
               e.stopPropagation();
               const stand = currentStand.current;
               if (stand && onBookNow) {
@@ -292,7 +320,7 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
             }}
           >
             <span className="flex gap-1.5 items-center justify-center">
-              {" "}
+              {' '}
               <BadgeCheck size={16} /> Book Now
             </span>
           </button>
@@ -302,6 +330,6 @@ const StandTooltip = forwardRef<TooltipHandle, StandTooltipProps>(
   },
 );
 
-StandTooltip.displayName = "StandTooltip";
+StandTooltip.displayName = 'StandTooltip';
 
 export default StandTooltip;

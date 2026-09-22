@@ -1,0 +1,24 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "abedin",
+    "abusaleh",
+    "development",
+    "main",
+    "without-api"
+  ],
+  "parent": {
+    "abedin": "main",
+    "abusaleh": "main",
+    "development": "main",
+    "main": null,
+    "without-api": "main"
+  },
+  "order": [
+    "main",
+    "abedin",
+    "abusaleh",
+    "development",
+    "without-api"
+  ]
+}
