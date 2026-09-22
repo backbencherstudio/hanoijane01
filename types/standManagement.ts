@@ -16,6 +16,9 @@ export interface StandBookedBy {
 export interface StandApiItem {
   id: string;
   isAvailable: boolean;
+  isPending: boolean;
+  isBooked: boolean;
+  state: string;
   standNumber: string;
   title: string;
   hall: string;
