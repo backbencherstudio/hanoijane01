@@ -8,6 +8,9 @@ export interface Stand extends StandData {
   size: string;
   price: number;
   isAvailable: boolean;
+  isPending: boolean;
+  isBooked: boolean;
+  state: string;
   title: string;
   categorySlug: string;
   exhibitor: string | null;
@@ -20,6 +23,9 @@ export interface ApiStand {
   title: string;
   standNumber: string;
   isAvailable: boolean;
+  isPending: boolean;
+  isBooked: boolean;
+  state: string;
   size: string;
   price: number;
   vatPercentage: number;
@@ -34,6 +40,10 @@ export interface HallStand {
   id: string;
   standNumber: string;
   title: string;
+  state: string;
+  isAvailable: boolean;
+  isPending: boolean;
+  isBooked: boolean;
 }
 
 export interface HallStandCategory {
