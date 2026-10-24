@@ -83,7 +83,7 @@ export const standData: StandData[] = [
   { stand_no: "M12", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 582 },
   { stand_no: "M13", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 620.5 },
   { stand_no: "M14", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 659.5 },
-  { stand_no: "M15", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 723.5 },
+  { stand_no: "M15", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 698 },
   { stand_no: "M16", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 762 },
   { stand_no: "M17", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 800.5 },
   { stand_no: "M18", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 758,   y: 839 },
@@ -112,8 +112,8 @@ export const standData: StandData[] = [
   { stand_no: "M37", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 839 },
   { stand_no: "M38", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 787.5 },
   { stand_no: "M39", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 762 },
-  { stand_no: "M40", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 704.5 },
-  { stand_no: "M41", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 679 },
+  { stand_no: "M40", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 694.5 },
+  { stand_no: "M41", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 669 },
   { stand_no: "M42", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 626 },
   { stand_no: "M43", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 600 },
   { stand_no: "M44", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "horizontal", x: 687.5, y: 549 },
@@ -140,7 +140,7 @@ export const standData: StandData[] = [
   { stand_no: "M59", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 627,   y: 659.5 },
 
   // Standard Size (vertical left outer column)
-  { stand_no: "M60", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 629.5, y: 724 },
+  { stand_no: "M60", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 627,   y: 698 },
   { stand_no: "M61", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 629.5, y: 762.5 },
   { stand_no: "M62", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 629.5, y: 801 },
   { stand_no: "M63", category: "marquee-standard",  categorySlug: "marquee-standard-size",  type: "vertical",   x: 629.5, y: 839.5 },
