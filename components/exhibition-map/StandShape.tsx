@@ -341,14 +341,29 @@ const StandShape = memo(function StandShape({
         case "marquee-premium-b":
           return (
             <>
-              <rect width="36.5" height="49.5" fill={fill} />
-
+              {/* Top plot (3m x 2m) */}
+              <rect width="36.5" height="23.5" fill={fill} />
               <text
                 x={18}
-                y={25}
+                y={12}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill="white"
+                fill="black"
+                fontSize={8}
+                fontWeight="500"
+                pointerEvents="none"
+              >
+                {stand_no}
+              </text>
+
+              {/* Bottom plot (3m x 2m) */}
+              <rect y="26" width="36.5" height="23.5" fill={fill} />
+              <text
+                x={18}
+                y={38}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="black"
                 fontSize={8}
                 fontWeight="500"
                 pointerEvents="none"
