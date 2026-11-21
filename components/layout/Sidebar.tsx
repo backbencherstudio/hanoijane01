@@ -17,6 +17,7 @@ interface SidebarProps {
 }
 const links = [
   { label: "Home", href: "/" },
+  { label: "Programme", href: "/programme" },
   { label: "Exhibition Map", href: "/exhibition-map" },
   // { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
