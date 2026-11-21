@@ -12,6 +12,7 @@ const Footer = () => {
 
   const navigation = {
     platform: [
+      { name: "Programme", href: "/programme" },
       { name: "Exhibition Map", href: "/exhibition-map" },
       { name: "Browse Stands", href: "/exhibition-map" },
       { name: "Exhibitor Login", href: "/sign-in" },
