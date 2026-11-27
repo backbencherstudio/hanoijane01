@@ -11,6 +11,7 @@ type Session = {
   time: string;
   title: string;
   description?: string;
+  moderator?: string;
   speakers?: string;
   expoDen?: boolean;
 };
@@ -29,13 +30,15 @@ const programme: { day: string; date: string; sessions: Session[] }[] = [
         time: "10:00–11:30",
         title: "Working Forward: Thoroughbred Industry Employment and Careers in the Coming Decades",
         description: "Skills, recruitment and career pathways.",
+        moderator: "Moderator: Joe Osborne",
         speakers:
           "Carol Nolan (HRI), Dr Ciara Losty (South East Technological University), Ado McGuinness (IRTA) and Ruth Flood",
       },
       {
         time: "11:30–12:30",
         title: "Equine Traceability",
-        description: "Expo Den session with Weatherbys and the Department of Agriculture.",
+        description:
+          "Session with Sharon O'Regan of Weatherbys and Rosanne Green from the Department of Agriculture.",
         expoDen: true,
       },
       { time: "12:30–13:00", title: "Lunch & Networking" },
@@ -49,12 +52,14 @@ const programme: { day: string; date: string; sessions: Session[] }[] = [
         title: "The Business of Racing",
         description:
           "A panel discussion on the business of racing, with international betting perspectives.",
+        moderator: "Moderator: Mark Boylan",
         speakers:
-          "Jonathan Mullin, Russell Ferris, James Ryan and Stephen Kenneally (HKJC), among other international betting experts",
+          "Jonathan Mullin, Russell Ferris, James Ryan and Stephen Kennelly (HKJC)",
       },
       {
         time: "16:00–16:45",
         title: "Finance and Insurance",
+        description: "Speakers from NFP, SC Dunne and Howden Insurance.",
         expoDen: true,
       },
       {
@@ -62,6 +67,7 @@ const programme: { day: string; date: string; sessions: Session[] }[] = [
         title: "The Sport of Racing",
         description:
           "The joy and fun of racing, with insights from leading owners, owner-breeders, syndicates and international voices.",
+        moderator: "Moderator: Johnny Ward",
         speakers:
           "Rich Ricci, Michael Owen, Johnny Murtagh and Sam Hoskins",
       },
@@ -76,20 +82,24 @@ const programme: { day: string; date: string; sessions: Session[] }[] = [
         title: "Racing & Breeding from the Horses’ Perspective",
         description:
           "Looking at the future of racing and the challenges facing the sector.",
-        speakers: "Eliot Forbes, Meta Osborne, Vicky Leonard and John Osborne",
+        moderator: "Moderator: Sally Ann Grassick",
+        speakers:
+          "Eliot Forbes, Meta Osborne, Vicky Leonard, John Osborne and Emma Berry",
       },
       {
         time: "10:30–12:00",
         title: "The Breeders’ Edge: What Successful Flat Breeders Are Doing Differently",
         description:
           "A discussion on the current state and future of Flat breeding.",
+        moderator: "Moderator: Bernard Condren",
         speakers:
           "Ed Sackville, Paul McCartan, Brendan Hayes and a Next Generation breeder",
       },
       {
         time: "12:30–13:30",
         title: "Staying Ahead of Parasites",
-        description: "ECHO Parasite Case Study.",
+        description:
+          "The Irish perspective on trends, resistance and practical pasture management.",
         speakers: "Kerrie Kavanagh, Wendy Conlon, Nikki Walshe and Sean Keane",
         expoDen: true,
       },
@@ -99,15 +109,18 @@ const programme: { day: string; date: string; sessions: Session[] }[] = [
       },
       {
         time: "14:30–15:30",
-        title: "Sustainable Stud Farming: Land Management, Equine Welfare & Environmental Challenges",
-        description: "ECHO Case Study.",
-        speakers: "Alan Creighton, John Tuthill and John Corbett",
+        title: "Sustainable Stud Farming",
+        description:
+          "Land Management, Equine Welfare & Environmental Challenges",
+        moderator: "Moderator: Pippa Hackett",
+        speakers: "Alan Creighton, John Tuthill, John Corbett and Des Leadon",
         expoDen: true,
       },
       {
         time: "15:30–17:00",
         title: "National Hunt Breeding: A Modern Approach",
         description: "The current and future model for National Hunt breeding.",
+        moderator: "Moderator: Jane Mangan",
         speakers:
           "Peter Molony, Bryan Mayoh, Henry de Bromhead and Noel George",
       },
@@ -116,7 +129,8 @@ const programme: { day: string; date: string; sessions: Session[] }[] = [
         title: "The Next 100: The Future Is in Our Hands",
         description:
           "Perspectives from the next generation of the industry.",
-        speakers: "Barry Kennedy, Aoife Boland and Ross O’Mahoney",
+        speakers:
+          "Barry Kennedy, Aoife Boland, Ross O’Mahoney, Timmy Love and Orla Hassett",
       },
     ],
   },
@@ -136,7 +150,7 @@ function SessionCard({ session }: { session: Session }) {
           <div className="mb-2 flex flex-wrap items-center gap-2">
             {session.expoDen && (
               <span className="rounded-full bg-[#C25B29]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#A4471E]">
-                Expo Den
+                Weatherbys Marquee Stage
               </span>
             )}
           </div>
@@ -148,10 +162,20 @@ function SessionCard({ session }: { session: Session }) {
               {session.description}
             </p>
           )}
-          {session.speakers && (
+          {(session.moderator || session.speakers) && (
             <p className="mt-3 flex items-start gap-2 text-sm leading-relaxed text-accent">
               <Users aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
-              <span>{session.speakers}</span>
+              <span>
+                {session.moderator && (
+                  <>
+                    <span className="font-semibold text-text-primary">
+                      {session.moderator}
+                    </span>
+                    {session.speakers ? " — " : ""}
+                  </>
+                )}
+                {session.speakers}
+              </span>
             </p>
           )}
         </div>
